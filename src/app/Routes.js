@@ -9,7 +9,6 @@ const Routes = () => {
     <Switch>
       {!isAuthorized ? (
         <Route>
-          <h1>title</h1>
           <AuthPage />
         </Route>
       ) : (

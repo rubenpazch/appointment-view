@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import Content from './Content';
 
 const ContentRoute = ({ component, path }) => {
-  console.log('path ==> ', path);
+  // eslint-disable-next-line no-console
+  console.log({ path });
 
   return (
     <Route>
