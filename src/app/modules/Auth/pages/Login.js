@@ -14,6 +14,15 @@ const initialValues = {
   password: 'demo',
 };
 
+const requestOptions = {
+  mode: 'no-cors',
+  method: 'GET',
+  redirect: 'follow',
+  header: {
+    'Access-Control-Allow-Origin': '*',
+  },
+};
+
 // eslint-disable-next-line no-unused-vars
 const Login = props => {
   // eslint-disable-next-line no-console
@@ -34,6 +43,11 @@ const Login = props => {
         },
       ),
   });
+
+  fetch('https://vast-tundra-77982.herokuapp.com/api/v1/users', requestOptions)
+    .then(response => response.text())
+    .then(result => console.log({ result }))
+    .catch(error => console.log('error', error));
 
   const formik = useFormik({
     initialValues,
