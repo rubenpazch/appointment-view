@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const Registration = () => {
-  const [loading, setLoading] = useState(false);
-  setLoading(false);
   return (
     <div>
       <div>

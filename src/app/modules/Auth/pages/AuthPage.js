@@ -4,9 +4,9 @@ import {
 } from 'react-router-dom';
 import toAbsoluteUrl from '../../../../helpers/assetsHelpers';
 import Login from './Login';
-import ContentRoute from '../../../../layout/components/ContentRoute';
+// import ContentRoute from '../../../../layout/components/ContentRoute';
 import Registration from './Registration';
-import ForgotPassword from './ForgotPassword';
+// import ForgotPassword from './ForgotPassword';
 
 // eslint-disable-next-line import/prefer-default-export
 export function AuthPage() {
@@ -89,15 +89,9 @@ export function AuthPage() {
                 <Route path="/auth/login">
                   <Login />
                 </Route>
-
-                <ContentRoute
-                  path="/auth/registration"
-                  component={Registration}
-                />
-                <ContentRoute
-                  path="/auth/forgot-password"
-                  component={ForgotPassword}
-                />
+                <Route path="/auth/registration">
+                  <Registration />
+                </Route>
                 <Redirect from="/auth" exact to="/auth/login" />
                 <Redirect to="/auth/login" />
               </Switch>
