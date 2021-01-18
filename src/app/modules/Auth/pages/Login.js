@@ -43,7 +43,7 @@ const Login = () => {
       <Formik
         initialValues={{ username: '', password: '' }}
         validationSchema={LoginSchema}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, setStatus }) => {
           enableLoading();
           setTimeout(() => {
             login(values.username, values.password)
@@ -54,12 +54,14 @@ const Login = () => {
               .catch(() => {
                 disableLoading();
                 setSubmitting(false);
+                setStatus('not working');
               });
           }, 1400);
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, status }) => (
           <Form>
+            <h1>{status}</h1>
             <Field type="username" name="username" />
             <ErrorMessage name="username" component="div" />
             <Field type="password" name="password" />
