@@ -1,167 +1,90 @@
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/forbid-prop-types */
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useFormik } from 'formik';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+// import { Link } from 'react-router-dom';
+import {
+  Formik,
+  Form,
+  Field,
+  ErrorMessage,
+} from 'formik';
+// import PropTypes from 'prop-types';
 import * as Yup from 'yup';
+import setToken from '../_redux/authAction';
 // import * as auth from '../_redux/authRedux';
-import { login } from '../_redux/authCrud';
+import { login } from '../_redux/authService';
 
-// eslint-disable-next-line no-unused-vars
-const initialValues = {
-  email: 'admin@test.com',
-  password: 'demo',
-};
+const Login = () => {
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
-const requestOptions = {
-  mode: 'no-cors',
-  method: 'GET',
-  redirect: 'follow',
-  header: {
-    'Access-Control-Allow-Origin': '*',
-  },
-};
-
-// eslint-disable-next-line no-unused-vars
-const Login = props => {
-  // eslint-disable-next-line no-console
-  console.log({ props });
   const LoginSchema = Yup.object().shape({
-    email: Yup.string()
-      .email('Wrong email format')
-      .min(3, 'Minimun 3 symbols')
-      .required({
-        id: 'AUTH.VALIDATION.REQUIRED_FIELD',
-      }),
+    username: Yup.string()
+      .min(3, 'Minimum 3 symbols')
+      .max(50, 'Maximum 50 symbols')
+      .required('this field is required'),
     password: Yup.string()
       .min(3, 'Minimum 3 symbols')
       .max(50, 'Maximum 50 symbols')
-      .required(
-        {
-          id: 'AUTH.VALIDATION.REQUIRED_FIELD',
-        },
-      ),
+      .required('this field is required'),
   });
 
-  fetch('https://vast-tundra-77982.herokuapp.com/api/v1/users', requestOptions)
-    .then(response => response.text())
-    .then(result => console.log({ result }))
-    .catch(error => console.log('error', error));
-
-  const formik = useFormik({
-    initialValues,
-    validationSchema: LoginSchema,
-    // eslint-disable-next-line no-unused-vars
-    onSubmit: (values, { setStatus, setSubmitting }) => {
-      // eslint-disable-next-line no-console
-      console.log({ values });
-      setTimeout(() => {
-        login(values.email, values.password);
-      }, 1000);
-    },
-  });
-
-  const getInputClasses = fieldname => {
-    if (formik.touched[fieldname] && formik.errors[fieldname]) {
-      return 'is-invalid';
-    }
-
-    if (formik.touched[fieldname] && !formik.errors[fieldname]) {
-      return 'is-valid';
-    }
-
-    return '';
+  const enableLoading = () => {
+    setLoading(true);
+  };
+  const disableLoading = () => {
+    setLoading(false);
   };
 
   return (
     <div>
-      {/* begin::Head */}
-      <div>
-        <h3>
-          formated message
-        </h3>
-        <p>
-          Enter your username and password
-        </p>
-      </div>
-      {/* end::Head */}
+      <h1>Any place in your app!</h1>
+      <Formik
+        initialValues={{ username: '', password: '' }}
+        validationSchema={LoginSchema}
+        onSubmit={(values, { setSubmitting }) => {
+          enableLoading();
+          setTimeout(() => {
+            login(values.username, values.password)
+              .then(({ data: { token, username } }) => {
+                dispatch(setToken({ token, username }));
+                disableLoading();
+              })
+              .catch(() => {
+                disableLoading();
+                setSubmitting(false);
+              });
+          }, 1400);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <Field type="username" name="username" />
+            <ErrorMessage name="username" component="div" />
+            <Field type="password" name="password" />
+            <ErrorMessage name="password" component="div" />
+            <button type="submit" disabled={isSubmitting}>
+              <span>Sign In</span>
+              {loading && (
+              <div className="spinner-border text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+              )}
+            </button>
 
-      {/* begin::Form */}
-      <form>
-        {formik.status ? (
-          <div>
-            <div>{formik.status}</div>
-          </div>
-        ) : (
-          <div>
-            <div>
-              Use account
-              {' '}
-              <strong>admin@demo.com</strong>
-              {' '}
-              and password
-              {' '}
-              <strong>demo</strong>
-              {' '}
-              to continue.
-            </div>
-          </div>
+          </Form>
         )}
-        <div>
-          <input
-            placeholder="Email"
-            type="email"
-            name="email"
-            className={`${getInputClasses('email')}`}
-          />
-          {formik.touched.email && formik.errors.email ? (
-            <div className="fv-plugins-message-container">
-              <div className="fv-help-block">{formik.errors.email}</div>
-            </div>
-          ) : null}
-        </div>
-        <div className="form-group fv-plugins-icon-container">
-          <input
-            placeholder="Password"
-            type="password"
-            name="password"
-          />
-          {formik.touched.password && formik.errors.password ? (
-            <div className="fv-plugins-message-container">
-              <div className="fv-help-block">{formik.errors.password}</div>
-            </div>
-          ) : null}
-        </div>
-        <div>
-          <Link
-            to="/auth/forgot-password"
-            id="kt_login_forgot"
-          >
-            forgot password
-          </Link>
-          <button
-            id="kt_login_signin_submit"
-            type="submit"
-            disabled={formik.isSubmitting}
-            className="btn btn-primary font-weight-bold px-9 py-4 my-3"
-          >
-            <span>Sign In</span>
-            <span className="ml-3 spinner spinner-white" />
-          </button>
-        </div>
-      </form>
-      {/* end::Form */}
+      </Formik>
     </div>
   );
 };
 
-Login.defaultProps = {
-  props: {},
-};
-
-Login.propTypes = {
-  props: PropTypes.object,
-};
-
+// Login.defaultProps = {
+//   props: {},
+// };
+//
+// Login.propTypes = {
+//   props: PropTypes.object,
+// };
 export default Login;

@@ -1,5 +1,7 @@
 import React from 'react';
-import { Link, Switch, Redirect } from 'react-router-dom';
+import {
+  Link, Switch, Redirect, Route,
+} from 'react-router-dom';
 import toAbsoluteUrl from '../../../../helpers/assetsHelpers';
 import Login from './Login';
 import ContentRoute from '../../../../layout/components/ContentRoute';
@@ -84,7 +86,10 @@ export function AuthPage() {
             {/* begin::Content body */}
             <div>
               <Switch>
-                <ContentRoute path="/auth/login" component={Login} />
+                <Route path="/auth/login">
+                  <Login />
+                </Route>
+
                 <ContentRoute
                   path="/auth/registration"
                   component={Registration}

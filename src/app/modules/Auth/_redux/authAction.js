@@ -1,8 +1,8 @@
-import * as actionsTypes from './authTypes';
+import { FETCH_TOKEN } from './authReducer';
 
-const getToken = result => ({
-  type: actionsTypes.FETCH_TOKEN_SUCCESS,
+const setToken = result => ({
+  type: FETCH_TOKEN,
   token: result,
 });
 
-export default getToken;
+export default setToken;
