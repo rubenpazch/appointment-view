@@ -1,17 +1,17 @@
 import React from 'react';
-import { Redirect, Switch } from 'react-router-dom';
-
-export default function Appoinment() {
+import Logout from '../Auth/pages/Logout';
+// import { Redirect, Switch } from 'react-router-dom';
+const Appointment = () => {
+  console.log('in component');
   return (
     <>
-      <h1>you are in appointment</h1>
-      <Switch>
-        <Redirect
-          exact
-          from="/home"
-          to="/appointment"
-        />
-      </Switch>
+      <div>
+        <h2>testing</h2>
+        <h1>you are in appointment</h1>
+        <Logout />
+      </div>
     </>
   );
-}
+};
+
+export default Appointment;

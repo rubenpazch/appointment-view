@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/forbid-prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 // import { Link } from 'react-router-dom';
 import {
@@ -11,13 +11,18 @@ import {
 } from 'formik';
 // import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import setToken from '../_redux/authAction';
+import { setToken } from '../_redux/authAction';
 // import * as auth from '../_redux/authRedux';
 import { login } from '../_redux/authService';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setLoading(false);
+    return () => setLoading(false);
+  }, []);
 
   const LoginSchema = Yup.object().shape({
     username: Yup.string()

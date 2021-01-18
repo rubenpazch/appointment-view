@@ -1,8 +1,11 @@
-import { FETCH_TOKEN } from './authReducer';
+import { FETCH_TOKEN, REMOVE_TOKEN } from './authReducer';
 
-const setToken = result => ({
+export const setToken = result => ({
   type: FETCH_TOKEN,
-  token: result,
+  payload: result,
 });
 
-export default setToken;
+export const removeToken = () => ({
+  type: REMOVE_TOKEN,
+  token: '',
+});

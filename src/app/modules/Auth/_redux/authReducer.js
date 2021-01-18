@@ -7,17 +7,20 @@ const initialState = {
 };
 
 export const FETCH_TOKEN = 'FETCH_TOKEN';
+export const REMOVE_TOKEN = 'REMOVE_TOKEN';
 
 export const tokenReducer = persistReducer(
-  { storage, key: 'v713-demo1-auth', whitelist: ['username', 'token'] },
+  { storage, key: 'appointment-auth', whitelist: ['username', 'token'] },
   (state = initialState, action) => {
     switch (action.type) {
       case FETCH_TOKEN:
         return {
           ...state,
-          username: action.username,
-          token: action.token,
+          token: action.payload.token,
+          username: action.payload.username,
         };
+      case REMOVE_TOKEN:
+        return initialState;
       default:
         return state;
     }

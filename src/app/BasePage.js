@@ -8,7 +8,7 @@ export default function BasePage() {
   return (
     <Suspense>
       <Switch>
-        <Redirect exact from="/" to="/Register" />
+        <Redirect exact from="/" to="/Appointments" />
         <Route path="/Appointments" component={Appointments} />
       </Switch>
     </Suspense>
