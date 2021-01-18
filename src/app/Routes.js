@@ -1,11 +1,19 @@
 import React from 'react';
 import { Redirect, Switch, Route } from 'react-router-dom';
+import { shallowEqual, useSelector } from 'react-redux';
 import { AuthPage } from './modules/Auth';
 // import Login from './modules/Auth/pages/Login';
 import BasePage from './BasePage';
 
 const Routes = () => {
-  const isAuthorized = false;
+  const { isAuthorized } = useSelector(
+    ({ tokenStore }) => ({
+      isAuthorized: tokenStore.token !== '',
+    }),
+    shallowEqual,
+  );
+  console.log({ isAuthorized });
+
   return (
     <Switch>
       {!isAuthorized ? (
