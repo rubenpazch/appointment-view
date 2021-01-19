@@ -43,8 +43,7 @@ const WrapperSignUp = styled.div`
 
 const WrapperLogin = styled.div`  
   width: 100vw;
-  height: 100%;
-  background-color: yellow;
+  height: 100%;  
 `;
 
 // eslint-disable-next-line import/prefer-default-export
