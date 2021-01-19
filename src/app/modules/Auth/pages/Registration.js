@@ -13,11 +13,11 @@ import {
 import * as Yup from 'yup';
 import { setToken } from '../_redux/authAction';
 // import * as auth from '../_redux/authRedux';
-import { login } from '../_redux/authService';
+import { register } from '../_redux/authService';
 
 const Registration = () => {
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   useEffect(() => {
     setLoading(false);
@@ -46,14 +46,17 @@ const Registration = () => {
     <div>
       <h1>Any place in your app!</h1>
       <Formik
-        initialValues={{ username: '', password: '' }}
+        initialValues={{ 
+          email: '', 
+          username: '', 
+          password: '' }}
         validationSchema={LoginSchema}
         onSubmit={(values, { setSubmitting, setStatus }) => {
           enableLoading();
           setTimeout(() => {
-            login(values.username, values.password)
-              .then(({ data: { token, username } }) => {
-                dispatch(setToken({ token, username }));
+            register(values.email, values.username, values.password)
+              .then(() => {
+                // dispatch(setToken());
                 disableLoading();
               })
               .catch(() => {
@@ -67,12 +70,14 @@ const Registration = () => {
         {({ isSubmitting, status }) => (
           <Form>
             <h1>{status}</h1>
+            <Field type="email" name="email" />
+            <ErrorMessage name="email" component="div" />
             <Field type="username" name="username" />
-            <ErrorMessage name="username" component="div" />
+            <ErrorMessage name="username" component="div" />            
             <Field type="password" name="password" />
             <ErrorMessage name="password" component="div" />
             <button type="submit" disabled={isSubmitting}>
-              <span>Sign In</span>
+              <span>Sign Up</span>
               {loading && (
               <div className="spinner-border text-primary" role="status">
                 <span className="sr-only">Loading...</span>
