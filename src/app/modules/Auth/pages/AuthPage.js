@@ -2,75 +2,89 @@ import React from 'react';
 import {
   Link, Switch, Redirect, Route,
 } from 'react-router-dom';
+import styled from 'styled-components';
 import toAbsoluteUrl from '../../../../helpers/assetsHelpers';
 import Login from './Login';
 // import ContentRoute from '../../../../layout/components/ContentRoute';
 import Registration from './Registration';
 // import ForgotPassword from './ForgotPassword';
 
+const Wrapper = styled.div`  
+  min-height: 100vh;
+`;
+
+const MainContent = styled.div`  
+  min-height: 100vh;
+`;
+
+const LeftAside = styled.div`
+  background-color: green;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 450px;
+  background-image: url(${toAbsoluteUrl('/media/bg/bg-5.jpg')});  
+`;
+
+const ContentAside = styled.div`  
+  min-width: 60vw;
+`;
+
+const ContentLeftAside = styled.div`
+  text-shadow: 2px 2px 5px white;
+
+  a {
+    color: black;
+  }
+`;
+
+const WrapperSignUp = styled.div`  
+  display: block;
+`;
+
+const WrapperLogin = styled.div`  
+  width: 100vw;
+  height: 100%;
+`;
+
 // eslint-disable-next-line import/prefer-default-export
 export function AuthPage() {
   return (
     <>
-      <div>
-        {/* begin::Login */}
-        <div id="kt_login">
-          {/* begin::Aside */}
-          <div style={{
-            backgroundImage: `url(${toAbsoluteUrl('/media/bg/bg-4.jpg')})`,
-          }}
-          >
-            {/* begin: Aside Container */}
-            <div>
-              {/* start:: Aside header */}
+      <Wrapper className="d-flex flex-column">
+        <MainContent className="d-flex flex-column flex-sm-column flex-md-column flex-lg-row">
+          <LeftAside className="d-flex">
+            <ContentLeftAside
+              className="d-flex flex-column flex-sm-column flex-md-column flex-lg-column justify-content-between"
+            >
               <Link to="/">
                 <img
                   alt="Logo"
-                  className="max-h-70px"
-                  src={toAbsoluteUrl('/media/logos/stars.png')}
+                  src={toAbsoluteUrl('/media/logos/logo.png')}
                 />
               </Link>
-              {/* end:: Aside header */}
-
-              {/* start:: Aside content */}
-              <div>
+              <div className="d-flex flex-column m-3">
                 <h3>
                   Welcome to Clinic Appointment
                 </h3>
                 <p>
-                  The ultimate Bootstrap & React 17 admin theme framework for
-                  next generation web apps.
+                  Managment of clinical Appointment, Multiple Services, Patient Registration.
                 </p>
               </div>
-              {/* end:: Aside content */}
-
-              {/* start:: Aside footer for desktop */}
-              <div>
+              <div className="d-flex flex-row d-sm-none justify-content-between m-3">
                 <div>
-                  &copy; Clinic Appointment
+                  &copy; Appointment App
                 </div>
                 <div>
-                  <Link to="/terms">
-                    Privacy
-                  </Link>
-                  <Link to="/terms">
-                    Legal
-                  </Link>
                   <Link to="/terms">
                     Contact
                   </Link>
                 </div>
               </div>
-              {/* end:: Aside footer for desktop */}
-            </div>
-            {/* end: Aside Container */}
-          </div>
-          {/* begin::Aside */}
+            </ContentLeftAside>
+          </LeftAside>
 
-          {/* begin::Content */}
-          <div>
-            {/* begin::Content header */}
-            <div>
+          <ContentAside className="d-flex flex-column overflow-hidden">
+            <WrapperSignUp className="d-flex flex-row justify-content-end pr-3 pt-3">
               <span>
                 Dont have an account yet?
               </span>
@@ -80,11 +94,8 @@ export function AuthPage() {
               >
                 Sign Up!
               </Link>
-            </div>
-            {/* end::Content header */}
-
-            {/* begin::Content body */}
-            <div>
+            </WrapperSignUp>
+            <WrapperLogin className="d-flex align-items-center">
               <Switch>
                 <Route path="/auth/login">
                   <Login />
@@ -95,32 +106,25 @@ export function AuthPage() {
                 <Redirect from="/auth" exact to="/auth/login" />
                 <Redirect to="/auth/login" />
               </Switch>
-            </div>
-            {/* end::Content body */}
-
-            {/* begin::Mobile footer */}
-            <div>
-              <div>
-                &copy; 2020 Appointment Clinic
+            </WrapperLogin>
+            <div className="d-flex d-lg-none flex-column flex-sm-row justify-content-between align-items-center mt-5 p-5">
+              <div className="text-dark-50 font-weight-bold order-2 order-sm-1 my-2">
+                &copy; Appointment App
               </div>
-              <div>
-                <Link to="/terms">
-                  Privacy
-                </Link>
-                <Link to="/terms">
-                  Legal
-                </Link>
-                <Link to="/terms">
+              <div className="d-flex order-1 order-sm-2 my-2">
+                <Link
+                  to="/terms"
+                  className="text-dark-75 text-hover-primary ml-4"
+                >
                   Contact
                 </Link>
               </div>
             </div>
-            {/* end::Mobile footer */}
-          </div>
-          {/* end::Content */}
-        </div>
-        {/* end::Login */}
-      </div>
+          </ContentAside>
+
+        </MainContent>
+
+      </Wrapper>
     </>
   );
 }

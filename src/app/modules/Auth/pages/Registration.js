@@ -1,7 +1,8 @@
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/forbid-prop-types */
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { Button } from '@material-ui/core';
+// import { useDispatch } from 'react-redux';
 // import { Link } from 'react-router-dom';
 import {
   Formik,
@@ -11,7 +12,7 @@ import {
 } from 'formik';
 // import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { setToken } from '../_redux/authAction';
+// import { setToken } from '../_redux/authAction';
 // import * as auth from '../_redux/authRedux';
 import { register } from '../_redux/authService';
 
@@ -46,10 +47,11 @@ const Registration = () => {
     <div>
       <h1>Any place in your app!</h1>
       <Formik
-        initialValues={{ 
-          email: '', 
-          username: '', 
-          password: '' }}
+        initialValues={{
+          email: '',
+          username: '',
+          password: '',
+        }}
         validationSchema={LoginSchema}
         onSubmit={(values, { setSubmitting, setStatus }) => {
           enableLoading();
@@ -73,7 +75,7 @@ const Registration = () => {
             <Field type="email" name="email" />
             <ErrorMessage name="email" component="div" />
             <Field type="username" name="username" />
-            <ErrorMessage name="username" component="div" />            
+            <ErrorMessage name="username" component="div" />
             <Field type="password" name="password" />
             <ErrorMessage name="password" component="div" />
             <button type="submit" disabled={isSubmitting}>
@@ -85,6 +87,9 @@ const Registration = () => {
               )}
             </button>
 
+            <Button variant="contained" color="primary">
+              Primary Button
+            </Button>
           </Form>
         )}
       </Formik>
