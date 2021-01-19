@@ -44,6 +44,7 @@ const WrapperSignUp = styled.div`
 const WrapperLogin = styled.div`  
   width: 100vw;
   height: 100%;
+  background-color: yellow;
 `;
 
 // eslint-disable-next-line import/prefer-default-export
@@ -70,7 +71,7 @@ export function AuthPage() {
                   Managment of clinical Appointment, Multiple Services, Patient Registration.
                 </p>
               </div>
-              <div className="d-flex flex-row d-sm-none justify-content-between m-3">
+              <div className="d-flex flex-row justify-content-between m-3">
                 <div>
                   &copy; Appointment App
                 </div>
@@ -84,13 +85,14 @@ export function AuthPage() {
           </LeftAside>
 
           <ContentAside className="d-flex flex-column overflow-hidden">
-            <WrapperSignUp className="d-flex flex-row justify-content-end pr-3 pt-3">
+            <WrapperSignUp className="d-flex flex-row justify-content-end pr-5 pt-5">
               <span>
                 Dont have an account yet?
               </span>
               <Link
                 to="/auth/registration"
                 id="kt_login_signup"
+                className="pl-3"
               >
                 Sign Up!
               </Link>

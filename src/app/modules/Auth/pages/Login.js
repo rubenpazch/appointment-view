@@ -44,7 +44,6 @@ const Login = () => {
 
   return (
     <div>
-      <h1>Any place in your app!</h1>
       <Formik
         initialValues={{ username: '', password: '' }}
         validationSchema={LoginSchema}
@@ -71,6 +70,7 @@ const Login = () => {
             <ErrorMessage name="username" component="div" />
             <Field type="password" name="password" />
             <ErrorMessage name="password" component="div" />
+
             <button type="submit" disabled={isSubmitting}>
               <span>Sign In</span>
               {loading && (
