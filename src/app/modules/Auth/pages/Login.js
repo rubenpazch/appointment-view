@@ -86,7 +86,7 @@ const Login = () => {
       }, 1400);
     },
   });
-  console.log({ formik });
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <WrapperLogin className="d-flex flex-column align-items-center">

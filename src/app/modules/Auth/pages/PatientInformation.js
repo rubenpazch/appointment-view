@@ -40,7 +40,7 @@ const WrapperButton = styled.div`
   max-width: 200px;
 `;
 
-const Registration = () => {
+const PatientInformation = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
@@ -139,4 +139,4 @@ const Registration = () => {
 // Login.propTypes = {
 //   props: PropTypes.object,
 // };
-export default Registration;
+export default PatientInformation;

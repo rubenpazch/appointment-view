@@ -6,7 +6,8 @@ import styled from 'styled-components';
 import toAbsoluteUrl from '../../../../helpers/assetsHelpers';
 import Login from './Login';
 // import ContentRoute from '../../../../layout/components/ContentRoute';
-import Registration from './Registration';
+// import Registration from './Registration';
+import StepperRegistration from './StepperRegistration';
 // import ForgotPassword from './ForgotPassword';
 
 const Wrapper = styled.div`  
@@ -102,7 +103,7 @@ export function AuthPage() {
                   <Login />
                 </Route>
                 <Route path="/auth/registration">
-                  <Registration />
+                  <StepperRegistration />
                 </Route>
                 <Redirect from="/auth" exact to="/auth/login" />
                 <Redirect to="/auth/login" />
