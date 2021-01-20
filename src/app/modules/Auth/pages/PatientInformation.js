@@ -18,20 +18,16 @@ import {
 } from 'formik';
 // import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { setToken } from '../_redux/authAction';
+import { setPatientInformation } from '../_redux/authAction';
 // import * as auth from '../_redux/authRedux';
-import { login } from '../_redux/authService';
+import { registerPeople } from '../_redux/authService';
 
-const WrapperUsername = styled.div` 
+const WrapperField = styled.div` 
   padding: 15px;
 `;
 
 const WrapperLogin = styled.div`  
   min-width: 70vw;  
-`;
-
-const WrapperPassword = styled.div`  
-  padding: 15px;
 `;
 
 const WrapperButton = styled.div`
@@ -57,25 +53,57 @@ const PatientInformation = () => {
   };
 
   const LoginSchema = Yup.object().shape({
-    username: Yup.string()
+    firstname: Yup.string()
       .min(3, 'Minimum 3 symbols')
       .max(50, 'Maximum 50 symbols')
       .required('this field is required'),
-    password: Yup.string()
+    lastname: Yup.string()
+      .min(3, 'Minimum 3 symbols')
+      .max(50, 'Maximum 50 symbols')
+      .required('this field is required'),
+    documentid: Yup.string()
+      .min(3, 'Minimum 3 symbols')
+      .max(50, 'Maximum 50 symbols')
+      .required('this field is required'),
+    phone: Yup.string()
+      .min(3, 'Minimum 3 symbols')
+      .max(50, 'Maximum 50 symbols')
+      .required('this field is required'),
+    historynumber: Yup.string()
       .min(3, 'Minimum 3 symbols')
       .max(50, 'Maximum 50 symbols')
       .required('this field is required'),
   });
 
   const formik = useFormik({
-    initialValues: { username: '', password: '' },
+    initialValues: {
+      firstname: '', lastname: '', documentid: '', phone: '', historynumber: '',
+    },
     validationSchema: LoginSchema,
     onSubmit: values => {
       enableLoading();
       setTimeout(() => {
-        login(values.username, values.password)
-          .then(({ data: { token, username } }) => {
-            dispatch(setToken({ token, username }));
+        registerPeople(
+          values.firstname,
+          values.lastname,
+          values.documentid,
+          values.phone,
+          values.historynumber,
+        )
+          .then(({
+            data: {
+              data: {
+                attributes: {
+                  firstName, lastName, documentId, phone, historyNumber,
+                },
+              },
+            },
+          }) => {
+            dispatch(
+              setPatientInformation({
+                firstName, lastName, documentId, phone, historyNumber,
+              }),
+            );
             disableLoading();
           })
           .catch(() => {
@@ -90,37 +118,81 @@ const PatientInformation = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <WrapperLogin className="d-flex flex-column align-items-center">
-        <WrapperUsername className="d-flex flex-row justify-content-center">
+
+        <WrapperField className="d-flex flex-row justify-content-center">
           <FormControl>
-            <InputLabel htmlFor="username">username</InputLabel>
+            <InputLabel htmlFor="firstname">First Name</InputLabel>
             <Input
-              id="username"
+              id="firstname"
               type="text"
               onChange={formik.handleChange}
-              value={formik.values.username}
+              value={formik.values.firstname}
               aria-describedby="component-error-text"
             />
-            {formik.errors.username ? <FormHelperText id="component-error-text" error>{formik.errors.username}</FormHelperText> : null}
+            {formik.errors.firstname ? <FormHelperText id="component-error-text" error>{formik.errors.firstname}</FormHelperText> : null}
 
           </FormControl>
-        </WrapperUsername>
+        </WrapperField>
 
-        <WrapperPassword className="d-flex flex-row justify-content-center">
+        <WrapperField className="d-flex flex-row justify-content-center">
           <FormControl>
-            <InputLabel htmlFor="password">password</InputLabel>
+            <InputLabel htmlFor="lastName">Last Name</InputLabel>
             <Input
-              id="password"
-              type="password"
+              id="lastname"
+              type="text"
               onChange={formik.handleChange}
-              value={formik.values.password}
+              value={formik.values.lastname}
               aria-describedby="component-error-text"
             />
-            {formik.errors.password ? <FormHelperText id="component-error-text" error>{formik.errors.password}</FormHelperText> : null}
+            {formik.errors.lastname ? <FormHelperText id="component-error-text" error>{formik.errors.lastname}</FormHelperText> : null}
           </FormControl>
-        </WrapperPassword>
+        </WrapperField>
+
+        <WrapperField className="d-flex flex-row justify-content-center">
+          <FormControl>
+            <InputLabel htmlFor="documentid">Document ID</InputLabel>
+            <Input
+              id="documentid"
+              type="text"
+              onChange={formik.handleChange}
+              value={formik.values.documentid}
+              aria-describedby="component-error-text"
+            />
+            {formik.errors.documentid ? <FormHelperText id="component-error-text" error>{formik.errors.documentid}</FormHelperText> : null}
+          </FormControl>
+        </WrapperField>
+
+        <WrapperField className="d-flex flex-row justify-content-center">
+          <FormControl>
+            <InputLabel htmlFor="phone">Phone</InputLabel>
+            <Input
+              id="phone"
+              type="text"
+              onChange={formik.handleChange}
+              value={formik.values.phone}
+              aria-describedby="component-error-text"
+            />
+            {formik.errors.phone ? <FormHelperText id="component-error-text" error>{formik.errors.phone}</FormHelperText> : null}
+          </FormControl>
+        </WrapperField>
+
+        <WrapperField className="d-flex flex-row justify-content-center">
+          <FormControl>
+            <InputLabel htmlFor="historynumber">History Number</InputLabel>
+            <Input
+              id="historynumber"
+              type="text"
+              onChange={formik.handleChange}
+              value={formik.values.historynumber}
+              aria-describedby="component-error-text"
+            />
+            {formik.errors.historynumber ? <FormHelperText id="component-error-text" error>{formik.errors.historynumber}</FormHelperText> : null}
+          </FormControl>
+        </WrapperField>
+
         <WrapperButton className="d-flex flex-row justify-content-start ">
           <Button variant="contained" color="primary" type="submit">
-            Login
+            Save
           </Button>
           {loading && (
           <CircularProgress color="secondary" />

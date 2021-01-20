@@ -18,11 +18,9 @@ import RegistrationResume from './RegistrationResume';
 
 const WrapperStepper = styled.div`
   width: 70vw;
-  background-color: red;
 `;
 
 const WrapperStepNavigation = styled.div`
-  background-color: green;
   padding: 15px 0 0 30px;
 `;
 
