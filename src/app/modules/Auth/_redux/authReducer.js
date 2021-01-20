@@ -5,11 +5,13 @@ const initialState = {
   token: '',
   username: '',
   patient: '',
+  userInformation: '',
 };
 
 export const FETCH_TOKEN = 'FETCH_TOKEN';
 export const REMOVE_TOKEN = 'REMOVE_TOKEN';
 export const PATIENT_INFORMATION = 'PATIENT_INFORMATION';
+export const USER_INFORMATION = 'USER_INFORMATION';
 
 export const tokenReducer = persistReducer(
   { storage, key: 'appointment-auth', whitelist: ['username', 'token'] },
@@ -25,6 +27,11 @@ export const tokenReducer = persistReducer(
         return {
           ...state,
           patient: action.payload,
+        };
+      case USER_INFORMATION:
+        return {
+          ...state,
+          userInformation: action.payload,
         };
       case REMOVE_TOKEN:
         return initialState;

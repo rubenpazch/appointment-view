@@ -8,16 +8,16 @@ export function login(username, password) {
   return axios.post(LOGIN_URL, { user: { username, password } });
 }
 
-export function register(email, username, password) {
+export function register(email, username, password, personid) {
   return axios.post(REGISTER_URL, {
     user: {
       email,
       username,
       password,
       password_digest: password,
-      role_id: 6,
-      department_id: 11,
-      person_id: 21,
+      role_id: 9,
+      department_id: 15,
+      person_id: personid,
     },
   });
 }

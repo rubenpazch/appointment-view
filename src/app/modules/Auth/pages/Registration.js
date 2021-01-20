@@ -11,27 +11,23 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // import { Link } from 'react-router-dom';
 import {
   useFormik,
 } from 'formik';
 // import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { setToken } from '../_redux/authAction';
-// import * as auth from '../_redux/authRedux';
-import { login } from '../_redux/authService';
+import { setUserInformation } from '../_redux/authAction';
 
-const WrapperUsername = styled.div` 
+import { register } from '../_redux/authService';
+
+const WrapperField = styled.div` 
   padding: 15px;
 `;
 
 const WrapperLogin = styled.div`  
   min-width: 70vw;  
-`;
-
-const WrapperPassword = styled.div`  
-  padding: 15px;
 `;
 
 const WrapperButton = styled.div`
@@ -43,6 +39,7 @@ const WrapperButton = styled.div`
 const Registration = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const { patient } = useSelector(state => state.tokenStore);
 
   useEffect(() => {
     setLoading(false);
@@ -57,6 +54,10 @@ const Registration = () => {
   };
 
   const LoginSchema = Yup.object().shape({
+    email: Yup.string()
+      .min(3, 'Minimum 3 symbols')
+      .max(50, 'Maximum 50 symbols')
+      .required('this field is required'),
     username: Yup.string()
       .min(3, 'Minimum 3 symbols')
       .max(50, 'Maximum 50 symbols')
@@ -68,14 +69,18 @@ const Registration = () => {
   });
 
   const formik = useFormik({
-    initialValues: { username: '', password: '' },
+    initialValues: { email: '', username: '', password: '' },
     validationSchema: LoginSchema,
     onSubmit: values => {
       enableLoading();
       setTimeout(() => {
-        login(values.username, values.password)
-          .then(({ data: { token, username } }) => {
-            dispatch(setToken({ token, username }));
+        console.log({ patient });
+        /* eslint-disable camelcase */
+        register(values.email, values.username, values.password, patient.id)
+          .then(({ data: { data: { attributes: { email, username, role_id } } } }) => {
+            dispatch(setUserInformation({
+              email, username, role_id,
+            }));
             disableLoading();
           })
           .catch(() => {
@@ -90,7 +95,23 @@ const Registration = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <WrapperLogin className="d-flex flex-column align-items-center">
-        <WrapperUsername className="d-flex flex-row justify-content-center">
+
+        <WrapperField className="d-flex flex-row justify-content-center">
+          <FormControl>
+            <InputLabel htmlFor="email">email</InputLabel>
+            <Input
+              id="email"
+              type="text"
+              onChange={formik.handleChange}
+              value={formik.values.email}
+              aria-describedby="component-error-text"
+            />
+            {formik.errors.email ? <FormHelperText id="component-error-text" error>{formik.errors.email}</FormHelperText> : null}
+
+          </FormControl>
+        </WrapperField>
+
+        <WrapperField className="d-flex flex-row justify-content-center">
           <FormControl>
             <InputLabel htmlFor="username">username</InputLabel>
             <Input
@@ -103,9 +124,9 @@ const Registration = () => {
             {formik.errors.username ? <FormHelperText id="component-error-text" error>{formik.errors.username}</FormHelperText> : null}
 
           </FormControl>
-        </WrapperUsername>
+        </WrapperField>
 
-        <WrapperPassword className="d-flex flex-row justify-content-center">
+        <WrapperField className="d-flex flex-row justify-content-center">
           <FormControl>
             <InputLabel htmlFor="password">password</InputLabel>
             <Input
@@ -117,10 +138,10 @@ const Registration = () => {
             />
             {formik.errors.password ? <FormHelperText id="component-error-text" error>{formik.errors.password}</FormHelperText> : null}
           </FormControl>
-        </WrapperPassword>
+        </WrapperField>
         <WrapperButton className="d-flex flex-row justify-content-start ">
           <Button variant="contained" color="primary" type="submit">
-            Login
+            Save
           </Button>
           {loading && (
           <CircularProgress color="secondary" />
