@@ -96,12 +96,13 @@ const PatientInformation = () => {
                 attributes: {
                   firstName, lastName, documentId, phone, historyNumber,
                 },
+                id,
               },
             },
           }) => {
             dispatch(
               setPatientInformation({
-                firstName, lastName, documentId, phone, historyNumber,
+                firstName, lastName, documentId, phone, historyNumber, id,
               }),
             );
             disableLoading();
