@@ -1,8 +1,6 @@
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/forbid-prop-types */
 import React, { useState, useEffect } from 'react';
-// import TextField from '@material-ui/core/TextField';
-
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
@@ -12,14 +10,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-// import { Link } from 'react-router-dom';
 import {
   useFormik,
 } from 'formik';
 // import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { setToken } from '../_redux/authAction';
-// import * as auth from '../_redux/authRedux';
 import { login } from '../_redux/authService';
 
 const WrapperUsername = styled.div` 

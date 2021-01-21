@@ -4,6 +4,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { Spinner } from 'react-bootstrap';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
 
 import Routes from './app/Routes';
 // import Login from './app/modules/Auth/pages/Login';
@@ -14,7 +16,9 @@ function App({ persistor, store }) {
       <PersistGate persistor={persistor}>
         <React.Suspense fallback={<Spinner animation="border" />}>
           <BrowserRouter>
-            <Routes />
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <Routes />
+            </MuiPickersUtilsProvider>
           </BrowserRouter>
         </React.Suspense>
       </PersistGate>
