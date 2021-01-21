@@ -1,12 +1,20 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import 'moment/locale/en-in';
+// eslint-disable-next-line no-unused-vars
+import { useDispatch, useSelector } from 'react-redux';
 import Logout from '../Auth/pages/Logout';
+// eslint-disable-next-line no-unused-vars
 import AppointmentDetail from './pages/AppointmentDetail';
+// eslint-disable-next-line no-unused-vars
+import { getListAppointmentByDateService } from './_redux/appointmentService';
+import { setListByDateService } from './_redux/appointmentAction';
+// import { appointmentReducer } from './_redux/appointmentReducer';
 
 moment.locale('en');
 
@@ -28,15 +36,25 @@ const ContentWrapper = styled.div`
 const Appointment = () => {
   // const [loading, setLoading] = useState(true);
   const loading = true;
-  const [date] = useState(new Date());
-  const changeDate = selectedDate => {
-    console.log(selectedDate._i);
-    console.log({ selectedDate });
-  };
+  const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
   const [locale] = useState('en');
-  // const [anchorEl, setAnchorEl] = useState(null);
+  const { filterappointmentsby } = useSelector(state => state.appointmentStore);
+  const dispatch = useDispatch();
 
-  // setLocale('es');
+  const changeDate = selectedDate => {
+    setDate(moment(selectedDate).format('YYYY-MM-DD'));
+  };
+  useEffect(() => {
+    getListAppointmentByDateService('66', date)
+      .then(({ data }) => {
+        dispatch(setListByDateService(data));
+      })
+      .catch(error => {
+        console.log({ error });
+      // setSubmitting(false);
+      // setStatus('not working');
+      });
+  }, [date]);
 
   return (
     <AppointmentWrapper className="d-flex flex-row">
@@ -53,11 +71,18 @@ const Appointment = () => {
         </MuiPickersUtilsProvider>
       </LeftSideBar>
       <ContentWrapper className="d-flex flex-column">
-        <h1>Today</h1>
-        <AppointmentDetail service="cirugia" patient="Carlos Paz" office="Consultorio 1" time="8:00" />
-        <AppointmentDetail service="cirugia" patient="Carlos Paz" office="Consultorio 1" time="8:00" />
+        { filterappointmentsby !== null && filterappointmentsby.length > 0
+          ? filterappointmentsby.map(item => (
+            <AppointmentDetail
+              key={item.id}
+              time={moment.utc(item.attributes.startTime).format('HH:mm')}
+              patient="patient x"
+              service="service z"
+              office="office s"
+            />
+          ))
+          : <h1>no data</h1> }
         { loading ? <Logout /> : null }
-
       </ContentWrapper>
     </AppointmentWrapper>
   );
