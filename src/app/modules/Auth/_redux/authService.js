@@ -3,6 +3,7 @@ import axios from 'axios';
 export const LOGIN_URL = 'http://localhost:3000/api/v1/tokens';
 export const REGISTER_URL = 'http://localhost:3000/api/v1/users';
 export const PEOPLE_REGISTER = 'http://localhost:3000/api/v1/people';
+export const GET_DEPARTMENTS = 'http://localhost:3000/api/v1/departments';
 
 export function login(username, password) {
   return axios.post(LOGIN_URL, { user: { username, password } });
@@ -32,4 +33,8 @@ export function registerPeople(firstName, lastName, documentId, phone, historyNu
       historyNumber,
     },
   });
+}
+
+export function getDepartments() {
+  return axios.get(GET_DEPARTMENTS);
 }

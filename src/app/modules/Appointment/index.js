@@ -6,15 +6,19 @@ import styled from 'styled-components';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import 'moment/locale/en-in';
-// eslint-disable-next-line no-unused-vars
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import NativeSelect from '@material-ui/core/NativeSelect';
 import { useDispatch, useSelector } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
+
 import Logout from '../Auth/pages/Logout';
-// eslint-disable-next-line no-unused-vars
 import AppointmentDetail from './pages/AppointmentDetail';
-// eslint-disable-next-line no-unused-vars
 import { getListAppointmentByDateService } from './_redux/appointmentService';
 import { setListByDateService } from './_redux/appointmentAction';
-// import { appointmentReducer } from './_redux/appointmentReducer';
+import { setDepartments } from '../Auth/_redux/authAction';
+import { getDepartments } from '../Auth/_redux/authService';
 
 moment.locale('en');
 
@@ -33,19 +37,38 @@ const ContentWrapper = styled.div`
   border: 1px dashed black;
 `;
 
+const useStyles = makeStyles(theme => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+}));
+
 const Appointment = () => {
   // const [loading, setLoading] = useState(true);
   const loading = true;
   const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
   const [locale] = useState('en');
   const { filterappointmentsby } = useSelector(state => state.appointmentStore);
+  const { departments } = useSelector(state => state.tokenStore);
+  const classes = useStyles();
   const dispatch = useDispatch();
+
+  const [selectedDepartment, setSelectedDepartment] = React.useState(0);
+
+  const handleChange = event => {
+    setSelectedDepartment(event.target.value);
+  };
 
   const changeDate = selectedDate => {
     setDate(moment(selectedDate).format('YYYY-MM-DD'));
   };
+
   useEffect(() => {
-    getListAppointmentByDateService('66', date)
+    getListAppointmentByDateService(selectedDepartment, date)
       .then(({ data }) => {
         dispatch(setListByDateService(data));
       })
@@ -54,8 +77,18 @@ const Appointment = () => {
       // setSubmitting(false);
       // setStatus('not working');
       });
-  }, [date]);
+  }, [date, selectedDepartment]);
 
+  useEffect(() => {
+    getDepartments()
+      .then(({ data }) => {
+        dispatch(setDepartments(data));
+      }).catch(error => {
+        console.log({ error });
+        // setSubmitting(false);
+        // setStatus('not working');
+      });
+  }, []);
   return (
     <AppointmentWrapper className="d-flex flex-row">
       <LeftSideBar>
@@ -69,6 +102,23 @@ const Appointment = () => {
             onChange={changeDate}
           />
         </MuiPickersUtilsProvider>
+        <FormControl className={classes.formControl}>
+          <InputLabel shrink htmlFor="age-native-label-placeholder">
+            Age
+          </InputLabel>
+          <NativeSelect
+            value={selectedDepartment}
+            onChange={handleChange}
+          >
+            <option value="0">Select Department</option>
+            {departments !== null
+              ? departments.map(item => (
+                <option value={item.id} key={item.id}>{item.attributes.name}</option>
+              ))
+              : null}
+          </NativeSelect>
+          <FormHelperText>Label + placeholder</FormHelperText>
+        </FormControl>
       </LeftSideBar>
       <ContentWrapper className="d-flex flex-column">
         { filterappointmentsby !== null && filterappointmentsby.length > 0
