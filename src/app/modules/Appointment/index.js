@@ -17,8 +17,8 @@ import Logout from '../Auth/pages/Logout';
 import AppointmentDetail from './pages/AppointmentDetail';
 import { getListAppointmentByDateService } from './_redux/appointmentService';
 import { setListByDateService } from './_redux/appointmentAction';
-import { setDepartments } from '../Auth/_redux/authAction';
-import { getDepartments } from '../Auth/_redux/authService';
+import { setDepartments, setDoctorCalendars } from '../Auth/_redux/authAction';
+import { getDepartments, getDoctorCalendars } from '../Auth/_redux/authService';
 
 moment.locale('en');
 
@@ -54,11 +54,27 @@ const Appointment = () => {
   const [locale] = useState('en');
   const { filterappointmentsby } = useSelector(state => state.appointmentStore);
   const { departments } = useSelector(state => state.tokenStore);
+  const { doctorcalendars } = useSelector(state => state.tokenStore);
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const [selectedDepartment, setSelectedDepartment] = React.useState(0);
+  const [selectedDepartment, setSelectedDepartment] = useState(0);
 
+  if (departments !== null){
+    const resultado = departments.find( item => item.id === selectedDepartment );
+    if (typeof (resultado) !== 'undefined'){
+      console.log('resultado departments => ', resultado);
+    }
+  }
+
+  if(doctorcalendars !== null){
+    const resultadoDC = doctorcalendars.filter( item => item.attributes.startDate === date );
+    if(typeof (resultadoDC) !== 'undefined'){
+      console.log('resultado doctorcalendars',resultadoDC);
+    }
+  }
+
+  
   const handleChange = event => {
     setSelectedDepartment(event.target.value);
   };
@@ -66,7 +82,7 @@ const Appointment = () => {
   const changeDate = selectedDate => {
     setDate(moment(selectedDate).format('YYYY-MM-DD'));
   };
-
+  // console.log(doctorcalendars);
   useEffect(() => {
     getListAppointmentByDateService(selectedDepartment, date)
       .then(({ data }) => {
@@ -89,6 +105,18 @@ const Appointment = () => {
         // setStatus('not working');
       });
   }, []);
+
+  useEffect(() => {
+    getDoctorCalendars()
+      .then(({ data }) => {
+        dispatch(setDoctorCalendars(data));
+      }).catch(error => {
+        console.log({ error });
+        // setSubmitting(false);doctorcalendars
+        // setStatus('not working');
+      });
+  }, []);
+
   return (
     <AppointmentWrapper className="d-flex flex-row">
       <LeftSideBar>

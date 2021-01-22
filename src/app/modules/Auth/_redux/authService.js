@@ -4,6 +4,7 @@ export const LOGIN_URL = 'http://localhost:3000/api/v1/tokens';
 export const REGISTER_URL = 'http://localhost:3000/api/v1/users';
 export const PEOPLE_REGISTER = 'http://localhost:3000/api/v1/people';
 export const GET_DEPARTMENTS = 'http://localhost:3000/api/v1/departments';
+export const GET_DOCTOR_CALENDAR = 'http://localhost:3000/api/v1/doctor_calendars';
 
 export function login(username, password) {
   return axios.post(LOGIN_URL, { user: { username, password } });
@@ -37,4 +38,8 @@ export function registerPeople(firstName, lastName, documentId, phone, historyNu
 
 export function getDepartments() {
   return axios.get(GET_DEPARTMENTS);
+}
+
+export function getDoctorCalendars() {
+  return axios.get(GET_DOCTOR_CALENDAR);
 }

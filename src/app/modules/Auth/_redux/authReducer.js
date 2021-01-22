@@ -2,11 +2,12 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 const initialState = {
-  token: '',
+  token: null,
   username: '',
-  patient: '',
-  userInformation: '',
+  patient: null,
+  userInformation: null,
   departments: null,
+  doctorcalendars: null,
 };
 
 export const FETCH_TOKEN = 'FETCH_TOKEN';
@@ -14,6 +15,7 @@ export const REMOVE_TOKEN = 'REMOVE_TOKEN';
 export const PATIENT_INFORMATION = 'PATIENT_INFORMATION';
 export const USER_INFORMATION = 'USER_INFORMATION';
 export const FETCH_GET_DEPARTMENTS = 'FETCH_GET_DEPARTMENTS';
+export const FETCH_DOCTOR_CALENDARS = 'FETCH_DOCTOR_CALENDARS';
 
 export const tokenReducer = persistReducer(
   { storage, key: 'appointment-auth', whitelist: ['username', 'token'] },
@@ -39,6 +41,11 @@ export const tokenReducer = persistReducer(
         return {
           ...state,
           departments: action.payload,
+        };
+      case FETCH_DOCTOR_CALENDARS:
+        return {
+          ...state,
+          doctorcalendars: action.payload,
         };
       case REMOVE_TOKEN:
         return initialState;

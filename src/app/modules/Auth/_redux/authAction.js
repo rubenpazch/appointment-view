@@ -1,5 +1,10 @@
 import {
-  FETCH_TOKEN, REMOVE_TOKEN, PATIENT_INFORMATION, USER_INFORMATION, FETCH_GET_DEPARTMENTS,
+  FETCH_TOKEN, 
+  REMOVE_TOKEN, 
+  PATIENT_INFORMATION, 
+  USER_INFORMATION, 
+  FETCH_GET_DEPARTMENTS, 
+  FETCH_DOCTOR_CALENDARS
 } from './authReducer';
 
 export const setToken = result => ({
@@ -24,5 +29,10 @@ export const setUserInformation = result => ({
 
 export const setDepartments = result => ({
   type: FETCH_GET_DEPARTMENTS,
+  payload: result.data,
+});
+
+export const setDoctorCalendars = result => ({
+  type: FETCH_DOCTOR_CALENDARS,
   payload: result.data,
 });
