@@ -23,18 +23,17 @@ import { getDepartments, getDoctorCalendars } from '../Auth/_redux/authService';
 moment.locale('en');
 
 const AppointmentWrapper = styled.div`  
-  height: 100vh;
-  border: 1px dashed black;
+  width: 100%;
 `;
 
-const LeftSideBar = styled.div`  
-  width: 35vw;
-  border: 1px dashed black;
+const LeftSideBar = styled.div`
+  width: 30%;
 `;
 
-const ContentWrapper = styled.div`  
-  width: 65vw;
-  border: 1px dashed black;
+const ContentWrapper = styled.div`
+  width: 65%;
+  padding: 15px 0 0 15px;
+  margin: 0;
 `;
 
 const useStyles = makeStyles(theme => ({
@@ -53,30 +52,98 @@ const Appointment = () => {
   const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
   const [locale] = useState('en');
   const { filterappointmentsby } = useSelector(state => state.appointmentStore);
+  const [availability, setAvailability] = useState();
   const { departments } = useSelector(state => state.tokenStore);
   const { doctorcalendars } = useSelector(state => state.tokenStore);
   const classes = useStyles();
   const dispatch = useDispatch();
-
+  console.log(filterappointmentsby);
   const [selectedDepartment, setSelectedDepartment] = useState(0);
-
-  if (departments !== null){
-    const resultado = departments.find( item => item.id === selectedDepartment );
-    if (typeof (resultado) !== 'undefined'){
-      console.log('resultado departments => ', resultado);
+  const filterDoctorCalendarByDay = (departments, doctorCalendars) => {
+    const itemsFound = [];
+    if (departments !== null && doctorCalendars !== null) {
+      const currentDepartment = departments.find(
+        item => item.id === selectedDepartment,
+      );
+      const doctorCalendarByDay = doctorcalendars.filter(
+        item => item.attributes.startDate === date,
+      );
+      if (typeof (currentDepartment) !== 'undefined' && typeof (doctorCalendarByDay) !== 'undefined') {
+        const iteratedepartment = (element, index, array) => {
+          itemsFound.push(doctorCalendarByDay.find(
+            x => Number(x.attributes.user_id) === Number(element.id),
+          ));
+        };
+        currentDepartment.relationships.doctors.data.forEach(iteratedepartment);
+      }
     }
-  }
+    return itemsFound;
+  };
 
-  if(doctorcalendars !== null){
-    const resultadoDC = doctorcalendars.filter( item => item.attributes.startDate === date );
-    if(typeof (resultadoDC) !== 'undefined'){
-      console.log('resultado doctorcalendars',resultadoDC);
+  const getShifts = () => {
+    const currentDateTimeable = filterDoctorCalendarByDay(departments, doctorcalendars);
+    const arrayHours = [];
+    if (currentDateTimeable !== null) {
+      const iteratedoctorcalendars = (element, index, array) => {
+        const obj = {
+          startTime: moment.utc(element.attributes.startTime),
+          totalHours: element.attributes.totalHours,
+          shiftinterval: element.attributes.shiftinterval,
+          totalShift: ((
+            Number(element.attributes.totalHours) * 60)
+            / (Number(element.attributes.shiftinterval))),
+        };
+        arrayHours.push(obj);
+      };
+      currentDateTimeable.forEach(iteratedoctorcalendars);
     }
-  }
+    return arrayHours;
+  };
 
-  
+  const getShiftDetails = () => {
+    const arrayShiftDetailByHour = [];
+    const arrayShiftDetail = getShifts();
+    let indexKey = 1;
+    const iterateShiftDetail = (element, index, array) => {
+      const r = 0;
+      let nextStartTime = moment.utc(element.startTime);
+      // eslint-disable-next-line no-plusplus
+      for (let r = 0; r < element.totalShift; r++) {
+        const obj = {
+          id: indexKey,
+          startTime: moment.utc(nextStartTime).format('HH:mm'),
+          endTime: moment.utc(nextStartTime).add(15, 'minutes').format('HH:mm'),
+          status: false,
+          firstName: '',
+          lastName: '',
+        };
+        arrayShiftDetailByHour.push(obj);
+        nextStartTime = moment.utc(nextStartTime).add(15, 'minutes');
+        indexKey += 1;
+      }
+    };
+    arrayShiftDetail.forEach(iterateShiftDetail);
+    return arrayShiftDetailByHour;
+  };
+
+  const updateAvailability = () => {
+    const listShiftDetails = getShiftDetails();
+    const iterateFilterappointmentsby = (element, index, array) => {
+      const startTimeAppointment = moment.utc(element.attributes.startTime).format('HH:mm');
+      const endTimeAppointment = moment.utc(element.attributes.startTime).format('HH:mm');
+      const foundIndex = listShiftDetails.findIndex(x => x.startTime === startTimeAppointment);
+      if (foundIndex !== -1) {
+        listShiftDetails[foundIndex].status = true;
+      }
+    };
+    filterappointmentsby.forEach(iterateFilterappointmentsby);
+    return listShiftDetails;
+  };
+
   const handleChange = event => {
     setSelectedDepartment(event.target.value);
+    const resultAvalilability = updateAvailability();
+    setAvailability(resultAvalilability);
   };
 
   const changeDate = selectedDate => {
@@ -148,15 +215,16 @@ const Appointment = () => {
           <FormHelperText>Label + placeholder</FormHelperText>
         </FormControl>
       </LeftSideBar>
-      <ContentWrapper className="d-flex flex-column">
-        { filterappointmentsby !== null && filterappointmentsby.length > 0
-          ? filterappointmentsby.map(item => (
+      <ContentWrapper className="d-flex flex-column justify-content-center">
+        { availability !== null && typeof (availability) !== 'undefined'
+          ? availability.map(item => (
             <AppointmentDetail
               key={item.id}
-              time={moment.utc(item.attributes.startTime).format('HH:mm')}
-              patient="patient x"
-              service="service z"
-              office="office s"
+              time={item.startTime}
+              endTime={item.endTime}
+              patient="Mia Maria Fernando Baca Paz"
+              service="ODONTOLOGIA BASICA"
+              office="Consultorio 105 (Ubicado en el piso 4 modulo 3)"
             />
           ))
           : <h1>no data</h1> }
