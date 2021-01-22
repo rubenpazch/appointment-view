@@ -74,7 +74,6 @@ const Appointment = () => {
   const { doctorcalendars } = useSelector(state => state.tokenStore);
   const classes = useStyles();
   const dispatch = useDispatch();
-  console.log(filterappointmentsby);
   const [selectedDepartment, setSelectedDepartment] = useState(0);
   const [open, setOpen] = React.useState(false);
 
@@ -86,29 +85,31 @@ const Appointment = () => {
     setOpen(false);
   };
 
-  const filterDoctorCalendarByDay = (departments, doctorCalendars) => {
+  const filterDoctorCalendarByDay = (departmentsList, doctorCalendarsList) => {
     const itemsFound = [];
-    if (departments !== null && doctorCalendars !== null) {
-      const currentDepartment = departments.find(
+    if (departmentsList !== null && doctorCalendarsList !== null) {
+      const currentDepartment = departmentsList.find(
         item => item.id === selectedDepartment,
       );
-      const doctorCalendarByDay = doctorcalendars.filter(
+      const doctorCalendarByDay = doctorCalendarsList.filter(
         item => item.attributes.startDate === date,
       );
       if (typeof (currentDepartment) !== 'undefined' && typeof (doctorCalendarByDay) !== 'undefined') {
         const iteratedepartment = (element, index, array) => {
-          itemsFound.push(doctorCalendarByDay.find(
+          const doctorcalendarfounded = doctorCalendarByDay.find(
             x => Number(x.attributes.user_id) === Number(element.id),
-          ));
+          );
+          if (doctorcalendarfounded !== undefined) {
+            itemsFound.push(doctorcalendarfounded);
+          }
         };
         currentDepartment.relationships.doctors.data.forEach(iteratedepartment);
       }
     }
     return itemsFound;
   };
-
-  const getShifts = () => {
-    const currentDateTimeable = filterDoctorCalendarByDay(departments, doctorcalendars);
+  const getShifts = (departmentsList, doctorCalendarsList) => {
+    const currentDateTimeable = filterDoctorCalendarByDay(departmentsList, doctorCalendarsList);
     const arrayHours = [];
     if (currentDateTimeable !== null) {
       const iteratedoctorcalendars = (element, index, array) => {
@@ -126,10 +127,9 @@ const Appointment = () => {
     }
     return arrayHours;
   };
-
-  const getShiftDetails = () => {
+  const getShiftDetails = (departmentsList, doctorCalendarsList) => {
     const arrayShiftDetailByHour = [];
-    const arrayShiftDetail = getShifts();
+    const arrayShiftDetail = getShifts(departmentsList, doctorCalendarsList);
     let indexKey = 1;
     const iterateShiftDetail = (element, index, array) => {
       const r = 0;
@@ -153,8 +153,8 @@ const Appointment = () => {
     return arrayShiftDetailByHour;
   };
 
-  const updateAvailability = () => {
-    const listShiftDetails = getShiftDetails();
+  const updateAvailability = (departmentsList, doctorCalendarsList) => {
+    const listShiftDetails = getShiftDetails(departmentsList, doctorCalendarsList);
     const iterateFilterappointmentsby = (element, index, array) => {
       const startTimeAppointment = moment.utc(element.attributes.startTime).format('HH:mm');
       const endTimeAppointment = moment.utc(element.attributes.startTime).format('HH:mm');
@@ -169,7 +169,7 @@ const Appointment = () => {
 
   const handleChange = event => {
     setSelectedDepartment(event.target.value);
-    const resultAvalilability = updateAvailability();
+    const resultAvalilability = updateAvailability(departments, doctorcalendars);
     setAvailability(resultAvalilability);
   };
 

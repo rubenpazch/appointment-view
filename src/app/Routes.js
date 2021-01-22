@@ -8,7 +8,7 @@ import BasePage from './BasePage';
 const Routes = () => {
   const { isAuthorized } = useSelector(
     ({ tokenStore }) => ({
-      isAuthorized: tokenStore.token !== '',
+      isAuthorized: tokenStore.token !== null,
     }),
     shallowEqual,
   );
