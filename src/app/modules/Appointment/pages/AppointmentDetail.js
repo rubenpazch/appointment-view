@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/forbid-prop-types */
 import React from 'react';
@@ -68,10 +69,22 @@ const AppointmentService = styled.div`
     color: #3c6ecc;
   }
 `;
+const StatusAppointmentBusy = styled.div`
+  background-color: #fff7f7;
+  width: 10%;
+  margin: 5px;
+  color: #ff0202;
+  border-radius: 5px;
+  border: 1px dashed;
+`;
 
 const AppointmentDetail = ({
-  // eslint-disable-next-line no-unused-vars
-  time, endTime, patient, service, office,
+  time,
+  endTime,
+  patient,
+  service,
+  office,
+  status,
 }) => {
   const test = '';
 
@@ -100,9 +113,18 @@ const AppointmentDetail = ({
           </div>
         </AppointmentService>
       </AppointmentContent>
-      <StatusAppointment className="d-flex flex-column align-items-center pt-2 font-weight-bold">
-        <span>Free</span>
-      </StatusAppointment>
+      { status
+        ? (
+          <StatusAppointmentBusy className="d-flex flex-column align-items-center pt-2 font-weight-bold">
+            <span>Busy</span>
+          </StatusAppointmentBusy>
+        )
+        : (
+          <StatusAppointment className="d-flex flex-column align-items-center pt-2 font-weight-bold">
+            <span>Free</span>
+          </StatusAppointment>
+        )}
+
     </Wrapper>
   );
 };

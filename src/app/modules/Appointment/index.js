@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 import moment from 'moment';
@@ -12,13 +13,21 @@ import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
 
-import Logout from '../Auth/pages/Logout';
-import AppointmentDetail from './pages/AppointmentDetail';
-import { getListAppointmentByDateService } from './_redux/appointmentService';
-import { setListByDateService } from './_redux/appointmentAction';
-import { setDepartments, setDoctorCalendars } from '../Auth/_redux/authAction';
 import { getDepartments, getDoctorCalendars } from '../Auth/_redux/authService';
+import { setDepartments, setDoctorCalendars } from '../Auth/_redux/authAction';
+import { setListByDateService } from './_redux/appointmentAction';
+import { getListAppointmentByDateService } from './_redux/appointmentService';
+import AppointmentDetail from './pages/AppointmentDetail';
+import Logout from '../Auth/pages/Logout';
 
 moment.locale('en');
 
@@ -46,6 +55,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+function PaperComponent(props) {
+  return (
+    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...props} />
+    </Draggable>
+  );
+}
+
 const Appointment = () => {
   // const [loading, setLoading] = useState(true);
   const loading = true;
@@ -59,6 +76,16 @@ const Appointment = () => {
   const dispatch = useDispatch();
   console.log(filterappointmentsby);
   const [selectedDepartment, setSelectedDepartment] = useState(0);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const filterDoctorCalendarByDay = (departments, doctorCalendars) => {
     const itemsFound = [];
     if (departments !== null && doctorCalendars !== null) {
@@ -214,6 +241,36 @@ const Appointment = () => {
           </NativeSelect>
           <FormHelperText>Label + placeholder</FormHelperText>
         </FormControl>
+        { loading ? <Logout /> : null }
+        <div>
+          <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+            Open form dialog
+          </Button>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            PaperComponent={PaperComponent}
+            aria-labelledby="draggable-dialog-title"
+          >
+            <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+              Subscribe
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                ssss
+                occasionally.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleClose} color="primary">
+                Subscribe
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
       </LeftSideBar>
       <ContentWrapper className="d-flex flex-column justify-content-center">
         { availability !== null && typeof (availability) !== 'undefined'
@@ -222,13 +279,13 @@ const Appointment = () => {
               key={item.id}
               time={item.startTime}
               endTime={item.endTime}
+              status={item.status}
               patient="Mia Maria Fernando Baca Paz"
               service="ODONTOLOGIA BASICA"
               office="Consultorio 105 (Ubicado en el piso 4 modulo 3)"
             />
           ))
           : <h1>no data</h1> }
-        { loading ? <Logout /> : null }
       </ContentWrapper>
     </AppointmentWrapper>
   );
