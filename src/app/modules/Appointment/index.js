@@ -12,7 +12,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -45,15 +45,25 @@ const ContentWrapper = styled.div`
   margin: 0;
 `;
 
-const useStyles = makeStyles(theme => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
+const LabelAppointmentDate = styled.div`
+  padding: 0;
+  margin: 0;
+`;
+
+const LabelAppointmentDepartment = styled.div`
+  padding: 0;
+  margin: 0;
+`;
+
+const LabelAppointmentStartTime = styled.div`
+  padding: 0;
+  margin: 0;
+`;
+
+const LabelAppointmentEndTime = styled.div`
+  padding: 0;
+  margin: 0;
+`;
 
 function PaperComponent(props) {
   return (
@@ -66,15 +76,27 @@ function PaperComponent(props) {
 const Appointment = () => {
   // const [loading, setLoading] = useState(true);
   const loading = true;
-  const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
+  const [appointmentDate, setAppointmentDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
+  const [selectedValueDepartment, setSelectedValueDepartment] = useState(0);
+  const [selectedNameDepartment, setSelectedNameDepartment] = useState('No service selected');
+  const [listShiftDetailsState, setListShiftDetailsState] = useState([
+    {
+      endTime: '',
+      firstName: '',
+      id: 0,
+      lastName: '',
+      startTime: '',
+      status: true,
+    },
+  ]);
+  const [startTimeState, setStartTimeState] = useState('08:00');
+  const [endTimeState, setEndTimeState] = useState('08:15');
   const [locale] = useState('en');
   const { filterappointmentsby } = useSelector(state => state.appointmentStore);
   const [availability, setAvailability] = useState();
   const { departments } = useSelector(state => state.tokenStore);
   const { doctorcalendars } = useSelector(state => state.tokenStore);
-  const classes = useStyles();
   const dispatch = useDispatch();
-  const [selectedDepartment, setSelectedDepartment] = useState(0);
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -89,10 +111,10 @@ const Appointment = () => {
     const itemsFound = [];
     if (departmentsList !== null && doctorCalendarsList !== null) {
       const currentDepartment = departmentsList.find(
-        item => item.id === selectedDepartment,
+        item => item.id === selectedValueDepartment,
       );
       const doctorCalendarByDay = doctorCalendarsList.filter(
-        item => item.attributes.startDate === date,
+        item => item.attributes.startDate === appointmentDate,
       );
       if (typeof (currentDepartment) !== 'undefined' && typeof (doctorCalendarByDay) !== 'undefined') {
         const iteratedepartment = (element, index, array) => {
@@ -155,6 +177,8 @@ const Appointment = () => {
 
   const updateAvailability = (departmentsList, doctorCalendarsList) => {
     const listShiftDetails = getShiftDetails(departmentsList, doctorCalendarsList);
+    setListShiftDetailsState(listShiftDetails);
+    console.log({ listShiftDetails });
     const iterateFilterappointmentsby = (element, index, array) => {
       const startTimeAppointment = moment.utc(element.attributes.startTime).format('HH:mm');
       const endTimeAppointment = moment.utc(element.attributes.startTime).format('HH:mm');
@@ -167,18 +191,37 @@ const Appointment = () => {
     return listShiftDetails;
   };
 
+  const handleChangeStartTime = event => {
+    setStartTimeState(event.target.value);
+    console.log({ event });
+  };
+
+  const handleChangeEndTime = event => {
+    setEndTimeState(event.target.value);
+    console.log({ event });
+  };
+
   const handleChange = event => {
-    setSelectedDepartment(event.target.value);
+    setSelectedValueDepartment(event.target.value);
+    const currentDepartment = departments.find(
+      item => item.id === event.target.value,
+    );
+    if (typeof (currentDepartment) !== 'undefined') {
+      setSelectedNameDepartment(currentDepartment.attributes.name);
+    } else {
+      setSelectedNameDepartment('Need to select a department');
+    }
+
     const resultAvalilability = updateAvailability(departments, doctorcalendars);
     setAvailability(resultAvalilability);
   };
 
   const changeDate = selectedDate => {
-    setDate(moment(selectedDate).format('YYYY-MM-DD'));
+    setAppointmentDate(moment(selectedDate).format('YYYY-MM-DD'));
   };
   // console.log(doctorcalendars);
   useEffect(() => {
-    getListAppointmentByDateService(selectedDepartment, date)
+    getListAppointmentByDateService(selectedValueDepartment, appointmentDate)
       .then(({ data }) => {
         dispatch(setListByDateService(data));
       })
@@ -187,7 +230,7 @@ const Appointment = () => {
       // setSubmitting(false);
       // setStatus('not working');
       });
-  }, [date, selectedDepartment]);
+  }, [appointmentDate, selectedValueDepartment]);
 
   useEffect(() => {
     getDepartments()
@@ -216,20 +259,20 @@ const Appointment = () => {
       <LeftSideBar>
         <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={locale}>
           <DatePicker
-            autoOk
+            autoOkshrink
             orientation="landscape"
             variant="static"
             openTo="date"
-            value={date}
+            value={appointmentDate}
             onChange={changeDate}
           />
         </MuiPickersUtilsProvider>
-        <FormControl className={classes.formControl}>
+        <FormControl>
           <InputLabel shrink htmlFor="age-native-label-placeholder">
-            Age
+            Department
           </InputLabel>
           <NativeSelect
-            value={selectedDepartment}
+            value={selectedValueDepartment}
             onChange={handleChange}
           >
             <option value="0">Select Department</option>
@@ -244,25 +287,74 @@ const Appointment = () => {
         { loading ? <Logout /> : null }
         <div>
           <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-            Open form dialog
+            New
           </Button>
-          <Dialog
-            open={open}
-            onClose={handleClose}
-            PaperComponent={PaperComponent}
-            aria-labelledby="draggable-dialog-title"
-          >
-            <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-              Subscribe
-            </DialogTitle>
+          <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                ssss
+                To subscribe to t
                 occasionally.
               </DialogContentText>
+              <div className="my-3">
+                <FormControl>
+                  <InputLabel shrink htmlFor="age-native-label-placeholder">
+                    Start Time:
+                  </InputLabel>
+                  <NativeSelect
+                    value={startTimeState}
+                    onChange={handleChangeStartTime}
+                  >
+                    <option value="0">Select Department</option>
+                    {listShiftDetailsState !== null
+                      ? listShiftDetailsState.map(item => (
+                        <option value={item.startTime} key={item.id}>{item.startTime}</option>
+                      ))
+                      : null}
+                  </NativeSelect>
+                  <FormHelperText>Label + placeholder</FormHelperText>
+                </FormControl>
+              </div>
+              <div className="my-3">
+                <FormControl>
+                  <InputLabel shrink htmlFor="age-native-label-placeholder">
+                    Start Time:
+                  </InputLabel>
+                  <NativeSelect
+                    value={endTimeState}
+                    onChange={handleChangeEndTime}
+                  >
+                    <option value="0">Select Department</option>
+                    {listShiftDetailsState !== null
+                      ? listShiftDetailsState.map(item => (
+                        <option value={item.startTime} key={item.id}>{item.endTime}</option>
+                      ))
+                      : null}
+                  </NativeSelect>
+                  <FormHelperText>Label + placeholder</FormHelperText>
+                </FormControl>
+              </div>
+
+              <LabelAppointmentDate className="d-flex flex-row my-3">
+                <InputLabel htmlFor="age-native-label-placeholder">
+                  Date:
+                </InputLabel>
+
+                <InputLabel htmlFor="age-native-label-placeholder">
+                  {appointmentDate}
+                </InputLabel>
+              </LabelAppointmentDate>
+              <LabelAppointmentDepartment className="d-flex flex-row my-3">
+                <InputLabel htmlFor="age-native-label-placeholder">
+                  Service:
+                </InputLabel>
+                <InputLabel htmlFor="age-native-label-placeholder">
+                  {selectedNameDepartment}
+                </InputLabel>
+              </LabelAppointmentDepartment>
             </DialogContent>
             <DialogActions>
-              <Button autoFocus onClick={handleClose} color="primary">
+              <Button onClick={handleClose} color="primary">
                 Cancel
               </Button>
               <Button onClick={handleClose} color="primary">
