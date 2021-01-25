@@ -90,7 +90,7 @@ const Appointment = () => {
     },
   ]);
   const [startTimeState, setStartTimeState] = useState('08:00');
-  const [endTimeState, setEndTimeState] = useState('08:15');
+  const [intervalTimeState, setIntervalTimeState] = useState('');
   const [locale] = useState('en');
   const { filterappointmentsby } = useSelector(state => state.appointmentStore);
   const [availability, setAvailability] = useState();
@@ -172,13 +172,13 @@ const Appointment = () => {
       }
     };
     arrayShiftDetail.forEach(iterateShiftDetail);
+    console.log({ arrayShiftDetail });
     return arrayShiftDetailByHour;
   };
 
   const updateAvailability = (departmentsList, doctorCalendarsList) => {
     const listShiftDetails = getShiftDetails(departmentsList, doctorCalendarsList);
     setListShiftDetailsState(listShiftDetails);
-    console.log({ listShiftDetails });
     const iterateFilterappointmentsby = (element, index, array) => {
       const startTimeAppointment = moment.utc(element.attributes.startTime).format('HH:mm');
       const endTimeAppointment = moment.utc(element.attributes.startTime).format('HH:mm');
@@ -193,15 +193,14 @@ const Appointment = () => {
 
   const handleChangeStartTime = event => {
     setStartTimeState(event.target.value);
-    console.log({ event });
-  };
-
-  const handleChangeEndTime = event => {
-    setEndTimeState(event.target.value);
-    console.log({ event });
+    const shiftDetail = listShiftDetailsState.find(
+      item => Number(item.id) === Number(event.target.value),
+    );
+    setIntervalTimeState(shiftDetail);
   };
 
   const handleChange = event => {
+    console.log(event.target.value);
     setSelectedValueDepartmentState(event.target.value);
     const currentDepartment = departments.find(
       item => item.id === event.target.value,
@@ -308,31 +307,21 @@ const Appointment = () => {
                     <option value="0">Select Department</option>
                     {listShiftDetailsState !== null
                       ? listShiftDetailsState.map(item => (
-                        <option value={item.startTime} key={item.id}>{item.startTime}</option>
+                        <option value={item.id} key={item.id}>{item.startTime}</option>
                       ))
                       : null}
                   </NativeSelect>
                   <FormHelperText>Label + placeholder</FormHelperText>
                 </FormControl>
-              </div>
-              <div className="my-3">
-                <FormControl>
-                  <InputLabel shrink htmlFor="age-native-label-placeholder">
-                    Start Time:
+                <LabelAppointmentDate className="d-flex flex-row my-3">
+                  <InputLabel htmlFor="age-native-label-placeholder">
+                    End Time:
                   </InputLabel>
-                  <NativeSelect
-                    value={endTimeState}
-                    onChange={handleChangeEndTime}
-                  >
-                    <option value="0">Select Department</option>
-                    {listShiftDetailsState !== null
-                      ? listShiftDetailsState.map(item => (
-                        <option value={item.startTime} key={item.id}>{item.endTime}</option>
-                      ))
-                      : null}
-                  </NativeSelect>
-                  <FormHelperText>Label + placeholder</FormHelperText>
-                </FormControl>
+
+                  <InputLabel htmlFor="age-native-label-placeholder">
+                    {intervalTimeState.endTime}
+                  </InputLabel>
+                </LabelAppointmentDate>
               </div>
 
               <LabelAppointmentDate className="d-flex flex-row my-3">
