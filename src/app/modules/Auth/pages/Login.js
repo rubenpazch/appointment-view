@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/forbid-prop-types */
@@ -8,6 +9,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
@@ -40,11 +42,17 @@ const WrapperButton = styled.div`
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const [openAlert, setOpenAlert] = useState(false);
+  const [errorState, setErrorState] = useState('');
 
   useEffect(() => {
     setLoading(false);
     return () => setLoading(false);
   }, []);
+
+  setTimeout(() => {
+    setOpenAlert(false);
+  }, (5000));
 
   const enableLoading = () => {
     setLoading(true);
@@ -71,11 +79,13 @@ const Login = () => {
       enableLoading();
       setTimeout(() => {
         login(values.username, values.password)
-          .then(({ data: { token, username } }) => {
-            dispatch(setToken({ token, username }));
+          .then(({ data: { token, username, user_id } }) => {
+            dispatch(setToken({ token, username, user_id }));
             disableLoading();
           })
-          .catch(() => {
+          .catch(error => {
+            setOpenAlert(true);
+            setErrorState('Incorrect Username or Password');
             disableLoading();
             // setSubmitting(false);
             // setStatus('not working');
@@ -87,6 +97,14 @@ const Login = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <WrapperLogin className="d-flex flex-column align-items-center">
+        { openAlert
+          ? (
+            <div className="alert alert-danger" role="alert">
+              {errorState}
+            </div>
+          )
+          : null}
+
         <WrapperUsername className="d-flex flex-row justify-content-center">
           <FormControl>
             <InputLabel htmlFor="username">username</InputLabel>
@@ -95,9 +113,12 @@ const Login = () => {
               type="text"
               onChange={formik.handleChange}
               value={formik.values.username}
+              onBlur={formik.handleBlur}
               aria-describedby="component-error-text"
             />
-            {formik.errors.username ? <FormHelperText id="component-error-text" error>{formik.errors.username}</FormHelperText> : null}
+            { formik.touched.username && formik.errors.username
+              ? <FormHelperText id="component-error-text" error>{formik.errors.username}</FormHelperText>
+              : null}
 
           </FormControl>
         </WrapperUsername>
@@ -110,9 +131,12 @@ const Login = () => {
               type="password"
               onChange={formik.handleChange}
               value={formik.values.password}
+              onBlur={formik.handleBlur}
               aria-describedby="component-error-text"
             />
-            {formik.errors.password ? <FormHelperText id="component-error-text" error>{formik.errors.password}</FormHelperText> : null}
+            {formik.touched.password && formik.errors.password
+              ? <FormHelperText id="component-error-text" error>{formik.errors.password}</FormHelperText>
+              : null}
           </FormControl>
         </WrapperPassword>
         <WrapperButton className="d-flex flex-row justify-content-start ">

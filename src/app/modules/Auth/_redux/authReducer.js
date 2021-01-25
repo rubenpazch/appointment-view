@@ -1,9 +1,11 @@
+/* eslint-disable camelcase */
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 const initialState = {
   token: null,
   username: '',
+  user_id: '',
   patient: null,
   userInformation: null,
   departments: null,
@@ -18,7 +20,7 @@ export const FETCH_GET_DEPARTMENTS = 'FETCH_GET_DEPARTMENTS';
 export const FETCH_DOCTOR_CALENDARS = 'FETCH_DOCTOR_CALENDARS';
 
 export const tokenReducer = persistReducer(
-  { storage, key: 'appointment-auth', whitelist: ['username', 'token'] },
+  { storage, key: 'appointment-auth', whitelist: ['username', 'token', 'user_id'] },
   (state = initialState, action) => {
     switch (action.type) {
       case FETCH_TOKEN:
@@ -26,6 +28,7 @@ export const tokenReducer = persistReducer(
           ...state,
           token: action.payload.token,
           username: action.payload.username,
+          user_id: action.payload.user_id,
         };
       case PATIENT_INFORMATION:
         return {

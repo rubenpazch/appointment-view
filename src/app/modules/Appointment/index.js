@@ -76,8 +76,8 @@ function PaperComponent(props) {
 const Appointment = () => {
   // const [loading, setLoading] = useState(true);
   const loading = true;
-  const [appointmentDate, setAppointmentDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
-  const [selectedValueDepartment, setSelectedValueDepartment] = useState(0);
+  const [appointmentDateState, setAppointmentDateState] = useState(moment(new Date()).format('YYYY-MM-DD'));
+  const [selectedValueDepartmentState, setSelectedValueDepartmentState] = useState(0);
   const [selectedNameDepartment, setSelectedNameDepartment] = useState('No service selected');
   const [listShiftDetailsState, setListShiftDetailsState] = useState([
     {
@@ -111,10 +111,10 @@ const Appointment = () => {
     const itemsFound = [];
     if (departmentsList !== null && doctorCalendarsList !== null) {
       const currentDepartment = departmentsList.find(
-        item => item.id === selectedValueDepartment,
+        item => item.id === selectedValueDepartmentState,
       );
       const doctorCalendarByDay = doctorCalendarsList.filter(
-        item => item.attributes.startDate === appointmentDate,
+        item => item.attributes.startDate === appointmentDateState,
       );
       if (typeof (currentDepartment) !== 'undefined' && typeof (doctorCalendarByDay) !== 'undefined') {
         const iteratedepartment = (element, index, array) => {
@@ -202,7 +202,7 @@ const Appointment = () => {
   };
 
   const handleChange = event => {
-    setSelectedValueDepartment(event.target.value);
+    setSelectedValueDepartmentState(event.target.value);
     const currentDepartment = departments.find(
       item => item.id === event.target.value,
     );
@@ -216,12 +216,12 @@ const Appointment = () => {
     setAvailability(resultAvalilability);
   };
 
-  const changeDate = selectedDate => {
-    setAppointmentDate(moment(selectedDate).format('YYYY-MM-DD'));
+  const changeAppointmentDate = selectedDate => {
+    setAppointmentDateState(moment(selectedDate).format('YYYY-MM-DD'));
   };
-  // console.log(doctorcalendars);
+
   useEffect(() => {
-    getListAppointmentByDateService(selectedValueDepartment, appointmentDate)
+    getListAppointmentByDateService(selectedValueDepartmentState, appointmentDateState)
       .then(({ data }) => {
         dispatch(setListByDateService(data));
       })
@@ -230,7 +230,7 @@ const Appointment = () => {
       // setSubmitting(false);
       // setStatus('not working');
       });
-  }, [appointmentDate, selectedValueDepartment]);
+  }, [appointmentDateState, selectedValueDepartmentState]);
 
   useEffect(() => {
     getDepartments()
@@ -263,8 +263,8 @@ const Appointment = () => {
             orientation="landscape"
             variant="static"
             openTo="date"
-            value={appointmentDate}
-            onChange={changeDate}
+            value={appointmentDateState}
+            onChange={changeAppointmentDate}
           />
         </MuiPickersUtilsProvider>
         <FormControl>
@@ -272,7 +272,7 @@ const Appointment = () => {
             Department
           </InputLabel>
           <NativeSelect
-            value={selectedValueDepartment}
+            value={selectedValueDepartmentState}
             onChange={handleChange}
           >
             <option value="0">Select Department</option>
@@ -341,7 +341,7 @@ const Appointment = () => {
                 </InputLabel>
 
                 <InputLabel htmlFor="age-native-label-placeholder">
-                  {appointmentDate}
+                  {appointmentDateState}
                 </InputLabel>
               </LabelAppointmentDate>
               <LabelAppointmentDepartment className="d-flex flex-row my-3">
