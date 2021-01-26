@@ -129,7 +129,7 @@ const Appointment = () => {
   ]);
   const [startTimeState, setStartTimeState] = useState('08:00');
   const [intervalTimeState, setIntervalTimeState] = useState('');
-  const notify = () => toast.error('Wow so easy!', {
+  const notify = message => toast.error(message, {
     position: 'top-center',
     autoClose: 3000,
     hideProgressBar: true,
@@ -161,10 +161,18 @@ const Appointment = () => {
     const { startTime, endTime, doctor_id } = intervalTimeState;
 
     saveAppointment(appointmentDateState, startTime, endTime, user_id, doctor_id)
-      .then(response => {
+      .then(({ response }) => {
         console.log('ok --> ', response);
+        if (response.status === 422) {
+          console.log('--> ', response.data.appointmentDate[0]);
+          notify(response.data.appointmentDate[0]);
+        } else if (response.status === 200) {
+          console.log('success');
+        } else {
+          console.log('else');
+        }
       }, error => {
-        console.log('ok --> ', error);
+        console.log('error --> ', error);
       })
       .catch(error => {
         console.log('error --> ', { error });
