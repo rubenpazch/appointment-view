@@ -30,6 +30,7 @@ import { setDepartments, setDoctorCalendars } from '../Auth/_redux/authAction';
 import { setListByDateService } from './_redux/appointmentAction';
 import { getListAppointmentByDateService, saveAppointment } from './_redux/appointmentService';
 import AppointmentDetail from './pages/AppointmentDetail';
+import Resume from './pages/Resume';
 import Logout from '../Auth/pages/Logout';
 import { ToastContext } from '../../../components/ToastContextProvider';
 
@@ -40,13 +41,20 @@ const AppointmentWrapper = styled.div`
 `;
 
 const LeftSideBar = styled.div`
-  width: 30%;
+  width: 35%;
+  padding: 15px;
+  border-right: 1px solid #deabab;
+  -moz-box-shadow:    -9px 4px 12px 2px #000000;
+  -webkit-box-shadow: -9px 4px 12px 2px #000000;
+  box-shadow: -9px 4px 12px 2px #000000;
+  min-height: 100vh;
+  height: 100%;
 `;
 
 const ContentWrapper = styled.div`
-  width: 65%;
+  width: 62%;
   padding: 15px 0 0 15px;
-  margin: 0;
+  margin: 0;  
 `;
 
 const LabelAppointmentDate = styled.div`
@@ -66,6 +74,42 @@ const LabelAppointmentStartTime = styled.div`
 
 const LabelAppointmentEndTime = styled.div`
   padding: 0;
+  margin: 0;
+`;
+
+const DatePickerContainer = styled.div`
+  padding: 1px;
+  margin: 0 0 15px 0;
+`;
+
+const ContentLogout = styled.div`
+  padding: 15px;
+  margin: 0;
+  button {
+    min-width: 100px;
+  }
+`;
+
+const SelectOptionContainer = styled.div`
+  padding: 0;
+  margin: 0;
+  
+  .MuiFormControl-root {
+    width: 100%;
+    min-width: 100%;
+
+    label {
+      font-size: 1.2rem;
+    }
+
+    label + .MuiInput-formControl {
+      margin-top: 22px;
+    }
+  }  
+`;
+
+const ContentAvailability = styled.div`
+  padding: 15px;
   margin: 0;
 `;
 
@@ -328,38 +372,40 @@ const Appointment = () => {
   return (
     <AppointmentWrapper className="d-flex flex-row">
       <LeftSideBar>
-        <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={locale}>
-          <DatePicker
-            autoOkshrink
-            orientation="landscape"
-            variant="static"
-            openTo="date"
-            value={appointmentDateState}
-            onChange={changeAppointmentDate}
-          />
-        </MuiPickersUtilsProvider>
-        <FormControl>
-          <InputLabel shrink htmlFor="age-native-label-placeholder">
-            Department
-          </InputLabel>
-          <NativeSelect
-            value={currentDepartmentValue}
-            onChange={handleChangeDepartment}
-          >
-            <option value="0">Select Department</option>
-            {departments !== null
-              ? departments.map(item => (
-                <option value={item.id} key={item.id}>{item.attributes.name}</option>
-              ))
-              : null}
-          </NativeSelect>
-          <FormHelperText>Label + placeholder</FormHelperText>
-        </FormControl>
-        { loading ? <Logout /> : null }
+        <DatePickerContainer>
+          <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={locale}>
+            <DatePicker
+              autoOkshrink
+              orientation="landscape"
+              variant="static"
+              openTo="date"
+              value={appointmentDateState}
+              onChange={changeAppointmentDate}
+            />
+          </MuiPickersUtilsProvider>
+        </DatePickerContainer>
+        <SelectOptionContainer>
+          <FormControl>
+            <InputLabel shrink htmlFor="age-native-label-placeholder">
+              Department
+            </InputLabel>
+            <NativeSelect
+              value={currentDepartmentValue}
+              onChange={handleChangeDepartment}
+            >
+              <option value="0">Select Department</option>
+              {departments !== null
+                ? departments.map(item => (
+                  <option value={item.id} key={item.id}>{item.attributes.name}</option>
+                ))
+                : null}
+            </NativeSelect>
+            <FormHelperText>Choose an option</FormHelperText>
+          </FormControl>
+
+        </SelectOptionContainer>
+
         <div>
-          <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-            New
-          </Button>
           <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
             <DialogContent>
@@ -425,20 +471,32 @@ const Appointment = () => {
           </Dialog>
         </div>
       </LeftSideBar>
-      <ContentWrapper className="d-flex flex-column justify-content-center">
-        { availability !== null && typeof (availability) !== 'undefined'
-          ? availability.map(item => (
-            <AppointmentDetail
-              key={item.id}
-              time={item.startTime}
-              endTime={item.endTime}
-              status={item.status}
-              patient={`${item.firstName} ${item.lastName} `}
-              service="ODONTOLOGIA BASICA"
-              office="Consultorio 105 (Ubicado en el piso 4 modulo 3)"
-            />
-          ))
-          : <h1>no data</h1> }
+      <ContentWrapper className="d-flex flex-column justify-content-start">
+        <ContentLogout className="d-flex flex-row justify-content-between">
+          <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+            New
+          </Button>
+          { loading ? <Logout /> : null }
+        </ContentLogout>
+        <Resume
+          doctorName="Carlos Paz"
+          location="Consultorio 101"
+        />
+        <ContentAvailability>
+          { availability !== null && typeof (availability) !== 'undefined'
+            ? availability.map(item => (
+              <AppointmentDetail
+                key={item.id}
+                time={item.startTime}
+                endTime={item.endTime}
+                status={item.status}
+                patient={`${item.firstName} ${item.lastName} `}
+                service="ODONTOLOGIA BASICA"
+                office="Consultorio 105 (Ubicado en el piso 4 modulo 3)"
+              />
+            ))
+            : <h1>no data</h1> }
+        </ContentAvailability>
       </ContentWrapper>
     </AppointmentWrapper>
   );
