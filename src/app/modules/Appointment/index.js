@@ -4,9 +4,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+
 import MomentUtils from '@date-io/moment';
 import 'moment/locale/en-in';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -14,7 +15,6 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { useDispatch, useSelector } from 'react-redux';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -23,7 +23,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
-import { ToastContainer, toast } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
 
 import { getDepartments, getDoctorCalendars } from '../Auth/_redux/authService';
@@ -32,6 +31,7 @@ import { setListByDateService } from './_redux/appointmentAction';
 import { getListAppointmentByDateService, saveAppointment } from './_redux/appointmentService';
 import AppointmentDetail from './pages/AppointmentDetail';
 import Logout from '../Auth/pages/Logout';
+import { ToastContext } from '../../../components/ToastContextProvider';
 
 moment.locale('en');
 
@@ -126,6 +126,7 @@ const Appointment = () => {
   const [currentDepartmentValue, setCurrentDepartmentValue] = useState(0);
   const [currentDepartment, setCurrentDepartment] = useState(defaultDepartment);
   const [doctorCalendarByDay, setDoctorCalendarByDay] = useState(defaultDoctorCalendar);
+  const { notify } = useContext(ToastContext);
   const [listShiftDetailsState, setListShiftDetailsState] = useState([
     {
       endTime: '',
@@ -138,14 +139,6 @@ const Appointment = () => {
   ]);
   const [startTimeState, setStartTimeState] = useState('08:00');
   const [intervalTimeState, setIntervalTimeState] = useState('');
-  const notify = message => toast.error(message, {
-    position: 'top-center',
-    autoClose: 3000,
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-  });
 
   const [locale] = useState('en');
   // const { filterappointmentsby } = useSelector(state => state.appointmentStore);
@@ -321,19 +314,6 @@ const Appointment = () => {
             value={appointmentDateState}
             onChange={changeAppointmentDate}
           />
-          <div>
-            <ToastContainer
-              position="top-center"
-              autoClose={3000}
-              hideProgressBar
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-            />
-          </div>
         </MuiPickersUtilsProvider>
         <FormControl>
           <InputLabel shrink htmlFor="age-native-label-placeholder">

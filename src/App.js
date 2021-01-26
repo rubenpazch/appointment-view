@@ -5,9 +5,11 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { Spinner } from 'react-bootstrap';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { ToastContainer } from 'material-react-toastify';
 import MomentUtils from '@date-io/moment';
 
 import Routes from './app/Routes';
+import { ToastContextProvider } from './components/ToastContextProvider';
 // import Login from './app/modules/Auth/pages/Login';
 
 function App({ persistor, store }) {
@@ -17,7 +19,22 @@ function App({ persistor, store }) {
         <React.Suspense fallback={<Spinner animation="border" />}>
           <BrowserRouter>
             <MuiPickersUtilsProvider utils={MomentUtils}>
-              <Routes />
+              <ToastContextProvider>
+                <Routes />
+              </ToastContextProvider>
+              <div>
+                <ToastContainer
+                  position="top-center"
+                  autoClose={3000}
+                  hideProgressBar
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                />
+              </div>
             </MuiPickersUtilsProvider>
           </BrowserRouter>
         </React.Suspense>
