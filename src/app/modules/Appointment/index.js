@@ -110,6 +110,15 @@ const defaultDoctorCalendar = [{
   type: '',
 }];
 
+const getTextFromObject = text => {
+  const expresionRegular = /\[|\]/;
+  const result = text.split(expresionRegular);
+  if (typeof (result[1]) !== 'undefined' && result[1] !== null) {
+    return result[1];
+  }
+  return '';
+};
+
 const Appointment = () => {
   // const [loading, setLoading] = useState(true);
   const loading = true;
@@ -162,16 +171,17 @@ const Appointment = () => {
 
     saveAppointment(appointmentDateState, startTime, endTime, user_id, doctor_id)
       .then(({ response }) => {
-        console.log('ok --> ', response);
         if (response.status === 422) {
-          console.log('--> ', response.data.appointmentDate[0]);
-          notify(response.data.appointmentDate[0]);
+          notify(`Error: ${getTextFromObject(response.request.responseText)}`);
         } else if (response.status === 200) {
           console.log('success');
         } else {
           console.log('else');
         }
       }, error => {
+        if (response.data.user_id[0] !== null) {
+          notify(response.data.user_id[0]);
+        }
         console.log('error --> ', error);
       })
       .catch(error => {
