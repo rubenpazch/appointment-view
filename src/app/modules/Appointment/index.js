@@ -165,6 +165,7 @@ const Appointment = () => {
     saveAppointment(appointmentDateState, startTime, endTime, user_id, doctor_id)
       .then(({ response }) => {
         if (response.status === 422) {
+          console.log(response.request.responseText);
           notify(`Error: ${getTextFromObject(response.request.responseText)}`);
         } else if (response.status === 200) {
           console.log('success');
@@ -211,7 +212,19 @@ const Appointment = () => {
       .then(({ data }) => {
         dispatch(setListByDateService(data));
         setFilterAppointmentsBy(data.data);
-
+        const includedList = data.included;
+        const arrayOfPerson = [];
+        const arrayOfUsers = [];
+        for (let indexIL = 0; indexIL < includedList.length; indexIL += 1) {
+          if (includedList[indexIL].type === 'person') {
+            arrayOfPerson.push(includedList[indexIL]);
+          }
+          if (includedList[indexIL].type === 'user') {
+            arrayOfUsers.push(includedList[indexIL]);
+          }
+        }
+        console.log({ arrayOfUsers });
+        const appointmentList = data.data;
         const doctorsCalendarFounded = [];
         resultDepartments.relationships.doctors.data.filter(itemDepartment => {
           resultDoctorCalendars.filter(itemCalendar => {
@@ -252,21 +265,31 @@ const Appointment = () => {
               endTime: moment.utc(nextStartTime).add(15, 'minutes').format('HH:mm'),
               status: false,
               doctor_id: arrayHours[indexj].user_id,
+              patient_id: '',
+              firstName: ' ... ',
+              lastName: '',
             };
             arrayShiftDetailByHour.push(obj);
             nextStartTime = moment.utc(nextStartTime).add(15, 'minutes');
             indexKey += 1;
           }
         }
+        console.log({ appointmentList });
         setListShiftDetailsState(arrayShiftDetailByHour);
-        for (let indexh = 0; indexh < data.data.length; indexh += 1) {
+        for (let indexh = 0; indexh < appointmentList.length; indexh += 1) {
           const foundIndex = arrayShiftDetailByHour.findIndex(
-            x => x.startTime === moment.utc(data.data[indexh].attributes.startTime).format('HH:mm'),
+            x => x.startTime === moment.utc(appointmentList[indexh].attributes.startTime).format('HH:mm'),
           );
           if (foundIndex !== -1) {
             arrayShiftDetailByHour[foundIndex].status = true;
+            arrayShiftDetailByHour[foundIndex].patient_id = appointmentList[indexh].attributes.user_id;
+            const objectUser = arrayOfUsers.find(u => Number(u.id) === Number(appointmentList[indexh].attributes.user_id));
+            const objectPerson = arrayOfPerson.find(p => Number(p.id) === Number(objectUser.attributes.person_id));
+            arrayShiftDetailByHour[foundIndex].firstName = objectPerson.attributes.firstName;
+            arrayShiftDetailByHour[foundIndex].lastName = objectPerson.attributes.lastName;
           }
         }
+        console.log({ arrayShiftDetailByHour });
         setAvailability(arrayShiftDetailByHour);
       })
       .catch(error => {
@@ -410,7 +433,7 @@ const Appointment = () => {
               time={item.startTime}
               endTime={item.endTime}
               status={item.status}
-              patient="Mia Maria Fernando Baca Paz"
+              patient={`${item.firstName} ${item.lastName} `}
               service="ODONTOLOGIA BASICA"
               office="Consultorio 105 (Ubicado en el piso 4 modulo 3)"
             />
