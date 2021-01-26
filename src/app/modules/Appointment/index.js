@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-undef */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
@@ -21,11 +23,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import { ToastContainer, toast } from 'material-react-toastify';
+import 'material-react-toastify/dist/ReactToastify.css';
 
 import { getDepartments, getDoctorCalendars } from '../Auth/_redux/authService';
 import { setDepartments, setDoctorCalendars } from '../Auth/_redux/authAction';
 import { setListByDateService } from './_redux/appointmentAction';
-import { getListAppointmentByDateService } from './_redux/appointmentService';
+import { getListAppointmentByDateService, saveAppointment } from './_redux/appointmentService';
 import AppointmentDetail from './pages/AppointmentDetail';
 import Logout from '../Auth/pages/Logout';
 
@@ -73,12 +77,46 @@ function PaperComponent(props) {
   );
 }
 
+const defaultDepartment = {
+  attributes: {
+    name: 'Not selected',
+  },
+  id: 0,
+  relationships: {
+    doctors: {
+      data: [
+        {
+          id: 0,
+          type: '',
+        },
+      ],
+    },
+  },
+  type: '',
+};
+
+const defaultDoctorCalendar = [{
+  attributes: {
+    endDate: '',
+    endTime: '',
+    id: 0,
+    shiftinterval: 0,
+    startDate: '',
+    startTime: '',
+    totalHours: 0,
+    user_id: 0,
+  },
+  id: 0,
+  type: '',
+}];
+
 const Appointment = () => {
   // const [loading, setLoading] = useState(true);
   const loading = true;
   const [appointmentDateState, setAppointmentDateState] = useState(moment(new Date()).format('YYYY-MM-DD'));
-  const [selectedValueDepartmentState, setSelectedValueDepartmentState] = useState(0);
-  const [selectedNameDepartment, setSelectedNameDepartment] = useState('No service selected');
+  const [currentDepartmentValue, setCurrentDepartmentValue] = useState(0);
+  const [currentDepartment, setCurrentDepartment] = useState(defaultDepartment);
+  const [doctorCalendarByDay, setDoctorCalendarByDay] = useState(defaultDoctorCalendar);
   const [listShiftDetailsState, setListShiftDetailsState] = useState([
     {
       endTime: '',
@@ -91,10 +129,21 @@ const Appointment = () => {
   ]);
   const [startTimeState, setStartTimeState] = useState('08:00');
   const [intervalTimeState, setIntervalTimeState] = useState('');
+  const notify = () => toast.error('Wow so easy!', {
+    position: 'top-center',
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+
   const [locale] = useState('en');
-  const { filterappointmentsby } = useSelector(state => state.appointmentStore);
+  // const { filterappointmentsby } = useSelector(state => state.appointmentStore);
+  const [filterAppointmentsBy, setFilterAppointmentsBy] = useState();
   const [availability, setAvailability] = useState();
-  const { departments } = useSelector(state => state.tokenStore);
+  // eslint-disable-next-line camelcase
+  const { departments, user_id } = useSelector(state => state.tokenStore);
   const { doctorcalendars } = useSelector(state => state.tokenStore);
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
@@ -107,88 +156,19 @@ const Appointment = () => {
     setOpen(false);
   };
 
-  const filterDoctorCalendarByDay = (departmentsList, doctorCalendarsList) => {
-    const itemsFound = [];
-    if (departmentsList !== null && doctorCalendarsList !== null) {
-      const currentDepartment = departmentsList.find(
-        item => item.id === selectedValueDepartmentState,
-      );
-      const doctorCalendarByDay = doctorCalendarsList.filter(
-        item => item.attributes.startDate === appointmentDateState,
-      );
-      if (typeof (currentDepartment) !== 'undefined' && typeof (doctorCalendarByDay) !== 'undefined') {
-        const iteratedepartment = (element, index, array) => {
-          const doctorcalendarfounded = doctorCalendarByDay.find(
-            x => Number(x.attributes.user_id) === Number(element.id),
-          );
-          if (doctorcalendarfounded !== undefined) {
-            itemsFound.push(doctorcalendarfounded);
-          }
-        };
-        currentDepartment.relationships.doctors.data.forEach(iteratedepartment);
-      }
-    }
-    return itemsFound;
-  };
-  const getShifts = (departmentsList, doctorCalendarsList) => {
-    const currentDateTimeable = filterDoctorCalendarByDay(departmentsList, doctorCalendarsList);
-    const arrayHours = [];
-    if (currentDateTimeable !== null) {
-      const iteratedoctorcalendars = (element, index, array) => {
-        const obj = {
-          startTime: moment.utc(element.attributes.startTime),
-          totalHours: element.attributes.totalHours,
-          shiftinterval: element.attributes.shiftinterval,
-          totalShift: ((
-            Number(element.attributes.totalHours) * 60)
-            / (Number(element.attributes.shiftinterval))),
-        };
-        arrayHours.push(obj);
-      };
-      currentDateTimeable.forEach(iteratedoctorcalendars);
-    }
-    return arrayHours;
-  };
-  const getShiftDetails = (departmentsList, doctorCalendarsList) => {
-    const arrayShiftDetailByHour = [];
-    const arrayShiftDetail = getShifts(departmentsList, doctorCalendarsList);
-    let indexKey = 1;
-    const iterateShiftDetail = (element, index, array) => {
-      const r = 0;
-      let nextStartTime = moment.utc(element.startTime);
-      // eslint-disable-next-line no-plusplus
-      for (let r = 0; r < element.totalShift; r++) {
-        const obj = {
-          id: indexKey,
-          startTime: moment.utc(nextStartTime).format('HH:mm'),
-          endTime: moment.utc(nextStartTime).add(15, 'minutes').format('HH:mm'),
-          status: false,
-          firstName: '',
-          lastName: '',
-        };
-        arrayShiftDetailByHour.push(obj);
-        nextStartTime = moment.utc(nextStartTime).add(15, 'minutes');
-        indexKey += 1;
-      }
-    };
-    arrayShiftDetail.forEach(iterateShiftDetail);
-    console.log({ arrayShiftDetail });
-    return arrayShiftDetailByHour;
-  };
+  const handleSubmitModal = event => {
+    // eslint-disable-next-line camelcase
+    const { startTime, endTime, doctor_id } = intervalTimeState;
 
-  const updateAvailability = (departmentsList, doctorCalendarsList) => {
-    const listShiftDetails = getShiftDetails(departmentsList, doctorCalendarsList);
-    setListShiftDetailsState(listShiftDetails);
-    const iterateFilterappointmentsby = (element, index, array) => {
-      const startTimeAppointment = moment.utc(element.attributes.startTime).format('HH:mm');
-      const endTimeAppointment = moment.utc(element.attributes.startTime).format('HH:mm');
-      const foundIndex = listShiftDetails.findIndex(x => x.startTime === startTimeAppointment);
-      if (foundIndex !== -1) {
-        listShiftDetails[foundIndex].status = true;
-      }
-    };
-    filterappointmentsby.forEach(iterateFilterappointmentsby);
-    return listShiftDetails;
+    saveAppointment(appointmentDateState, startTime, endTime, user_id, doctor_id)
+      .then(response => {
+        console.log('ok --> ', response);
+      }, error => {
+        console.log('ok --> ', error);
+      })
+      .catch(error => {
+        console.log('error --> ', { error });
+      });
   };
 
   const handleChangeStartTime = event => {
@@ -199,37 +179,95 @@ const Appointment = () => {
     setIntervalTimeState(shiftDetail);
   };
 
-  const handleChange = event => {
-    console.log(event.target.value);
-    setSelectedValueDepartmentState(event.target.value);
-    const currentDepartment = departments.find(
+  const handleChangeDepartment = event => {
+    setCurrentDepartmentValue(event.target.value);
+
+    const resultDepartments = departments.find(
       item => item.id === event.target.value,
     );
-    if (typeof (currentDepartment) !== 'undefined') {
-      setSelectedNameDepartment(currentDepartment.attributes.name);
-    } else {
-      setSelectedNameDepartment('Need to select a department');
+
+    const resultDoctorCalendars = doctorcalendars.filter(
+      item => item.attributes.startDate === appointmentDateState,
+    );
+
+    if (typeof (resultDepartments) !== 'undefined') {
+      setCurrentDepartment(resultDepartments);
     }
-
-    const resultAvalilability = updateAvailability(departments, doctorcalendars);
-    setAvailability(resultAvalilability);
-  };
-
-  const changeAppointmentDate = selectedDate => {
-    setAppointmentDateState(moment(selectedDate).format('YYYY-MM-DD'));
-  };
-
-  useEffect(() => {
-    getListAppointmentByDateService(selectedValueDepartmentState, appointmentDateState)
+    if (typeof (resultDoctorCalendars) !== 'undefined') {
+      setDoctorCalendarByDay(resultDoctorCalendars);
+    }
+    getListAppointmentByDateService(event.target.value, appointmentDateState)
       .then(({ data }) => {
         dispatch(setListByDateService(data));
+        setFilterAppointmentsBy(data.data);
+
+        const doctorsCalendarFounded = [];
+        resultDepartments.relationships.doctors.data.filter(itemDepartment => {
+          resultDoctorCalendars.filter(itemCalendar => {
+            if (Number(itemDepartment.id) === Number(itemCalendar.attributes.user_id)) {
+              doctorsCalendarFounded.push(itemCalendar);
+              return itemCalendar;
+            }
+            return defaultDoctorCalendar;
+          });
+          return defaultDepartment;
+        });
+
+        const arrayHours = [];
+        doctorsCalendarFounded.filter(x => {
+          const obj = {
+            startTime: moment.utc(x.attributes.startTime),
+            endTime: moment.utc(x.attributes.endTime),
+            user_id: x.attributes.user_id,
+            totalHours: x.attributes.totalHours,
+            shiftinterval: x.attributes.shiftinterval,
+            totalShift: ((
+              Number(x.attributes.totalHours) * 60)
+                / (Number(x.attributes.shiftinterval))),
+          };
+          arrayHours.push(obj);
+          return defaultDoctorCalendar;
+        });
+
+        const arrayShiftDetailByHour = [];
+        let indexKey = 1;
+        for (let indexj = 0; indexj < arrayHours.length; indexj += 1) {
+          const r = 0;
+          let nextStartTime = moment.utc(arrayHours[indexj].startTime);
+          for (let r = 0; r < arrayHours[indexj].totalShift; r += 1) {
+            const obj = {
+              id: indexKey,
+              startTime: moment.utc(nextStartTime).format('HH:mm'),
+              endTime: moment.utc(nextStartTime).add(15, 'minutes').format('HH:mm'),
+              status: false,
+              doctor_id: arrayHours[indexj].user_id,
+            };
+            arrayShiftDetailByHour.push(obj);
+            nextStartTime = moment.utc(nextStartTime).add(15, 'minutes');
+            indexKey += 1;
+          }
+        }
+        setListShiftDetailsState(arrayShiftDetailByHour);
+        for (let indexh = 0; indexh < data.data.length; indexh += 1) {
+          const foundIndex = arrayShiftDetailByHour.findIndex(
+            x => x.startTime === moment.utc(data.data[indexh].attributes.startTime).format('HH:mm'),
+          );
+          if (foundIndex !== -1) {
+            arrayShiftDetailByHour[foundIndex].status = true;
+          }
+        }
+        setAvailability(arrayShiftDetailByHour);
       })
       .catch(error => {
         console.log({ error });
       // setSubmitting(false);
       // setStatus('not working');
       });
-  }, [appointmentDateState, selectedValueDepartmentState]);
+  };
+
+  const changeAppointmentDate = selectedDate => {
+    setAppointmentDateState(moment(selectedDate).format('YYYY-MM-DD'));
+  };
 
   useEffect(() => {
     getDepartments()
@@ -265,14 +303,27 @@ const Appointment = () => {
             value={appointmentDateState}
             onChange={changeAppointmentDate}
           />
+          <div>
+            <ToastContainer
+              position="top-center"
+              autoClose={3000}
+              hideProgressBar
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+            />
+          </div>
         </MuiPickersUtilsProvider>
         <FormControl>
           <InputLabel shrink htmlFor="age-native-label-placeholder">
             Department
           </InputLabel>
           <NativeSelect
-            value={selectedValueDepartmentState}
-            onChange={handleChange}
+            value={currentDepartmentValue}
+            onChange={handleChangeDepartment}
           >
             <option value="0">Select Department</option>
             {departments !== null
@@ -338,7 +389,7 @@ const Appointment = () => {
                   Service:
                 </InputLabel>
                 <InputLabel htmlFor="age-native-label-placeholder">
-                  {selectedNameDepartment}
+                  {currentDepartment.attributes.name}
                 </InputLabel>
               </LabelAppointmentDepartment>
             </DialogContent>
@@ -346,7 +397,7 @@ const Appointment = () => {
               <Button onClick={handleClose} color="primary">
                 Cancel
               </Button>
-              <Button onClick={handleClose} color="primary">
+              <Button onClick={handleSubmitModal} color="primary">
                 Subscribe
               </Button>
             </DialogActions>
