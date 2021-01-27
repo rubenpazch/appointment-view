@@ -61,7 +61,9 @@ const EndTimeResume = styled.div`
   }
 `;
 
-const Resume = ({ doctorName, location }) => (
+const Resume = ({
+  doctorName, location, startTime, endTime,
+}) => (
   <ContentResume className="d-flex flex-column">
     <div className="d-flex flex-row">
       <DoctorResume className="d-flex flex-row">
@@ -74,18 +76,19 @@ const Resume = ({ doctorName, location }) => (
         <span>Consultory: </span>
         <p>
           {location}
-          {' '}
         </p>
       </ConsultoryResume>
     </div>
     <div className="d-flex flex-row">
       <StartTimeResume className="d-flex flex-row">
         <span>Start Time: </span>
-        <p>8:00 </p>
+        <p>
+          {startTime}
+        </p>
       </StartTimeResume>
       <EndTimeResume className="d-flex flex-row">
         <span>End Time: </span>
-        <p>16:00</p>
+        <p>{endTime}</p>
       </EndTimeResume>
     </div>
   </ContentResume>

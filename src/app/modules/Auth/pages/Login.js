@@ -79,8 +79,14 @@ const Login = () => {
       enableLoading();
       setTimeout(() => {
         login(values.username, values.password)
-          .then(({ data: { token, username, user_id } }) => {
-            dispatch(setToken({ token, username, user_id }));
+          .then(({
+            data: {
+              token, username, user_id, personInformation,
+            },
+          }) => {
+            dispatch(setToken({
+              token, username, user_id, personInformation,
+            }));
             disableLoading();
           })
           .catch(error => {

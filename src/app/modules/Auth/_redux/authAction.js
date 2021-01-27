@@ -5,6 +5,8 @@ import {
   USER_INFORMATION,
   FETCH_GET_DEPARTMENTS,
   FETCH_DOCTOR_CALENDARS,
+  FETCH_DOCTORS,
+  FETCH_DOCTORS_USERS,
 } from './authReducer';
 
 export const setToken = result => ({
@@ -35,4 +37,14 @@ export const setDepartments = result => ({
 export const setDoctorCalendars = result => ({
   type: FETCH_DOCTOR_CALENDARS,
   payload: result.data,
+});
+
+export const setDoctors = result => ({
+  type: FETCH_DOCTORS,
+  payload: result,
+});
+
+export const setDoctorsUsers = result => ({
+  type: FETCH_DOCTORS_USERS,
+  payload: result,
 });

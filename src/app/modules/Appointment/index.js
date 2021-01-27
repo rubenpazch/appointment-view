@@ -26,7 +26,9 @@ import Draggable from 'react-draggable';
 import 'material-react-toastify/dist/ReactToastify.css';
 
 import { getDepartments, getDoctorCalendars } from '../Auth/_redux/authService';
-import { setDepartments, setDoctorCalendars } from '../Auth/_redux/authAction';
+import {
+  setDepartments, setDoctorCalendars, setDoctors, setDoctorsUsers,
+} from '../Auth/_redux/authAction';
 import { setListByDateService } from './_redux/appointmentAction';
 import { getListAppointmentByDateService, saveAppointment } from './_redux/appointmentService';
 import AppointmentDetail from './pages/AppointmentDetail';
@@ -43,10 +45,6 @@ const AppointmentWrapper = styled.div`
 const LeftSideBar = styled.div`
   width: 35%;
   padding: 15px;
-  border-right: 1px solid #deabab;
-  -moz-box-shadow:    -9px 4px 12px 2px #000000;
-  -webkit-box-shadow: -9px 4px 12px 2px #000000;
-  box-shadow: -9px 4px 12px 2px #000000;
   min-height: 100vh;
   height: 100%;
 `;
@@ -54,7 +52,8 @@ const LeftSideBar = styled.div`
 const ContentWrapper = styled.div`
   width: 62%;
   padding: 15px 0 0 15px;
-  margin: 0;  
+  margin: 0; 
+  border-left: 1px solid #c3cdff;
 `;
 
 const LabelAppointmentDate = styled.div`
@@ -111,6 +110,21 @@ const SelectOptionContainer = styled.div`
 const ContentAvailability = styled.div`
   padding: 15px;
   margin: 0;
+`;
+
+const UserInformation = styled.div`
+  padding: 15px 0 1px 15px;
+  margin: 0 0 15px 0;
+  background-color: #3f51b4;
+  border-radius: 5px;
+  color: #ffffff;
+
+  span {
+    font-weight: 800;
+  }
+  p {
+    text-transform: uppercase;
+  }
 `;
 
 function PaperComponent(props) {
@@ -170,6 +184,7 @@ const Appointment = () => {
   const [currentDepartmentValue, setCurrentDepartmentValue] = useState(0);
   const [currentDepartment, setCurrentDepartment] = useState(defaultDepartment);
   const [doctorCalendarByDay, setDoctorCalendarByDay] = useState(defaultDoctorCalendar);
+  const [doctorCalendarByDepartment, setDoctorCalendarByDepartment] = useState(null);
   const { notify } = useContext(ToastContext);
   const [listShiftDetailsState, setListShiftDetailsState] = useState([
     {
@@ -191,9 +206,11 @@ const Appointment = () => {
   // eslint-disable-next-line camelcase
   const { departments, user_id } = useSelector(state => state.tokenStore);
   const { doctorcalendars } = useSelector(state => state.tokenStore);
+  const { doctors } = useSelector(state => state.tokenStore);
+  const { userInformation } = useSelector(state => state.tokenStore);
+  const { doctorsusers } = useSelector(state => state.tokenStore);
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -213,6 +230,7 @@ const Appointment = () => {
           notify(`Error: ${getTextFromObject(response.request.responseText)}`);
         } else if (response.status === 200) {
           console.log('success');
+          handleClose();
         } else {
           console.log('else');
         }
@@ -267,7 +285,7 @@ const Appointment = () => {
             arrayOfUsers.push(includedList[indexIL]);
           }
         }
-        console.log({ arrayOfUsers });
+
         const appointmentList = data.data;
         const doctorsCalendarFounded = [];
         resultDepartments.relationships.doctors.data.filter(itemDepartment => {
@@ -292,11 +310,21 @@ const Appointment = () => {
             totalShift: ((
               Number(x.attributes.totalHours) * 60)
                 / (Number(x.attributes.shiftinterval))),
+            userInformation: null,
+            doctorpersonInformation: null,
           };
           arrayHours.push(obj);
           return defaultDoctorCalendar;
         });
+        console.log({ arrayHours });
+        for (let indexAH = 0; indexAH < arrayHours.length; indexAH += 1) {
+          arrayHours[indexAH].userInformation = doctorsusers.find(x => Number(x.id) === Number(arrayHours[indexAH].user_id));
+        }
 
+        for (let indexAH = 0; indexAH < arrayHours.length; indexAH += 1) {
+          arrayHours[indexAH].doctorpersonInformation = doctors.find(x => Number(x.id) === Number(arrayHours[indexAH].userInformation.attributes.person_id));
+        }
+        setDoctorCalendarByDepartment(arrayHours);
         const arrayShiftDetailByHour = [];
         let indexKey = 1;
         for (let indexj = 0; indexj < arrayHours.length; indexj += 1) {
@@ -318,7 +346,7 @@ const Appointment = () => {
             indexKey += 1;
           }
         }
-        console.log({ appointmentList });
+
         setListShiftDetailsState(arrayShiftDetailByHour);
         for (let indexh = 0; indexh < appointmentList.length; indexh += 1) {
           const foundIndex = arrayShiftDetailByHour.findIndex(
@@ -333,7 +361,7 @@ const Appointment = () => {
             arrayShiftDetailByHour[foundIndex].lastName = objectPerson.attributes.lastName;
           }
         }
-        console.log({ arrayShiftDetailByHour });
+
         setAvailability(arrayShiftDetailByHour);
       })
       .catch(error => {
@@ -361,7 +389,20 @@ const Appointment = () => {
   useEffect(() => {
     getDoctorCalendars()
       .then(({ data }) => {
+        const includedList = data.included;
+        const arrayOfDoctors = [];
+        const arrayOfUsersDoctors = [];
+        for (let indexIL = 0; indexIL < includedList.length; indexIL += 1) {
+          if (includedList[indexIL].type === 'person') {
+            arrayOfDoctors.push(includedList[indexIL]);
+          }
+          if (includedList[indexIL].type === 'user') {
+            arrayOfUsersDoctors.push(includedList[indexIL]);
+          }
+        }
         dispatch(setDoctorCalendars(data));
+        dispatch(setDoctors(arrayOfDoctors));
+        dispatch(setDoctorsUsers(arrayOfUsersDoctors));
       }).catch(error => {
         console.log({ error });
         // setSubmitting(false);doctorcalendars
@@ -372,6 +413,10 @@ const Appointment = () => {
   return (
     <AppointmentWrapper className="d-flex flex-row">
       <LeftSideBar>
+        <UserInformation>
+          <span>Welcome</span>
+          <p>{`${userInformation.firstName} ${userInformation.lastName}`}</p>
+        </UserInformation>
         <DatePickerContainer>
           <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={locale}>
             <DatePicker
@@ -405,83 +450,91 @@ const Appointment = () => {
 
         </SelectOptionContainer>
 
-        <div>
-          <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                To subscribe to t
-                occasionally.
-              </DialogContentText>
-              <div className="my-3">
-                <FormControl>
-                  <InputLabel shrink htmlFor="age-native-label-placeholder">
-                    Start Time:
-                  </InputLabel>
-                  <NativeSelect
-                    value={startTimeState}
-                    onChange={handleChangeStartTime}
-                  >
-                    <option value="0">Select Department</option>
-                    {listShiftDetailsState !== null
-                      ? listShiftDetailsState.map(item => (
-                        <option value={item.id} key={item.id}>{item.startTime}</option>
-                      ))
-                      : null}
-                  </NativeSelect>
-                  <FormHelperText>Label + placeholder</FormHelperText>
-                </FormControl>
-                <LabelAppointmentDate className="d-flex flex-row my-3">
-                  <InputLabel htmlFor="age-native-label-placeholder">
-                    End Time:
-                  </InputLabel>
-
-                  <InputLabel htmlFor="age-native-label-placeholder">
-                    {intervalTimeState.endTime}
-                  </InputLabel>
-                </LabelAppointmentDate>
-              </div>
-
-              <LabelAppointmentDate className="d-flex flex-row my-3">
-                <InputLabel htmlFor="age-native-label-placeholder">
-                  Date:
-                </InputLabel>
-
-                <InputLabel htmlFor="age-native-label-placeholder">
-                  {appointmentDateState}
-                </InputLabel>
-              </LabelAppointmentDate>
-              <LabelAppointmentDepartment className="d-flex flex-row my-3">
-                <InputLabel htmlFor="age-native-label-placeholder">
-                  Service:
-                </InputLabel>
-                <InputLabel htmlFor="age-native-label-placeholder">
-                  {currentDepartment.attributes.name}
-                </InputLabel>
-              </LabelAppointmentDepartment>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleSubmitModal} color="primary">
-                Subscribe
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
       </LeftSideBar>
       <ContentWrapper className="d-flex flex-column justify-content-start">
         <ContentLogout className="d-flex flex-row justify-content-between">
           <Button variant="outlined" color="primary" onClick={handleClickOpen}>
             New
           </Button>
+          <div>
+            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+              <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  To subscribe to t
+                  occasionally.
+                </DialogContentText>
+                <div className="my-3">
+                  <FormControl>
+                    <InputLabel shrink htmlFor="age-native-label-placeholder">
+                      Start Time:
+                    </InputLabel>
+                    <NativeSelect
+                      value={startTimeState}
+                      onChange={handleChangeStartTime}
+                    >
+                      <option value="0">Select Department</option>
+                      {listShiftDetailsState !== null
+                        ? listShiftDetailsState.map(item => (
+                          <option value={item.id} key={item.id}>{item.startTime}</option>
+                        ))
+                        : null}
+                    </NativeSelect>
+                    <FormHelperText>Label + placeholder</FormHelperText>
+                  </FormControl>
+                  <LabelAppointmentDate className="d-flex flex-row my-3">
+                    <InputLabel htmlFor="age-native-label-placeholder">
+                      End Time:
+                    </InputLabel>
+
+                    <InputLabel htmlFor="age-native-label-placeholder">
+                      {intervalTimeState.endTime}
+                    </InputLabel>
+                  </LabelAppointmentDate>
+                </div>
+
+                <LabelAppointmentDate className="d-flex flex-row my-3">
+                  <InputLabel htmlFor="age-native-label-placeholder">
+                    Date:
+                  </InputLabel>
+
+                  <InputLabel htmlFor="age-native-label-placeholder">
+                    {appointmentDateState}
+                  </InputLabel>
+                </LabelAppointmentDate>
+                <LabelAppointmentDepartment className="d-flex flex-row my-3">
+                  <InputLabel htmlFor="age-native-label-placeholder">
+                    Service:
+                  </InputLabel>
+                  <InputLabel htmlFor="age-native-label-placeholder">
+                    {currentDepartment.attributes.name}
+                  </InputLabel>
+                </LabelAppointmentDepartment>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Cancel
+                </Button>
+                <Button onClick={handleSubmitModal} color="primary">
+                  Subscribe
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
           { loading ? <Logout /> : null }
         </ContentLogout>
-        <Resume
-          doctorName="Carlos Paz"
-          location="Consultorio 101"
-        />
+        {doctorCalendarByDepartment !== null
+          ? doctorCalendarByDepartment.map(item => (
+            <Resume
+              key={item.user_id}
+              doctorName={`${item.doctorpersonInformation.attributes.firstName} ${item.doctorpersonInformation.attributes.lastName}`}
+              location={currentDepartment.attributes.location}
+              startTime={moment.utc(item.startTime).format('HH:mm')}
+              endTime={moment.utc(item.endTime).format('HH:mm')}
+            />
+          ))
+          : null}
+
         <ContentAvailability>
           { availability !== null && typeof (availability) !== 'undefined'
             ? availability.map(item => (
