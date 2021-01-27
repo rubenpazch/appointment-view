@@ -373,6 +373,122 @@ const Appointment = () => {
 
   const changeAppointmentDate = selectedDate => {
     setAppointmentDateState(moment(selectedDate).format('YYYY-MM-DD'));
+    const currentDateSelected = moment(selectedDate).format('YYYY-MM-DD');
+    setCurrentDepartmentValue(currentDepartmentValue);
+
+    const resultDepartments = departments.find(
+      item => item.id === currentDepartmentValue,
+    );
+
+    const resultDoctorCalendars = doctorcalendars.filter(
+      item => item.attributes.startDate === currentDateSelected,
+    );
+
+    if (typeof (resultDepartments) !== 'undefined') {
+      setCurrentDepartment(resultDepartments);
+    }
+    if (typeof (resultDoctorCalendars) !== 'undefined') {
+      setDoctorCalendarByDay(resultDoctorCalendars);
+    }
+    getListAppointmentByDateService(currentDepartmentValue, currentDateSelected)
+      .then(({ data }) => {
+        dispatch(setListByDateService(data));
+        setFilterAppointmentsBy(data.data);
+        const includedList = data.included;
+        const arrayOfPerson = [];
+        const arrayOfUsers = [];
+        for (let indexIL = 0; indexIL < includedList.length; indexIL += 1) {
+          if (includedList[indexIL].type === 'person') {
+            arrayOfPerson.push(includedList[indexIL]);
+          }
+          if (includedList[indexIL].type === 'user') {
+            arrayOfUsers.push(includedList[indexIL]);
+          }
+        }
+
+        const appointmentList = data.data;
+        const doctorsCalendarFounded = [];
+        resultDepartments.relationships.doctors.data.filter(itemDepartment => {
+          resultDoctorCalendars.filter(itemCalendar => {
+            if (Number(itemDepartment.id) === Number(itemCalendar.attributes.user_id)) {
+              doctorsCalendarFounded.push(itemCalendar);
+              return itemCalendar;
+            }
+            return defaultDoctorCalendar;
+          });
+          return defaultDepartment;
+        });
+
+        const arrayHours = [];
+        doctorsCalendarFounded.filter(x => {
+          const obj = {
+            startTime: moment.utc(x.attributes.startTime),
+            endTime: moment.utc(x.attributes.endTime),
+            user_id: x.attributes.user_id,
+            totalHours: x.attributes.totalHours,
+            shiftinterval: x.attributes.shiftinterval,
+            totalShift: ((
+              Number(x.attributes.totalHours) * 60)
+                / (Number(x.attributes.shiftinterval))),
+            userInformation: null,
+            doctorpersonInformation: null,
+          };
+          arrayHours.push(obj);
+          return defaultDoctorCalendar;
+        });
+        console.log({ arrayHours });
+        for (let indexAH = 0; indexAH < arrayHours.length; indexAH += 1) {
+          arrayHours[indexAH].userInformation = doctorsusers.find(x => Number(x.id) === Number(arrayHours[indexAH].user_id));
+        }
+
+        for (let indexAH = 0; indexAH < arrayHours.length; indexAH += 1) {
+          arrayHours[indexAH].doctorpersonInformation = doctors.find(x => Number(x.id) === Number(arrayHours[indexAH].userInformation.attributes.person_id));
+        }
+        setDoctorCalendarByDepartment(arrayHours);
+        const arrayShiftDetailByHour = [];
+        let indexKey = 1;
+        for (let indexj = 0; indexj < arrayHours.length; indexj += 1) {
+          const r = 0;
+          let nextStartTime = moment.utc(arrayHours[indexj].startTime);
+          for (let r = 0; r < arrayHours[indexj].totalShift; r += 1) {
+            const obj = {
+              id: indexKey,
+              startTime: moment.utc(nextStartTime).format('HH:mm'),
+              endTime: moment.utc(nextStartTime).add(15, 'minutes').format('HH:mm'),
+              status: false,
+              doctor_id: arrayHours[indexj].user_id,
+              patient_id: '',
+              firstName: ' ... ',
+              lastName: '',
+            };
+            arrayShiftDetailByHour.push(obj);
+            nextStartTime = moment.utc(nextStartTime).add(15, 'minutes');
+            indexKey += 1;
+          }
+        }
+
+        setListShiftDetailsState(arrayShiftDetailByHour);
+        for (let indexh = 0; indexh < appointmentList.length; indexh += 1) {
+          const foundIndex = arrayShiftDetailByHour.findIndex(
+            x => x.startTime === moment.utc(appointmentList[indexh].attributes.startTime).format('HH:mm'),
+          );
+          if (foundIndex !== -1) {
+            arrayShiftDetailByHour[foundIndex].status = true;
+            arrayShiftDetailByHour[foundIndex].patient_id = appointmentList[indexh].attributes.user_id;
+            const objectUser = arrayOfUsers.find(u => Number(u.id) === Number(appointmentList[indexh].attributes.user_id));
+            const objectPerson = arrayOfPerson.find(p => Number(p.id) === Number(objectUser.attributes.person_id));
+            arrayShiftDetailByHour[foundIndex].firstName = objectPerson.attributes.firstName;
+            arrayShiftDetailByHour[foundIndex].lastName = objectPerson.attributes.lastName;
+          }
+        }
+
+        setAvailability(arrayShiftDetailByHour);
+      })
+      .catch(error => {
+        console.log({ error });
+      // setSubmitting(false);
+      // setStatus('not working');
+      });
   };
 
   useEffect(() => {
@@ -415,7 +531,10 @@ const Appointment = () => {
       <LeftSideBar>
         <UserInformation>
           <span>Welcome</span>
-          <p>{`${userInformation.firstName} ${userInformation.lastName}`}</p>
+          {userInformation !== null
+            ? <p>{`${userInformation.firstName} ${userInformation.lastName}`}</p>
+            : <p>No results founded</p>}
+
         </UserInformation>
         <DatePickerContainer>
           <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={locale}>
