@@ -24,6 +24,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import 'material-react-toastify/dist/ReactToastify.css';
+import PrimarySearchAppBar from '../../../components/TopBar';
 
 import { getDepartments, getDoctorCalendars } from '../Auth/_redux/authService';
 import {
@@ -33,8 +34,9 @@ import { setListByDateService } from './_redux/appointmentAction';
 import { getListAppointmentByDateService, saveAppointment } from './_redux/appointmentService';
 import AppointmentDetail from './pages/AppointmentDetail';
 import Resume from './pages/Resume';
-import Logout from '../Auth/pages/Logout';
 import { ToastContext } from '../../../components/ToastContextProvider';
+import SwipeableTemporaryDrawer from '../../../components/Navigation';
+import Logout from '../Auth/pages/Logout';
 
 moment.locale('en');
 
@@ -529,6 +531,7 @@ const Appointment = () => {
   return (
     <AppointmentWrapper className="d-flex flex-row">
       <LeftSideBar>
+        <Logout />
         <UserInformation>
           <span>Welcome</span>
           {userInformation !== null
@@ -568,7 +571,6 @@ const Appointment = () => {
           </FormControl>
 
         </SelectOptionContainer>
-
       </LeftSideBar>
       <ContentWrapper className="d-flex flex-column justify-content-start">
         <ContentLogout className="d-flex flex-row justify-content-between">
@@ -640,7 +642,6 @@ const Appointment = () => {
               </DialogActions>
             </Dialog>
           </div>
-          { loading ? <Logout /> : null }
         </ContentLogout>
         {doctorCalendarByDepartment !== null
           ? doctorCalendarByDepartment.map(item => (
