@@ -3,7 +3,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
-import { Container, Row, Col } from 'react-bootstrap';
 import {
   HashRouter,
   Switch,
@@ -18,24 +17,19 @@ import {
 
 import toAbsoluteUrl from '../../../helpers/assetsHelpers';
 import MenuList from '../../../components/MenuList';
+import Footer from './Pages/Footer';
 
-const Wrapper = styled.div` 
-  padding: 0;
-  margin: 0;
+const Wrapper = styled.div`
 `;
 
 const LeftContainer = styled.div` 
-  padding: 0;
-  margin: 0;
   min-height: 100vh;
-  height: 100vh;
+  min-width: 220px;
+  max-width: 220px;
 `;
 
 const RigthContainer = styled.div` 
-  padding: 0;
-  margin: 0;
   min-height: 100vh;
-  height: 100vh;
 `;
 const LogoContainer = styled.div`  
   min-height: 15vh;
@@ -44,49 +38,6 @@ const LogoContainer = styled.div`
   img {
     width: 150px;
   }
-`;
-const MenuContainer = styled.div`
-  min-height: 60vh;
-  height: 70vh;
-
-  ul {
-    background-color: #fff;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-
-    li {
-      background-color: #fff;
-      padding: 10px;
-      margin: 0;
-      height: 40px;
-      color: #fff;
-
-      a {
-        color: #000;
-        text-transform: uppercase;
-        font-weight: 800;
-      }
-      a:visited {
-        color: #000;
-      }
-      a:active {
-        color: purple;
-      }
-    }
-    
-    li:hover {
-      background-color: #98bd30;
-      a {
-        color: #fff;
-        text-decoration: none;
-      }
-    }
-  }
-`;
-const FooterContainer = styled.div` 
-  min-height: 15vh;
-  height: 15vh;
 `;
 
 function useQuery() {
@@ -108,56 +59,38 @@ const Dashboard = () => {
   const { path, url } = useRouteMatch();
   console.log('test');
   return (
-    <Container fluid>
-      <Row>
-        <Col xs={2} md={2} className="m-0 p-0">
-          <LeftContainer>
-            <Row className="m-0 p-0">
-              <Col md={12} className="m-0 p-0">
-                <LogoContainer>
-                  <img
-                    alt="Logo"
-                    src={toAbsoluteUrl('/media/logos/logo.png')}
-                  />
-                </LogoContainer>
-              </Col>
-              <Col md={12} className="m-0 p-0">
-                <MenuContainer>
-                  <MenuList />
-                </MenuContainer>
-              </Col>
-              <Col md={12} className="m-0 p-0">
-                <FooterContainer>
-                  <ul>
-                    <li>
-                      <FontAwesomeIcon icon={faClock} />
-                    </li>
-                    <li>
-                      <FontAwesomeIcon icon={faClock} />
-                    </li>
-                    <li>
-                      <FontAwesomeIcon icon={faClock} />
-                    </li>
-                  </ul>
-                </FooterContainer>
-              </Col>
-            </Row>
-          </LeftContainer>
-        </Col>
-        <Col xs={10} md={10} className="border-left">
-          <RigthContainer>
-            <Switch>
-              <Route exact path={path}>
-                <h3>Please select a service.</h3>
-              </Route>
-              <Route path={`${path}/:departmentname`}>
-                <TopicChild />
-              </Route>
-            </Switch>
-          </RigthContainer>
-        </Col>
-      </Row>
-    </Container>
+    <Wrapper className="container-fluid flex-nowrap">
+      <div className="row flex-row flex-nowrap">
+        <LeftContainer className="col-2 p-0 border-right">
+          <div className="row d-flex flex-column m-0 p-0">
+            <div className="col m-0 p-0">
+              <LogoContainer>
+                <img
+                  alt="Logo"
+                  src={toAbsoluteUrl('/media/logos/logo.png')}
+                />
+              </LogoContainer>
+            </div>
+            <div className="col m-0 p-0">
+              <MenuList />
+            </div>
+            <div className="col m-0 p-0">
+              <Footer />
+            </div>
+          </div>
+        </LeftContainer>
+        <RigthContainer className="col-10">
+          <Switch>
+            <Route exact path={path}>
+              <h3>Please select a service.</h3>
+            </Route>
+            <Route path={`${path}/:departmentname`}>
+              <TopicChild />
+            </Route>
+          </Switch>
+        </RigthContainer>
+      </div>
+    </Wrapper>
   );
 };
 
