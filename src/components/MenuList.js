@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { faClock, faUnderline } from '@fortawesome/free-solid-svg-icons';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -12,25 +12,50 @@ import { getDepartments } from '../app/modules/Auth/_redux/authService';
 import { setDepartments } from '../app/modules/Auth/_redux/authAction';
 
 const MenuContainer = styled.div`
-  min-height: 60vh;
-  height: 70vh;
-
+  min-height: 75vh;
+  height: 75vh;
   ul {
     background-color: #fff;
     list-style-type: none;
     padding: 0;
     margin: 0;
 
-    li {
-      background-color: #fff;
-      padding: 9px 0 0 15px;
-      margin: 0;
-      height: 40px;
+    li {      
+      margin: 0; 
+      padding: 0;
       color: #fff;
+      padding: 5px 0px 10px 15px;
     }
     
+    .linkMenu {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      white-space: nowrap;
+      text-decoration: none;
+      color: #000;
+    }
+    .linkMenu:active {
+      text-decoration: underline;
+    }
+    .nameLinkMenu{    
+      padding: 0;
+      margin: 0;
+    }
+
     li:hover {
       background-color: #98bd30;
+      margin: 0; 
+      padding: 0;
+      padding: 5px 0px 10px 15px;
+      color: #fff;
+    }
+    li:active {
+      background-color: #98bd30;
+      margin: 0; 
+      padding: 5px 0px 10px 15px;
+      color: #fff;
     }
   }
 `;
@@ -59,21 +84,15 @@ const MenuList = () => {
               <li key={item.id}>
                 <NavLink
                   to={`${url}/${item.attributes.name.replace(/ /g, '_')}?id=${item.id}`}
-                  className="normal"
                   activeStyle={{
-                    fontWeight: 'bold',
-                    color: '#fff',
-                    backgroundColor: '#98bd30',
-                    display: 'block',
-                    padding: '2px 0 0 13px',
-                    height: '30px',
-                    width: '215px',
-                    margin: '0 0 0 -10px',
-                    lineHeight: '27px',
+                    fontWeight: 900,
                   }}
+                  className="linkMenu"
                   exact
                 >
-                  {item.attributes.name}
+                  <span className="nameLinkMenu">
+                    {item.attributes.name}
+                  </span>
                 </NavLink>
               </li>
             ))
