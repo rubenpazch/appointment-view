@@ -18,18 +18,19 @@ import {
 import toAbsoluteUrl from '../../../helpers/assetsHelpers';
 import MenuList from '../../../components/MenuList';
 import Footer from './Pages/Footer';
+import Title from './Pages/Title';
+import CalendarCarrusel from './Pages/CalendarCarrusel';
 
 const Wrapper = styled.div`
 `;
 
 const LeftContainer = styled.div` 
   min-height: 100vh;
-  min-width: 220px;
-  max-width: 220px;
+  min-width: 220px;  
 `;
 
 const RigthContainer = styled.div` 
-  min-height: 100vh;
+  min-height: 100vh;  
 `;
 const LogoContainer = styled.div`  
   min-height: 15vh;
@@ -38,6 +39,20 @@ const LogoContainer = styled.div`
   img {
     width: 150px;
   }
+`;
+
+const TopContainer = styled.div`
+  height: 15vh;
+  min-height: 15vh;  
+  width: 100%;
+  min-width: 100%;
+`;
+
+const BottonContainer = styled.div`
+  height: 85vh;
+  min-height: 85vh;
+  width: 100%;
+  min-width: 100%;
 `;
 
 function useQuery() {
@@ -85,7 +100,14 @@ const Dashboard = () => {
               <h3>Please select a service.</h3>
             </Route>
             <Route path={`${path}/:departmentname`}>
-              <TopicChild />
+              <div className="row d-flex flex-column">
+                <TopContainer className="col-4 p-0">
+                  <Title />
+                </TopContainer>
+                <BottonContainer className="col-8 m-0 p-0">
+                  <CalendarCarrusel />
+                </BottonContainer>
+              </div>
             </Route>
           </Switch>
         </RigthContainer>
