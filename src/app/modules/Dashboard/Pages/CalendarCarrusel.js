@@ -157,9 +157,6 @@ const CalendarCarrusel = () => {
         timeout={timeout}
         navButtonsAlwaysVisible={navButtonsAlwaysVisible}
         navButtonsAlwaysInvisible={navButtonsAlwaysInvisible}
-        next={(now, previous) => console.log(`Next User Callback: Now displaying child${now}. Previously displayed child${previous}`)}
-        prev={(now, previous) => console.log(`Prev User Callback: Now displaying child${now}. Previously displayed child${previous}`)}
-        onChange={(now, previous) => console.log(`OnChange User Callback: Now displaying child${now}. Previously displayed child${previous}`)}
       >
         {getTagsBySlice().map(item => (
           item
