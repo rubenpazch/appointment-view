@@ -139,7 +139,6 @@ const CalendarCarrusel = () => {
     let lastSlice = 3;
     for (let index = 0; index < totalIterations; index += 1) {
       const newslice = doctorcalendars.slice(initialSlice, lastSlice);
-      console.log({ newslice });
       banners.push(<Banner item={newslice} key={index} />);
       initialSlice = lastSlice;
       lastSlice += 3;
