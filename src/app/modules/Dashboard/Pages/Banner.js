@@ -54,7 +54,6 @@ const doctorcalendars = [
 
 const Banner = prop => {
   const { item } = prop;
-  console.log({ item });
   return (
     <Wrapper className="m-0 px-5">
       <BannerItem doctorcalendars={item} />
