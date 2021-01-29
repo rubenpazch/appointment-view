@@ -74,7 +74,7 @@ const Registration = () => {
     onSubmit: values => {
       enableLoading();
       setTimeout(() => {
-        console.log({ patient });
+        // console.log({ patient });
         /* eslint-disable camelcase */
         register(values.email, values.username, values.password, patient.id)
           .then(({ data: { data: { attributes: { email, username, role_id } } } }) => {

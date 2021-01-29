@@ -12,7 +12,7 @@ const Routes = () => {
     }),
     shallowEqual,
   );
-  console.log({ isAuthorized });
+  // console.log({ isAuthorized });
 
   return (
     <Switch>

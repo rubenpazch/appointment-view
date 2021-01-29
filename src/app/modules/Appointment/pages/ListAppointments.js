@@ -228,22 +228,22 @@ const Appointment = () => {
     saveAppointment(appointmentDateState, startTime, endTime, user_id, doctor_id)
       .then(({ response }) => {
         if (response.status === 422) {
-          console.log(response.request.responseText);
+          // console.log(response.request.responseText);
           notify(`Error: ${getTextFromObject(response.request.responseText)}`);
         } else if (response.status === 200) {
-          console.log('success');
+          // console.log('success');
           handleClose();
         } else {
-          console.log('else');
+          // console.log('else');
         }
       }, error => {
         if (response.data.user_id[0] !== null) {
           notify(response.data.user_id[0]);
         }
-        console.log('error --> ', error);
+        // console.log('error --> ', error);
       })
       .catch(error => {
-        console.log('error --> ', { error });
+        // console.log('error --> ', { error });
       });
   };
 
@@ -318,7 +318,7 @@ const Appointment = () => {
           arrayHours.push(obj);
           return defaultDoctorCalendar;
         });
-        console.log({ arrayHours });
+        // console.log({ arrayHours });
         for (let indexAH = 0; indexAH < arrayHours.length; indexAH += 1) {
           arrayHours[indexAH].userInformation = doctorsusers.find(x => Number(x.id) === Number(arrayHours[indexAH].user_id));
         }
@@ -367,7 +367,7 @@ const Appointment = () => {
         setAvailability(arrayShiftDetailByHour);
       })
       .catch(error => {
-        console.log({ error });
+      // console.log({ error });
       // setSubmitting(false);
       // setStatus('not working');
       });
@@ -438,7 +438,7 @@ const Appointment = () => {
           arrayHours.push(obj);
           return defaultDoctorCalendar;
         });
-        console.log({ arrayHours });
+        // console.log({ arrayHours });
         for (let indexAH = 0; indexAH < arrayHours.length; indexAH += 1) {
           arrayHours[indexAH].userInformation = doctorsusers.find(x => Number(x.id) === Number(arrayHours[indexAH].user_id));
         }
@@ -487,7 +487,7 @@ const Appointment = () => {
         setAvailability(arrayShiftDetailByHour);
       })
       .catch(error => {
-        console.log({ error });
+      //  console.log({ error });
       // setSubmitting(false);
       // setStatus('not working');
       });
@@ -498,7 +498,7 @@ const Appointment = () => {
       .then(({ data }) => {
         dispatch(setDepartments(data));
       }).catch(error => {
-        console.log({ error });
+        // console.log({ error });
         // setSubmitting(false);
         // setStatus('not working');
       });
