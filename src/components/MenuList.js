@@ -8,8 +8,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   HashRouter, Switch, Route, NavLink, Redirect, useRouteMatch,
 } from 'react-router-dom';
-import { getDepartments } from '../app/modules/Auth/_redux/authService';
-import { setDepartments } from '../app/modules/Auth/_redux/authAction';
+import {
+  getDepartments,
+  getDoctorCalendars,
+} from '../app/modules/Auth/_redux/authService';
+import {
+  setDepartments,
+  setDoctorCalendars,
+  setDoctors,
+  setDoctorsUsers,
+} from '../app/modules/Auth/_redux/authAction';
 
 const MenuContainer = styled.div`
   min-height: 75vh;
@@ -64,17 +72,41 @@ const MenuList = () => {
   const dispatch = useDispatch();
   const { path, url } = useRouteMatch();
   const { departments } = useSelector(state => state.tokenStore);
-  console.log({ departments });
   useEffect(() => {
     getDepartments()
       .then(({ data }) => {
         dispatch(setDepartments(data));
       }).catch(error => {
-        console.log({ error });
+        // console.log({ error });
         // setSubmitting(false);
         // setStatus('not working');
       });
   }, []);
+
+  useEffect(() => {
+    getDoctorCalendars()
+      .then(({ data }) => {
+        const includedList = data.included;
+        const arrayOfDoctors = [];
+        const arrayOfUsersDoctors = [];
+        for (let indexIL = 0; indexIL < includedList.length; indexIL += 1) {
+          if (includedList[indexIL].type === 'person') {
+            arrayOfDoctors.push(includedList[indexIL]);
+          }
+          if (includedList[indexIL].type === 'user') {
+            arrayOfUsersDoctors.push(includedList[indexIL]);
+          }
+        }
+        dispatch(setDoctorCalendars(data));
+        dispatch(setDoctors(arrayOfDoctors));
+        dispatch(setDoctorsUsers(arrayOfUsersDoctors));
+      }).catch(error => {
+        // console.log({ error });
+        // setSubmitting(false);doctorcalendars
+        // setStatus('not working');
+      });
+  }, []);
+
   return (
     <>
       <MenuContainer>
