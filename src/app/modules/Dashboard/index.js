@@ -42,15 +42,15 @@ const LogoContainer = styled.div`
 `;
 
 const TopContainer = styled.div`
-  height: 15vh;
-  min-height: 15vh;  
+  height: 22vh;
+  min-height: 22vh;  
   width: 100%;
   min-width: 100%;
 `;
 
 const BottonContainer = styled.div`
-  height: 85vh;
-  min-height: 85vh;
+  height: 78vh;
+  min-height: 78vh;
   width: 100%;
   min-width: 100%;
 `;

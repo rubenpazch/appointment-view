@@ -15,36 +15,49 @@ import {
 } from '@material-ui/core';
 
 import toAbsoluteUrl from '../../../../helpers/assetsHelpers';
+import BannerItem from './BannerItem';
 
-const Wrapper = styled.div` 
-  margin: 0;
-  padding: 0;
-  background-color: purple;
-  max-width: 400px;
+const Wrapper = styled.div`  
+  max-width: 100%;
   min-height: 450px;
 `;
 
-const Banner = prop => {
-  // if (props.newProp) console.log(props.newProp)
-  const bannerPosition = prop.contentPosition || 'left';
-  const totalItems = prop.length || 3;
-  const mediaLength = totalItems - 1;
+const doctorcalendars = [
+  {
+    id: 1,
+    doctorname: 'Carlos Aparicio Ortiz',
+    imagelink: '/media/doctors/doctor3.png',
+    starttime: '08:00',
+    endtime: '16:00',
+    location: 'consultorio 101',
+    phonenumber: '23847623423687',
+  },
+  {
+    id: 2,
+    doctorname: 'Ernesto Carpio',
+    imagelink: '/media/doctors/doctor6.png',
+    starttime: '08:00',
+    endtime: '16:00',
+    location: 'consultorio 101',
+    phonenumber: '23847623423687',
+  },
+  {
+    id: 3,
+    doctorname: 'Raul Paredes',
+    imagelink: '/media/doctors/doctor5.png',
+    starttime: '08:00',
+    endtime: '16:00',
+    location: 'consultorio 101',
+    phonenumber: '23847623423687',
+  },
+];
 
+const Banner = prop => {
+  const { item } = prop;
+  console.log({ item });
   return (
-    <Wrapper>
-      <img
-        alt="Logo"
-        src={toAbsoluteUrl('/media/logos/logo.png')}
-      />
-      <h1>title</h1>
-      <p>description</p>
-      <ul>
-        <li>
-          <a href="www.google.com">
-            <FontAwesomeIcon icon={faClock} />
-          </a>
-        </li>
-      </ul>
+    <Wrapper className="m-0 px-5">
+      <BannerItem doctorcalendars={item} />
     </Wrapper>
   );
 };

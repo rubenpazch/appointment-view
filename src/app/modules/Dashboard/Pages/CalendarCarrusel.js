@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Carousel from 'react-material-ui-carousel';
 import { Paper } from '@material-ui/core';
@@ -9,56 +9,163 @@ import Banner from './Banner';
 const Wrapper = styled.div`  
   width: 100%;
   height: 100%;
-  background-color: red;
 `;
 
-const items = [
+const doctorcalendars = [
   {
-    name: 'Random Name #1',
-    description: 'Probably the most random thing you have ever seen!',
+    id: 1,
+    doctorname: 'Carlos Aparicio Ortiz',
+    imagelink: '/media/doctors/doctor3.png',
+    starttime: '08:00',
+    endtime: '16:00',
+    location: 'consultorio 101',
+    phonenumber: '23847623423687',
   },
   {
-    name: 'Random Name #2',
-    description: 'Hello World!',
+    id: 2,
+    doctorname: 'Ernesto Carpio',
+    imagelink: '/media/doctors/doctor6.png',
+    starttime: '08:00',
+    endtime: '16:00',
+    location: 'consultorio 101',
+    phonenumber: '23847623423687',
   },
   {
-    name: 'Random Name #3',
-    description: 'Hello World 2020!',
+    id: 3,
+    doctorname: 'Raul Paredes',
+    imagelink: '/media/doctors/doctor5.png',
+    starttime: '08:00',
+    endtime: '16:00',
+    location: 'consultorio 101',
+    phonenumber: '23847623423687',
+  },
+  {
+    id: 4,
+    doctorname: 'Che Aparicio Ortiz',
+    imagelink: '/media/doctors/doctor1.jpg',
+    starttime: '08:00',
+    endtime: '16:00',
+    location: 'consultorio 101',
+    phonenumber: '23847623423687',
+  },
+  {
+    id: 5,
+    doctorname: 'Oracio Carpio',
+    imagelink: '/media/doctors/doctor2.jpg',
+    starttime: '08:00',
+    endtime: '16:00',
+    location: 'consultorio 101',
+    phonenumber: '23847623423687',
+  },
+  {
+    id: 6,
+    doctorname: 'Pedrito Paredes',
+    imagelink: '/media/doctors/doctor4.jpg',
+    starttime: '08:00',
+    endtime: '16:00',
+    location: 'consultorio 101',
+    phonenumber: '23847623423687',
+  },
+  {
+    id: 7,
+    doctorname: 'Dionisia Aparicio Ortiz',
+    imagelink: '/media/doctors/doctor1.jpg',
+    starttime: '08:00',
+    endtime: '16:00',
+    location: 'consultorio 101',
+    phonenumber: '23847623423687',
+  },
+  {
+    id: 8,
+    doctorname: 'Clara Carpio',
+    imagelink: '/media/doctors/doctor2.jpg',
+    starttime: '08:00',
+    endtime: '16:00',
+    location: 'consultorio 101',
+    phonenumber: '23847623423687',
+  },
+  {
+    id: 9,
+    doctorname: 'Maria Paredes',
+    imagelink: '/media/doctors/doctor4.jpg',
+    starttime: '08:00',
+    endtime: '16:00',
+    location: 'consultorio 101',
+    phonenumber: '23847623423687',
   },
 ];
 
-function Item({ item }) {
-  return (
-    <Paper>
-      <h2>{item.name}</h2>
-      <p>{item.description}</p>
-      <button className="CheckButton" type="button">
-        Check it out!
-      </button>
-    </Paper>
-  );
-}
-
 const CalendarCarrusel = () => {
-  const itemmm = {
-    Name: 'Electronics',
-    Caption: 'Electrify your friends!',
-    contentPosition: 'left',
-    Items: [
-      {
-        Name: 'Macbook Pro',
-        Image: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1952&q=80',
-      },
-      {
-        Name: 'iPhone',
-        Image: 'https://images.unsplash.com/photo-1516397281156-ca07cf9746fc?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      },
-    ],
+  const [autoPlay, setAutoPlay] = useState(true);
+  const [animation, setAnimation] = useState('fade');
+  const [indicators, setIndicators] = useState(true);
+  const [timeout, setTimeout] = useState(500);
+  const [navButtonsAlwaysVisible, setNavButtonsAlwaysVisible] = useState(false);
+  const [navButtonsAlwaysInvisible, setNavButtonsAlwaysInvisible] = useState(false);
+
+  const toggleAutoPlay = () => {
+    setAutoPlay(!autoPlay);
+  };
+
+  const toggleIndicators = () => {
+    setIndicators(!indicators);
+  };
+
+  const toggleNavButtonsAlwaysVisible = () => {
+    setNavButtonsAlwaysInvisible(!navButtonsAlwaysInvisible);
+  };
+
+  const toggleNavButtonsAlwaysInvisible = () => {
+    setNavButtonsAlwaysVisible(!navButtonsAlwaysVisible);
+  };
+
+  const changeAnimation = event => {
+    setAnimation(event.target.value);
+  };
+
+  const changeTimeout = (event, value) => {
+    setTimeout(value);
+  };
+
+  const getSliceSize = length => {
+    if (length % 3 > 0) return length / 3 + 1;
+    return length / 3;
+  };
+
+  const getTagsBySlice = () => {
+    const totalIterations = getSliceSize(doctorcalendars.length);
+    const banners = [];
+    let initialSlice = 0;
+    let lastSlice = 3;
+    for (let index = 0; index < totalIterations; index += 1) {
+      const newslice = doctorcalendars.slice(initialSlice, lastSlice);
+      console.log({ newslice });
+      banners.push(<Banner item={newslice} key={index} />);
+      initialSlice = lastSlice;
+      lastSlice += 3;
+    }
+    return banners;
   };
 
   return (
-    <Wrapper className="m-0 p-0">
-      <Banner contentPosition="left" length={3} item={itemmm} />
+    <Wrapper className="m-0 px-0 py-5">
+      <Carousel
+        className="Example"
+        autoPlay={autoPlay}
+        animation={animation}
+        indicators={indicators}
+        timeout={timeout}
+        navButtonsAlwaysVisible={navButtonsAlwaysVisible}
+        navButtonsAlwaysInvisible={navButtonsAlwaysInvisible}
+        next={(now, previous) => console.log(`Next User Callback: Now displaying child${now}. Previously displayed child${previous}`)}
+        prev={(now, previous) => console.log(`Prev User Callback: Now displaying child${now}. Previously displayed child${previous}`)}
+        onChange={(now, previous) => console.log(`OnChange User Callback: Now displaying child${now}. Previously displayed child${previous}`)}
+      >
+        {getTagsBySlice().map(item => (
+          item
+        ))}
+      </Carousel>
+
     </Wrapper>
   );
 };
