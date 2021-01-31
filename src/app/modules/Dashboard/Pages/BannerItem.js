@@ -1,20 +1,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
+import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faClock, faPhoneSquareAlt, faAddressBook, faHeart, faPhotoVideo,
 } from '@fortawesome/free-solid-svg-icons';
-
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Grid,
-  Button,
-} from '@material-ui/core';
 
 import toAbsoluteUrl from '../../../../helpers/assetsHelpers';
 
@@ -87,7 +79,7 @@ const BannerItem = ({ doctorcalendars }) => {
             <TitleContainer className="p-3">
               <h2>
                 <a href="www.google.com">
-                  {`Dr. ${item.doctorname}`}
+                  {`Dr. ${item.relationships.person.data.firstName} ${item.relationships.person.data.lastName} `}
                 </a>
               </h2>
             </TitleContainer>
@@ -96,22 +88,27 @@ const BannerItem = ({ doctorcalendars }) => {
                 <li className="p-0 d-flex flex-row justify-content-start align-items-center">
                   <FontAwesomeIcon icon={faClock} />
                   <span className="pl-2 pr-2">Start Time: </span>
-                  <p className="p-0 m-0">{item.starttime}</p>
+                  <p className="p-0 m-0">{moment.utc(item.attributes.startTime).format('HH:mm')}</p>
                 </li>
                 <li className="px-0 py-1 d-flex flex-row justify-content-start align-items-center">
                   <FontAwesomeIcon icon={faClock} />
                   <span className="pl-2 pr-2">End Time: </span>
-                  <p className="p-0 m-0">{item.endtime}</p>
+                  <p className="p-0 m-0">{moment.utc(item.attributes.endTime).format('HH:mm')}</p>
                 </li>
                 <li className="px-0 py-1 d-flex flex-row justify-content-start align-items-center">
                   <FontAwesomeIcon icon={faPhoneSquareAlt} />
                   <span className="pl-2 pr-2">Phone Number: </span>
-                  <p className="p-0 m-0">{item.phonenumber}</p>
+                  <p className="p-0 m-0">{item.relationships.person.data.phone}</p>
+                </li>
+                <li className="px-0 py-1 d-flex flex-row justify-content-start align-items-center">
+                  <FontAwesomeIcon icon={faPhoneSquareAlt} />
+                  <span className="pl-2 pr-2">Department Number: </span>
+                  <p className="p-0 m-0">{item.relationships.department.data.contactNumber}</p>
                 </li>
                 <li className="px-0 py-1 d-flex flex-row justify-content-start align-items-start">
                   <FontAwesomeIcon icon={faAddressBook} />
                   <span className="pl-2 pr-2">Consultory: </span>
-                  <p className="p-0 m-0">{item.location}</p>
+                  <p className="p-0 m-0">{item.relationships.department.data.location}</p>
                 </li>
               </ul>
             </DetailsContainer>
