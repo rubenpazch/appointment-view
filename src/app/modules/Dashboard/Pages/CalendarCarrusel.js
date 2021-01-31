@@ -128,6 +128,7 @@ const CalendarCarrusel = () => {
   };
 
   const getSliceSize = length => {
+    if (length <= 3) return 1;
     if (length % 3 > 0) return length / 3 + 1;
     return length / 3;
   };
