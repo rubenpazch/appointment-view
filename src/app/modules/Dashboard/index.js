@@ -1,15 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
 import {
-  HashRouter,
   Switch,
   Route,
-  NavLink,
-  Link,
-  BrowserRouter as Router,
   useRouteMatch,
   useParams,
   useLocation,
