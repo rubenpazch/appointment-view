@@ -228,7 +228,6 @@ const Appointment = () => {
     saveAppointment(appointmentDateState, startTime, endTime, user_id, doctor_id)
       .then(({ response }) => {
         if (response.status === 422) {
-          // console.log(response.request.responseText);
           notify(`Error: ${getTextFromObject(response.request.responseText)}`);
         } else if (response.status === 200) {
           // console.log('success');

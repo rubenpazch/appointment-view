@@ -12,8 +12,6 @@ const Routes = () => {
     }),
     shallowEqual,
   );
-  // console.log({ isAuthorized });
-
   return (
     <Switch>
       {!isAuthorized ? (

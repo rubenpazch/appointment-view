@@ -128,7 +128,6 @@ const CalendarCarrusel = () => {
           .attributes
           .linkImage = usersFounded.attributes.linkImage;
       }
-      console.log({ filterCalendarByDepartment });
       setFilterCalendar(filterCalendarByDepartment);
     }
   }, [departmentId]);
@@ -170,7 +169,9 @@ const CalendarCarrusel = () => {
     let lastSlice = 3;
     for (let index = 0; index < totalIterations; index += 1) {
       const newslice = filterCalendar.slice(initialSlice, lastSlice);
-      banners.push(<Banner item={newslice} key={index} />);
+      if (newslice.length !== 0) {
+        banners.push(<Banner item={newslice} key={index} />);
+      }
       initialSlice = lastSlice;
       lastSlice += 3;
     }

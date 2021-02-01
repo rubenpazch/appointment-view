@@ -66,7 +66,6 @@ const TopicChild = () => {
 
 const Dashboard = () => {
   const { path, url } = useRouteMatch();
-  console.log('test');
   return (
     <Wrapper className="container-fluid flex-nowrap">
       <div className="row flex-row flex-nowrap">

@@ -66,11 +66,9 @@ const WrapperCalendarDetails = styled.div`
   padding: 0;
 `;
 
-const BannerItem = ({ doctorcalendars }) => {
-  console.log({ doctorcalendars });
-  return (
-    <Wrapper className="row">
-      {
+const BannerItem = ({ doctorcalendars }) => (
+  <Wrapper className="row">
+    {
         doctorcalendars.map(item => (
           <WrapperCalendarDetails className="col-4 d-flex flex-column justify-content-center align-items-center" key={item.id}>
             <a href="www.google.com">
@@ -100,7 +98,7 @@ const BannerItem = ({ doctorcalendars }) => {
                   <span className="pl-2 pr-2">Phone Number: </span>
                   <p className="p-0 m-0">{item.relationships.person.data.phone}</p>
                 </li>
-                <li className="px-0 py-1 d-flex flex-row justify-content-start align-items-center">
+                <li className="px-0 py-1 d-flex flex-row justify-content-start align-items-start">
                   <FontAwesomeIcon icon={faPhoneSquareAlt} />
                   <span className="pl-2 pr-2">Department Number: </span>
                   <p className="p-0 m-0">{item.relationships.department.data.contactNumber}</p>
@@ -135,8 +133,7 @@ const BannerItem = ({ doctorcalendars }) => {
         ))
       }
 
-    </Wrapper>
-  );
-};
+  </Wrapper>
+);
 
 export default BannerItem;
