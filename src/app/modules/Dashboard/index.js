@@ -93,7 +93,7 @@ const Dashboard = () => {
             <Route exact path={path}>
               <h3>Please select a service.</h3>
             </Route>
-            <Route path={`${path}/:departmentname`}>
+            <Route exact path={`${path}/:departmentname`}>
               <div className="row d-flex flex-column">
                 <TopContainer className="col-4 p-0">
                   <Title />
@@ -102,6 +102,9 @@ const Dashboard = () => {
                   <CalendarCarrusel />
                 </BottonContainer>
               </div>
+            </Route>
+            <Route path={`${path}/:departmentname/:doctorname`}>
+              <h1>component appointment</h1>
             </Route>
           </Switch>
         </RigthContainer>

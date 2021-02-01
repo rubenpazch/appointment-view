@@ -1,13 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock, faUnderline } from '@fortawesome/free-solid-svg-icons';
-import { Container, Row, Col } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  HashRouter, Switch, Route, NavLink, Redirect, useRouteMatch,
-} from 'react-router-dom';
+import { NavLink, useRouteMatch } from 'react-router-dom';
 import {
   getDepartments,
   getDoctorCalendars,
@@ -120,7 +115,6 @@ const MenuList = () => {
                     fontWeight: 900,
                   }}
                   className="linkMenu"
-                  exact
                 >
                   <span className="nameLinkMenu">
                     {item.attributes.name}

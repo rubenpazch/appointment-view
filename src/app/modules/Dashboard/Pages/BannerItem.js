@@ -3,6 +3,7 @@
 import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
+import { useRouteMatch, NavLink, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faClock, faPhoneSquareAlt, faAddressBook, faHeart, faPhotoVideo,
@@ -67,15 +68,19 @@ const WrapperCalendarDetails = styled.div`
 `;
 
 const BannerItem = ({ doctorcalendars }) => {
+  const { path, url } = useRouteMatch();
+  console.log({ url });
   console.log({ doctorcalendars });
   return (
     <Wrapper className="row">
       {
         doctorcalendars.map(item => (
           <WrapperCalendarDetails className="col-4 d-flex flex-column justify-content-center align-items-center" key={item.id}>
-            <a href="www.google.com">
+            <Link
+              to={`${url}/${item.relationships.person.data.firstName.replace(/ /g, '_')}_${item.relationships.person.data.lastName.replace(/ /g, '_')}?id=${item.attributes.id}`}
+            >
               <ImageContainer imagelink={toAbsoluteUrl(`${item.attributes.linkImage}`)} />
-            </a>
+            </Link>
             <TitleContainer className="p-3">
               <h2>
                 <a href="www.google.com">
