@@ -14,6 +14,7 @@ import MenuList from '../../../components/MenuList';
 import Footer from './Pages/Footer';
 import Title from './Pages/Title';
 import CalendarCarrusel from './Pages/CalendarCarrusel';
+import Appointment from './Pages/Appointment';
 
 const Wrapper = styled.div`
 `;
@@ -104,7 +105,7 @@ const Dashboard = () => {
               </div>
             </Route>
             <Route path={`${path}/:departmentname/:doctorname`}>
-              <h1>component appointment</h1>
+              <Appointment />
             </Route>
           </Switch>
         </RigthContainer>
