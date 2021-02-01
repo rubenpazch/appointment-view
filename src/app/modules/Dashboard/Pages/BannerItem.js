@@ -74,7 +74,7 @@ const BannerItem = ({ doctorcalendars }) => {
         doctorcalendars.map(item => (
           <WrapperCalendarDetails className="col-4 d-flex flex-column justify-content-center align-items-center" key={item.id}>
             <a href="www.google.com">
-              <ImageContainer imagelink={toAbsoluteUrl(`${item.imagelink}`)} />
+              <ImageContainer imagelink={toAbsoluteUrl(`${item.attributes.linkImage}`)} />
             </a>
             <TitleContainer className="p-3">
               <h2>

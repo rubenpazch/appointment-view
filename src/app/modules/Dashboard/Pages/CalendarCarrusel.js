@@ -13,90 +13,6 @@ const Wrapper = styled.div`
   height: 100%;
 `;
 
-const doctorcalendarsLocal = [
-  {
-    id: 1,
-    doctorname: 'Carlos Aparicio Ortiz',
-    imagelink: '/media/doctors/doctor3.png',
-    starttime: '08:00',
-    endtime: '16:00',
-    location: 'consultorio 101',
-    phonenumber: '23847623423687',
-  },
-  {
-    id: 2,
-    doctorname: 'Ernesto Carpio',
-    imagelink: '/media/doctors/doctor6.png',
-    starttime: '08:00',
-    endtime: '16:00',
-    location: 'consultorio 101',
-    phonenumber: '23847623423687',
-  },
-  {
-    id: 3,
-    doctorname: 'Raul Paredes',
-    imagelink: '/media/doctors/doctor5.png',
-    starttime: '08:00',
-    endtime: '16:00',
-    location: 'consultorio 101',
-    phonenumber: '23847623423687',
-  },
-  {
-    id: 4,
-    doctorname: 'Che Aparicio Ortiz',
-    imagelink: '/media/doctors/doctor1.jpg',
-    starttime: '08:00',
-    endtime: '16:00',
-    location: 'consultorio 101',
-    phonenumber: '23847623423687',
-  },
-  {
-    id: 5,
-    doctorname: 'Oracio Carpio',
-    imagelink: '/media/doctors/doctor2.jpg',
-    starttime: '08:00',
-    endtime: '16:00',
-    location: 'consultorio 101',
-    phonenumber: '23847623423687',
-  },
-  {
-    id: 6,
-    doctorname: 'Pedrito Paredes',
-    imagelink: '/media/doctors/doctor4.jpg',
-    starttime: '08:00',
-    endtime: '16:00',
-    location: 'consultorio 101',
-    phonenumber: '23847623423687',
-  },
-  {
-    id: 7,
-    doctorname: 'Dionisia Aparicio Ortiz',
-    imagelink: '/media/doctors/doctor1.jpg',
-    starttime: '08:00',
-    endtime: '16:00',
-    location: 'consultorio 101',
-    phonenumber: '23847623423687',
-  },
-  {
-    id: 8,
-    doctorname: 'Clara Carpio',
-    imagelink: '/media/doctors/doctor2.jpg',
-    starttime: '08:00',
-    endtime: '16:00',
-    location: 'consultorio 101',
-    phonenumber: '23847623423687',
-  },
-  {
-    id: 9,
-    doctorname: 'Maria Paredes',
-    imagelink: '/media/doctors/doctor4.jpg',
-    starttime: '08:00',
-    endtime: '16:00',
-    location: 'consultorio 101',
-    phonenumber: '23847623423687',
-  },
-];
-
 const defaultCalendarList = [
   {
     attributes: {
@@ -145,7 +61,9 @@ const CalendarCarrusel = () => {
   const [timeout, setTimeout] = useState(500);
   const [navButtonsAlwaysVisible, setNavButtonsAlwaysVisible] = useState(false);
   const [navButtonsAlwaysInvisible, setNavButtonsAlwaysInvisible] = useState(false);
-  const { doctorcalendars, doctors, departments } = useSelector(state => state.tokenStore);
+  const {
+    doctorcalendars, doctors, departments, doctorsusers,
+  } = useSelector(state => state.tokenStore);
   const departmentId = new URLSearchParams(useLocation().search).get('id');
   const [appointmentDateState, setAppointmentDateState] = useState(moment(new Date()).format('YYYY-MM-DD'));
   const [filterCalendar, setFilterCalendar] = useState(defaultCalendarList);
@@ -198,6 +116,17 @@ const CalendarCarrusel = () => {
           .relationships
           .department
           .data.location = departmentFounded.attributes.location;
+
+        const usersFounded = doctorsusers.find(user => {
+          const userId = Number(user.id);
+          const filterUserId = Number(filterCalendarByDepartment[index].attributes.user_id);
+          if (userId === filterUserId) return user;
+          return null;
+        });
+
+        filterCalendarByDepartment[index]
+          .attributes
+          .linkImage = usersFounded.attributes.linkImage;
       }
       console.log({ filterCalendarByDepartment });
       setFilterCalendar(filterCalendarByDepartment);
