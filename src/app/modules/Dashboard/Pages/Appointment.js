@@ -27,25 +27,20 @@ import Resume from '../../Appointment/pages/Resume';
 const Wrapper = styled.div`
 `;
 const ContentLogout = styled.div`
+  width: 50%;
   padding: 15px;
   margin: 0;
   button {
     min-width: 100px;
   }
 `;
-const LabelAppointmentDate = styled.div`
-  padding: 0;
-  margin: 0;
-`;
-
-const LabelAppointmentDepartment = styled.div`
-  padding: 0;
-  margin: 0;
-`;
 
 const ContentAvailability = styled.div`
-  padding: 15px;
+  padding: 0 0 0 12px;
   margin: 0;
+`;
+
+const WrapperTopContent = styled.div`  
 `;
 
 const defaultDepartment = {
@@ -283,29 +278,31 @@ const Appointment = () => {
 
   return (
     <Wrapper>
-      <ContentLogout className="d-flex flex-row justify-content-between">
-        <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-          New
-        </Button>
-        <ModalAppointment
-          open={open}
-          handleClose={handleClose}
-          handleSubmitModal={handleSubmitModal}
-          selectObjectList={listShiftDetailsState}
-        />
-      </ContentLogout>
-      {doctorInformation !== null
-        ? doctorInformation.map(item => (
-          <Resume
-            key={item.user_id}
-            doctorName={`${item.doctorpersonInformation.attributes.firstName} ${item.doctorpersonInformation.attributes.lastName}`}
-            location={currentDepartment.attributes.location}
-            startTime={moment.utc(item.startTime).format('HH:mm')}
-            endTime={moment.utc(item.endTime).format('HH:mm')}
+      <WrapperTopContent className="d-flex fle-row">
+        {doctorInformation !== null
+          ? doctorInformation.map(item => (
+            <Resume
+              key={item.user_id}
+              doctorName={`${item.doctorpersonInformation.attributes.firstName} ${item.doctorpersonInformation.attributes.lastName}`}
+              location={currentDepartment.attributes.location}
+              startTime={moment.utc(item.startTime).format('HH:mm')}
+              endTime={moment.utc(item.endTime).format('HH:mm')}
+            />
+          ))
+          : null}
+        <ContentLogout className="d-flex flex-row justify-content-between">
+          <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+            New
+          </Button>
+          <ModalAppointment
+            open={open}
+            handleClose={handleClose}
+            handleSubmitModal={handleSubmitModal}
+            selectObjectList={listShiftDetailsState}
           />
-        ))
-        : null}
-      <ContentAvailability>
+        </ContentLogout>
+      </WrapperTopContent>
+      <ContentAvailability className="d-flex flex-wrap">
         { availability !== null && typeof (availability) !== 'undefined'
           ? availability.map(item => (
             <AppointmentDetail

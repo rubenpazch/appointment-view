@@ -3,14 +3,17 @@ import React from 'react';
 import styled from 'styled-components';
 
 const ContentResume = styled.div`
-  padding: 15px;
-  margin: 0 15px;
-  min-height: 80px;
+  padding: 5px;
+  margin: 10px 0 0 15px;
+  min-height: 100%;
+  max-width: 100%;
+  width: 70%;
   border-radius: 5px;
   border: 1px dashed #3f51b5;
+  height: 50px;
 
   span {
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: #000000;
     min-width: 100px;
@@ -24,6 +27,7 @@ const DoctorResume = styled.div`
 
   p {
     padding: 0;
+    font-size: 0.8rem;
     margin: 0;
   }
 `;
@@ -35,6 +39,7 @@ const ConsultoryResume = styled.div`
 
   p {
     padding: 0;
+    font-size: 0.8rem;
     margin: 0;
   }
 `;
@@ -46,6 +51,7 @@ const StartTimeResume = styled.div`
 
   p {
     padding: 0;
+    font-size: 0.8rem;
     margin: 0;
   }
 `;
@@ -58,6 +64,7 @@ const EndTimeResume = styled.div`
   p {
     padding: 0;
     margin: 0;
+    font-size: 0.8rem;
   }
 `;
 

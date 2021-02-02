@@ -21,7 +21,7 @@ const Wrapper = styled.div`
 
 const LeftContainer = styled.div` 
   min-height: 100vh;
-  min-width: 220px;  
+  min-width: 170px;  
 `;
 
 const RigthContainer = styled.div` 
