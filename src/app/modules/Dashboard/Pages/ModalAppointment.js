@@ -23,6 +23,7 @@ const ModalAppointment = ({
   handleSubmitModal,
   handleClose,
   open,
+  selectObjectList,
 }) => {
   const [startTimeState, setStartTimeState] = useState('08:00');
   const [intervalTimeState, setIntervalTimeState] = useState('');
@@ -89,72 +90,73 @@ const ModalAppointment = ({
                 } = props;
                 return (
                   <form onSubmit={handleSubmit}>
+                    <div className="d-flex flex-column">
+                      <FormControl>
+                        <InputLabel shrink htmlFor="age-native-label-placeholder">
+                          Start Time:
+                        </InputLabel>
+                        <NativeSelect
+                          value={startTimeState}
+                          onChange={handleChangeStartTime}
+                        >
+                          <option value="0">Select Department</option>
+                          {selectObjectList !== null
+                            ? selectObjectList.map(item => (
+                              <option value={item.id} key={item.id}>{item.startTime}</option>
+                            ))
+                            : null}
+                        </NativeSelect>
+                        <FormHelperText>Label + placeholder</FormHelperText>
+                      </FormControl>
 
-                    <FormControl>
-                      <InputLabel shrink htmlFor="age-native-label-placeholder">
-                        Start Time:
-                      </InputLabel>
-                      <NativeSelect
-                        value={startTimeState}
-                        onChange={handleChangeStartTime}
-                      >
-                        <option value="0">Select Department</option>
-                        {listShiftDetailsState !== null
-                          ? listShiftDetailsState.map(item => (
-                            <option value={item.id} key={item.id}>{item.startTime}</option>
-                          ))
-                          : null}
-                      </NativeSelect>
-                      <FormHelperText>Label + placeholder</FormHelperText>
-                    </FormControl>
+                      <TextField
+                        label="name"
+                        name="name"
+                        value={values.name}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        helperText={(errors.name && touched.name) && errors.name}
+                        margin="normal"
+                      />
 
-                    <TextField
-                      label="name"
-                      name="name"
-                      value={values.name}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      helperText={(errors.name && touched.name) && errors.name}
-                      margin="normal"
-                    />
+                      <TextField
+                        error={errors.email && touched.email}
+                        label="email"
+                        name="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        helperText={(errors.email && touched.email) && errors.email}
+                        margin="normal"
+                      />
 
-                    <TextField
-                      error={errors.email && touched.email}
-                      label="email"
-                      name="email"
-                      value={values.email}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      helperText={(errors.email && touched.email) && errors.email}
-                      margin="normal"
-                    />
-
-                    <TextField
-                      label="comment"
-                      name="comment"
-                      value={values.comment}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      helperText={(errors.comment && touched.comment) && errors.comment}
-                      margin="normal"
-                    />
-                    <DialogActions>
-                      <Button onClick={handleClose} className="outline">
-                        Cancel
-                      </Button>
-                      <Button
-                        type="button"
-                        className="outline"
-                        onClick={handleReset}
-                        disabled={!dirty || isSubmitting}
-                      >
-                        Reset
-                      </Button>
-                      <Button type="submit" disabled={isSubmitting}>
-                        Submit
-                      </Button>
-                      {/* <DisplayFormikState {...props} /> */}
-                    </DialogActions>
+                      <TextField
+                        label="comment"
+                        name="comment"
+                        value={values.comment}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        helperText={(errors.comment && touched.comment) && errors.comment}
+                        margin="normal"
+                      />
+                      <DialogActions>
+                        <Button onClick={handleClose} className="outline">
+                          Cancel
+                        </Button>
+                        <Button
+                          type="button"
+                          className="outline"
+                          onClick={handleReset}
+                          disabled={!dirty || isSubmitting}
+                        >
+                          Reset
+                        </Button>
+                        <Button type="submit" disabled={isSubmitting}>
+                          Submit
+                        </Button>
+                        {/* <DisplayFormikState {...props} /> */}
+                      </DialogActions>
+                    </div>
                   </form>
                 );
               }}
