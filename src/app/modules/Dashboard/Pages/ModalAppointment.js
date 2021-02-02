@@ -32,13 +32,16 @@ const ModalAppointment = ({
       .required('this field is required'),
   });
 
-  const formik = useFormik({
-    initialValues: { startTimeState: '' },
-    validationSchema: LoginSchema,
-    onSubmit: values => {
-      console.log('subtmit');
+  const [listShiftDetailsState, setListShiftDetailsState] = useState([
+    {
+      endTime: '',
+      firstName: '',
+      id: 0,
+      lastName: '',
+      startTime: '',
+      status: true,
     },
-  });
+  ]);
   // const [openModal, setOpenModal] = useState(open);
   const handleChangeStartTime = event => {
     setStartTimeState(event.target.value);
@@ -86,6 +89,25 @@ const ModalAppointment = ({
                 } = props;
                 return (
                   <form onSubmit={handleSubmit}>
+
+                    <FormControl>
+                      <InputLabel shrink htmlFor="age-native-label-placeholder">
+                        Start Time:
+                      </InputLabel>
+                      <NativeSelect
+                        value={startTimeState}
+                        onChange={handleChangeStartTime}
+                      >
+                        <option value="0">Select Department</option>
+                        {listShiftDetailsState !== null
+                          ? listShiftDetailsState.map(item => (
+                            <option value={item.id} key={item.id}>{item.startTime}</option>
+                          ))
+                          : null}
+                      </NativeSelect>
+                      <FormHelperText>Label + placeholder</FormHelperText>
+                    </FormControl>
+
                     <TextField
                       label="name"
                       name="name"
