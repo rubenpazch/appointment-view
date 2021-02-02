@@ -139,7 +139,8 @@ const BannerItem = ({ doctorcalendars }) => {
           </WrapperCalendarDetails>
         ))
       }
-  </Wrapper>
-);
+    </Wrapper>
+  );
+};
 
 export default BannerItem;
