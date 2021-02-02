@@ -33,6 +33,8 @@ const LogoContainer = styled.div`
 
   img {
     width: 150px;
+    margin-top: 10px;
+    margin-left: 5px;
   }
 `;
 

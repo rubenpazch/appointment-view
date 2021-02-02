@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   background-color: ${props => (props.status ? '#fff3f3' : '#d0ffd0')};
   border: 1px solid ${props => (props.status ? '#f9c4c4' : '#6fff6f')};
   border-radius: 5px;
-  width: 30%;
+  width: 24%;
 `;
 
 const TimeWrapper = styled.div`

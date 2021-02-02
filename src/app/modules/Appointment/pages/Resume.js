@@ -4,19 +4,18 @@ import styled from 'styled-components';
 
 const ContentResume = styled.div`
   padding: 5px;
-  margin: 10px 0 0 15px;
+  margin: 15px 0 10px 15px;
   min-height: 100%;
   max-width: 100%;
   width: 70%;
-  border-radius: 5px;
-  border: 1px dashed #3f51b5;
+  border-radius: 5px;  
   height: 50px;
 
   span {
     font-size: 0.8rem;
     font-weight: 500;
     color: #000000;
-    min-width: 100px;
+    min-width: 70px;
   }
 `;
 

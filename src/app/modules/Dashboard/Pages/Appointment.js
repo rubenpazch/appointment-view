@@ -16,6 +16,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
 import { getListAppointmentByDateService, saveAppointment } from '../../Appointment/_redux/appointmentService';
 import { ToastContext } from '../../../../components/ToastContextProvider';
@@ -26,11 +31,12 @@ import Resume from '../../Appointment/pages/Resume';
 
 const Wrapper = styled.div`
 `;
-const ContentLogout = styled.div`
-  width: 50%;
-  padding: 15px;
-  margin: 0;
+const ContentLogout = styled.div`  
+  width: 50%;  
+  padding: 0;
+  margin: 15px 3px 0 0;
   button {
+    height: 30px;
     min-width: 100px;
   }
 `;
@@ -41,6 +47,22 @@ const ContentAvailability = styled.div`
 `;
 
 const WrapperTopContent = styled.div`  
+`;
+
+const DateWrapper = styled.div`    
+  padding: 0;
+  margin: 0;
+
+  button {
+    height: auto;
+    min-width: auto;
+    margin: 0;
+    padding: 0;
+  }
+`;
+
+const ModalWrapper = styled.div`  
+  width: 100%;  
 `;
 
 const defaultDepartment = {
@@ -118,6 +140,11 @@ const Appointment = () => {
   ]);
   const doctorCalendarId = new URLSearchParams(useLocation().search).get('id');
   const [filterAppointmentsBy, setFilterAppointmentsBy] = useState();
+  const [selectedDate, setSelectedDate] = React.useState(moment(new Date()));
+
+  const handleDateChange = date => {
+    setSelectedDate(date);
+  };
   console.log({ doctorCalendarId });
 
   useEffect(() => {
@@ -291,15 +318,34 @@ const Appointment = () => {
           ))
           : null}
         <ContentLogout className="d-flex flex-row justify-content-between">
-          <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-            New
-          </Button>
-          <ModalAppointment
-            open={open}
-            handleClose={handleClose}
-            handleSubmitModal={handleSubmitModal}
-            selectObjectList={listShiftDetailsState}
-          />
+          <DateWrapper>
+            <KeyboardDatePicker
+              disableToolbar
+              minDate={appointmentDateState}
+              variant="inline"
+              format="MM/DD/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="Appointment Date"
+              value={selectedDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+              className="m-0 p-0"
+            />
+          </DateWrapper>
+          <ModalWrapper className="d-flex flex-row align-items-center justify-content-end mr-3">
+            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+              New
+            </Button>
+            <ModalAppointment
+              open={open}
+              handleClose={handleClose}
+              handleSubmitModal={handleSubmitModal}
+              selectObjectList={listShiftDetailsState}
+            />
+          </ModalWrapper>
         </ContentLogout>
       </WrapperTopContent>
       <ContentAvailability className="d-flex flex-wrap">
