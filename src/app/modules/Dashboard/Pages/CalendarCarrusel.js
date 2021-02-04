@@ -59,7 +59,7 @@ const CalendarCarrusel = () => {
   const [animation, setAnimation] = useState('fade');
   const [indicators, setIndicators] = useState(true);
   const [timeout, setTimeout] = useState(500);
-  const [navButtonsAlwaysVisible, setNavButtonsAlwaysVisible] = useState(false);
+  const [navButtonsAlwaysVisible, setNavButtonsAlwaysVisible] = useState(true);
   const [navButtonsAlwaysInvisible, setNavButtonsAlwaysInvisible] = useState(false);
   const {
     doctorcalendars, doctors, departments, doctorsusers,
