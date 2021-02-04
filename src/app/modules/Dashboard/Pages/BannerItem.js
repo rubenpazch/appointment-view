@@ -69,15 +69,13 @@ const WrapperCalendarDetails = styled.div`
 
 const BannerItem = ({ doctorcalendars }) => {
   const { path, url } = useRouteMatch();
-  console.log({ url });
-  console.log({ doctorcalendars });
   return (
     <Wrapper className="row">
       {
         doctorcalendars.map(item => (
           <WrapperCalendarDetails className="col-4 d-flex flex-column justify-content-center align-items-center" key={item.id}>
             <Link
-              to={`${url}/${item.relationships.person.data.firstName.replace(/ /g, '_')}_${item.relationships.person.data.lastName.replace(/ /g, '_')}?id=${item.attributes.id}`}
+              to={`${url}/${item.relationships.person.data.firstName.replace(/ /g, '_')}_${item.relationships.person.data.lastName.replace(/ /g, '_')}?id=${item.attributes.id}&user_id=${item.attributes.user_id}`}
             >
               <ImageContainer imagelink={toAbsoluteUrl(`${item.attributes.linkImage}`)} />
             </Link>
