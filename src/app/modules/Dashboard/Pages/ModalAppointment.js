@@ -1,8 +1,12 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable import/no-duplicates */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import * as Yup from 'yup';
+import moment from 'moment';
+import MomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -14,10 +18,44 @@ import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import styled from 'styled-components';
+import {
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
 import {
-  useFormik, Formik,
+  useFormik, Formik, Form, ErrorMessage,
 } from 'formik';
+
+import { DisplayFormikState } from './helper';
+
+moment.locale('en');
+
+const DateWrapper = styled.div`    
+  padding: 0;
+  margin: 15px 0 0 0;
+
+  button {
+    height: auto;
+    min-width: auto;
+    margin: 0;
+    padding: 0;
+  }
+`;
+const EndTimeWrapper = styled.div`
+  margin: 15px 0 0 0;
+`;
+
+const defaultShiftDetail = {
+  doctor_id: 0,
+  endTime: '00:00',
+  firstName: '',
+  id: 0,
+  lastName: '',
+  patient_id: 0,
+  startTime: '00:00',
+  status: false,
+};
 
 const ModalAppointment = ({
   handleSubmitModal,
@@ -25,31 +63,29 @@ const ModalAppointment = ({
   open,
   selectObjectList,
 }) => {
-  const [startTimeState, setStartTimeState] = useState('08:00');
-  const [intervalTimeState, setIntervalTimeState] = useState('');
+  const [startTimeState, setStartTimeState] = useState('');
+  const [intervalTimeState, setIntervalTimeState] = useState(defaultShiftDetail);
+  const [appointmentDateState, setAppointmentDateState] = useState(moment(new Date()).format('YYYY-MM-DD'));
+  const [selectedDate, setSelectedDate] = React.useState('');
+  const [locale] = useState('en');
 
-  const LoginSchema = Yup.object().shape({
-    startTimeState: Yup.string()
-      .required('this field is required'),
-  });
+  const handleDateChange = e => {
+    console.log({ appointmentDateState });
+    const newDate = moment(e.target.value).format('YYYY-MM-DD');
+    setSelectedDate(newDate);
+  };
 
-  const [listShiftDetailsState, setListShiftDetailsState] = useState([
-    {
-      endTime: '',
-      firstName: '',
-      id: 0,
-      lastName: '',
-      startTime: '',
-      status: true,
-    },
-  ]);
   // const [openModal, setOpenModal] = useState(open);
   const handleChangeStartTime = event => {
     setStartTimeState(event.target.value);
-    // const shiftDetail = listShiftDetailsState.find(
-    //   item => Number(item.id) === Number(event.target.value),
-    // );
-    // setIntervalTimeState(shiftDetail);
+    const shiftDetail = selectObjectList.find(
+      item => Number(item.id) === Number(event.target.value),
+    );
+    if (typeof (shiftDetail) !== 'undefined') {
+      setIntervalTimeState(shiftDetail);
+    } else {
+      setIntervalTimeState(defaultShiftDetail);
+    }
   };
 
   return (
@@ -62,17 +98,19 @@ const ModalAppointment = ({
               Use this form to register a new appointment
             </DialogContentText>
             <Formik
-              initialValues={{ email: '', name: '', comment: '' }}
+              initialValues={
+                {
+                  idtime: '',
+                  appointmentdate: '',
+                }
+}
               onSubmit={values => handleSubmitModal(values)}
               validationSchema={
                 Yup.object().shape({
-                  email: Yup.string()
-                    .email()
-                    .required('Required'),
-                  name: Yup.string()
-                    .required('Required'),
-                  comment: Yup.string()
-                    .required('Required'),
+                  idtime: Yup.string()
+                    .required('Start Time is required'),
+                  appointmentdate: Yup.string()
+                    .required('Appointment Date Required'),
                 })
               }
             >
@@ -91,54 +129,70 @@ const ModalAppointment = ({
                 return (
                   <form onSubmit={handleSubmit}>
                     <div className="d-flex flex-column">
-                      <FormControl>
+                      <FormControl className="my-3">
                         <InputLabel shrink htmlFor="age-native-label-placeholder">
                           Start Time:
                         </InputLabel>
                         <NativeSelect
-                          value={startTimeState}
-                          onChange={handleChangeStartTime}
+                          id="idtime"
+                          name="idtime"
+                          value={values.idtime}
+                          onChange={handleChange}
                         >
-                          <option value="0">Select Department</option>
+                          <option value="">Select Start Time</option>
                           {selectObjectList !== null
                             ? selectObjectList.map(item => (
                               <option value={item.id} key={item.id}>{item.startTime}</option>
                             ))
                             : null}
                         </NativeSelect>
-                        <FormHelperText>Label + placeholder</FormHelperText>
+                        {errors.idtime && touched.idtime ? <FormHelperText id="component-error-text" error>{errors.idtime}</FormHelperText> : null}
+
                       </FormControl>
 
-                      <TextField
-                        label="name"
-                        name="name"
-                        value={values.name}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        helperText={(errors.name && touched.name) && errors.name}
-                        margin="normal"
-                      />
+                      <FormControl>
+                        <InputLabel shrink htmlFor="age-native-label-placeholder">
+                          End Time:
+                        </InputLabel>
+                        <NativeSelect
+                          value={intervalTimeState.endTime}
+                          disabled
+                        >
+                          <option
+                            name="endtime"
+                            value={intervalTimeState.endTime}
+                          >
+                            {intervalTimeState.endTime}
+                          </option>
+                        </NativeSelect>
+                      </FormControl>
+                      <FormControl className="my-3">
+                        <DateWrapper>
+                          <MuiPickersUtilsProvider
+                            libInstance={moment}
+                            utils={MomentUtils}
+                            locale={locale}
+                          >
+                            <TextField
+                              id="appointmentdate"
+                              name="appointmentdate"
+                              label="Appointment Date"
+                              format="MM/DD/yyyy"
+                              InputProps={{ inputProps: { min: appointmentDateState } }}
+                              type="date"
+                              className="m-0 p-0"
+                              value={values.appointmentdate}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </MuiPickersUtilsProvider>
+                        </DateWrapper>
 
-                      <TextField
-                        error={errors.email && touched.email}
-                        label="email"
-                        name="email"
-                        value={values.email}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        helperText={(errors.email && touched.email) && errors.email}
-                        margin="normal"
-                      />
+                        {errors.appointmentdate && touched.appointmentdate ? <FormHelperText id="component-error-text" error>{errors.appointmentdate}</FormHelperText> : null}
+                      </FormControl>
 
-                      <TextField
-                        label="comment"
-                        name="comment"
-                        value={values.comment}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        helperText={(errors.comment && touched.comment) && errors.comment}
-                        margin="normal"
-                      />
                       <DialogActions>
                         <Button onClick={handleClose} className="outline">
                           Cancel

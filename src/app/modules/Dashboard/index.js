@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import {
   Switch,
@@ -15,6 +15,7 @@ import Footer from './Pages/Footer';
 import Title from './Pages/Title';
 import CalendarCarrusel from './Pages/CalendarCarrusel';
 import Appointment from './Pages/Appointment';
+import { ToastContext } from '../../../components/ToastContextProvider';
 
 const Wrapper = styled.div`
 `;
@@ -69,6 +70,8 @@ const TopicChild = () => {
 
 const Dashboard = () => {
   const { path, url } = useRouteMatch();
+  const { notify } = useContext(ToastContext);
+  notify('home');
   return (
     <Wrapper className="container-fluid flex-nowrap">
       <div className="row flex-row flex-nowrap">

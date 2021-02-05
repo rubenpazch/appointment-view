@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 import moment from 'moment';
 import React, { useState, useContext, useEffect } from 'react';
@@ -6,19 +7,8 @@ import {
 } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import NativeSelect from '@material-ui/core/NativeSelect';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
@@ -145,6 +135,7 @@ const Appointment = () => {
   const [selectedDate, setSelectedDate] = React.useState(moment(new Date()));
 
   const handleDateChange = date => {
+    notify('Error:');
     const newDate = moment(date).format('YYYY-MM-DD');
     setCurrentDate(newDate);
     setSelectedDate(newDate);
@@ -283,28 +274,38 @@ const Appointment = () => {
   const handleSubmitModal = values => {
     handleClose();
     console.log({ values });
+    console.log({ listShiftDetailsState });
+    const { idtime, appointmentdate } = values;
+    const intervalItemSelected = listShiftDetailsState
+      .find(item => Number(item.id) === Number(idtime));
+    console.log({ intervalItemSelected });
+    const { startTime, endTime, doctor_id } = intervalItemSelected;
+    setIntervalTimeState();
     // eslint-disable-next-line camelcase
-    const { startTime, endTime, doctor_id } = intervalTimeState;
 
     saveAppointment(appointmentDateState, startTime, endTime, user_id, doctor_id)
       .then(({ response }) => {
+        console.log(response);
+        notify('Error:');
         if (response.status === 422) {
-          // console.log(response.request.responseText);
           notify(`Error: ${getTextFromObject(response.request.responseText)}`);
         } else if (response.status === 200) {
-          // console.log('success');
+          notify('else if:');
+          console.log('success');
           handleClose();
         } else {
           // console.log('else');
         }
       }, error => {
+        notify('error response:');
         // if (response.data.user_id[0] !== null) {
         //   notify(response.data.user_id[0]);
         // }
-        // console.log('error --> ', error);
+        console.log('error --> ', error);
       })
       .catch(error => {
-        // console.log('error --> ', { error });
+        notify('catch:');
+        console.log('error --> ', { error });
       });
   };
 
