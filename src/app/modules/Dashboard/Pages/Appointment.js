@@ -133,7 +133,6 @@ const Appointment = () => {
   const doctorUserId = new URLSearchParams(useLocation().search).get('user_id');
   const [filterAppointmentsBy, setFilterAppointmentsBy] = useState();
   const [selectedDate, setSelectedDate] = React.useState(moment(new Date()));
-
   const handleDateChange = date => {
     notify('Error:');
     const newDate = moment(date).format('YYYY-MM-DD');
