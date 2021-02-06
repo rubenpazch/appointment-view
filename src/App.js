@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { Spinner } from 'react-bootstrap';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ToastContainer } from 'material-react-toastify';
+import 'material-react-toastify/dist/ReactToastify.css';
 import MomentUtils from '@date-io/moment';
 
 import Routes from './app/Routes';
@@ -20,9 +21,6 @@ function App({ persistor, store }) {
           <BrowserRouter>
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <ToastContextProvider>
-                <Routes />
-              </ToastContextProvider>
-              <div>
                 <ToastContainer
                   position="top-center"
                   autoClose={3000}
@@ -34,7 +32,8 @@ function App({ persistor, store }) {
                   draggable
                   pauseOnHover
                 />
-              </div>
+                <Routes />
+              </ToastContextProvider>
             </MuiPickersUtilsProvider>
           </BrowserRouter>
         </React.Suspense>
