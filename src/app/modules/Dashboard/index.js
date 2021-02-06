@@ -7,6 +7,7 @@ import {
   useRouteMatch,
   useParams,
   useLocation,
+  Link,
 } from 'react-router-dom';
 
 import toAbsoluteUrl from '../../../helpers/assetsHelpers';
@@ -15,7 +16,6 @@ import Footer from './Pages/Footer';
 import Title from './Pages/Title';
 import CalendarCarrusel from './Pages/CalendarCarrusel';
 import Appointment from './Pages/Appointment';
-import { ToastContext } from '../../../components/ToastContextProvider';
 
 const Wrapper = styled.div`
 `;
@@ -70,8 +70,6 @@ const TopicChild = () => {
 
 const Dashboard = () => {
   const { path, url } = useRouteMatch();
-  const { notify } = useContext(ToastContext);
-  notify('home');
   return (
     <Wrapper className="container-fluid flex-nowrap">
       <div className="row flex-row flex-nowrap">
@@ -79,10 +77,12 @@ const Dashboard = () => {
           <div className="row d-flex flex-column m-0 p-0">
             <div className="col m-0 p-0">
               <LogoContainer>
-                <img
-                  alt="Logo"
-                  src={toAbsoluteUrl('/media/logos/logo.png')}
-                />
+                <Link to="/Dashboard">
+                  <img
+                    alt="Logo"
+                    src={toAbsoluteUrl('/media/logos/logo.png')}
+                  />
+                </Link>
               </LogoContainer>
             </div>
             <div className="col m-0 p-0">
