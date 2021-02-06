@@ -104,9 +104,13 @@ const getTextFromObject = text => {
   return '';
 };
 
+function disableWeekends(date) {
+  const dateBefore = moment(date).format('dddd');
+  return dateBefore === 'Saturday' || dateBefore === 'Sunday';
+}
+
 const Appointment = () => {
   const dispatch = useDispatch();
-  const { notify } = useContext(ToastContext);
   // eslint-disable-next-line camelcase
   const { departments, user_id } = useSelector(state => state.tokenStore);
   const [currentDepartment, setCurrentDepartment] = useState(defaultDepartment);
@@ -133,8 +137,9 @@ const Appointment = () => {
   const doctorUserId = new URLSearchParams(useLocation().search).get('user_id');
   const [filterAppointmentsBy, setFilterAppointmentsBy] = useState();
   const [selectedDate, setSelectedDate] = React.useState(moment(new Date()));
+  const notify = useContext(ToastContext);
+
   const handleDateChange = date => {
-    notify('Error:');
     const newDate = moment(date).format('YYYY-MM-DD');
     setCurrentDate(newDate);
     setSelectedDate(newDate);
@@ -443,6 +448,7 @@ const Appointment = () => {
             <KeyboardDatePicker
               disableToolbar
               minDate={appointmentDateState}
+              shouldDisableDate={disableWeekends}
               variant="inline"
               format="MM/DD/yyyy"
               margin="normal"
