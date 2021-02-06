@@ -9,7 +9,6 @@ export const ToastContext = createContext({});
 
 export const ToastContextProvider = ({ children }) => {
   // const [toast, setToast] = useState([]);
-
   const notify = message => toast.error(message, {
     position: 'top-center',
     autoClose: 3000,
