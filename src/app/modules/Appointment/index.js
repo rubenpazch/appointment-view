@@ -23,8 +23,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
-import 'material-react-toastify/dist/ReactToastify.css';
-import PrimarySearchAppBar from '../../../components/TopBar';
 
 import { getDepartments, getDoctorCalendars } from '../Auth/_redux/authService';
 import {
