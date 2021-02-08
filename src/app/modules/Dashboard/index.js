@@ -76,14 +76,7 @@ const Dashboard = () => {
         <LeftContainer className="col-2 p-0 border-right">
           <div className="row d-flex flex-column m-0 p-0">
             <div className="col m-0 p-0">
-              <LogoContainer>
-                <Link to="/Dashboard">
-                  <img
-                    alt="Logo"
-                    src={toAbsoluteUrl('/media/logos/logo.png')}
-                  />
-                </Link>
-              </LogoContainer>
+              <LogoContainer />
             </div>
             <div className="col m-0 p-0">
               <MenuList />
