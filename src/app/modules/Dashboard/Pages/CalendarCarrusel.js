@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import moment from 'moment';
@@ -7,6 +8,7 @@ import Carousel from 'react-material-ui-carousel';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Banner from './Banner';
+import Alert from '../../../../components/Alert';
 
 const Wrapper = styled.div`  
   width: 100%;
@@ -54,6 +56,24 @@ const defaultCalendarList = [
   },
 ];
 
+const defaultDepartment = {
+  attributes: {
+    name: 'Not selected',
+  },
+  id: 0,
+  relationships: {
+    doctors: {
+      data: [
+        {
+          id: 0,
+          type: '',
+        },
+      ],
+    },
+  },
+  type: '',
+};
+
 const CalendarCarrusel = () => {
   const [autoPlay, setAutoPlay] = useState(true);
   const [animation, setAnimation] = useState('fade');
@@ -67,6 +87,8 @@ const CalendarCarrusel = () => {
   const departmentId = new URLSearchParams(useLocation().search).get('id');
   const [appointmentDateState, setAppointmentDateState] = useState(moment(new Date()).format('YYYY-MM-DD'));
   const [filterCalendar, setFilterCalendar] = useState(defaultCalendarList);
+  const [listDoctorInformation, setListDoctorInformation] = useState(null);
+  const [currentDepartment, setCurrentDepartment] = useState(defaultDepartment);
 
   useEffect(() => {
     if (doctorcalendars !== null) {
@@ -79,6 +101,7 @@ const CalendarCarrusel = () => {
         }
         return null;
       });
+
       for (let index = 0; index < filterCalendarByDepartment.length; index += 1) {
         const doctorFounded = doctors.find(doctor => {
           const doctorId = Number(doctor.id);
@@ -132,6 +155,19 @@ const CalendarCarrusel = () => {
     }
   }, [departmentId]);
 
+  useEffect(() => {
+    if (departments !== null) {
+      const departmentFounded = departments.find(department => {
+        const departmentIdState = Number(departmentId);
+        const relId = Number(department.attributes.id);
+        if (relId === departmentIdState) return department;
+        return null;
+      });
+      console.log({ departmentFounded });
+      setCurrentDepartment(departmentFounded);
+    }
+  }, [departmentId]);
+
   const toggleAutoPlay = () => {
     setAutoPlay(!autoPlay);
   };
@@ -178,22 +214,39 @@ const CalendarCarrusel = () => {
     return banners;
   };
 
+  useEffect(() => {
+    const listResult = getTagsBySlice();
+    setListDoctorInformation(listResult);
+  }, [filterCalendar]);
+
   return (
     <Wrapper className="m-0 px-0 py-5">
-      <Carousel
-        className="Example"
-        autoPlay={autoPlay}
-        animation={animation}
-        indicators={indicators}
-        timeout={timeout}
-        navButtonsAlwaysVisible={navButtonsAlwaysVisible}
-        navButtonsAlwaysInvisible={navButtonsAlwaysInvisible}
-      >
-        {getTagsBySlice().map(item => (
-          item
-        ))}
-      </Carousel>
-
+      {
+        listDoctorInformation === null || listDoctorInformation.length === 0
+          ? (
+            <Alert
+              message={`There is not information for the service ${currentDepartment.attributes.name} `}
+              footerMessage="Ask the administration for more information"
+            />
+          )
+          : (
+            <Carousel
+              className="Example"
+              autoPlay={autoPlay}
+              animation={animation}
+              indicators={indicators}
+              timeout={timeout}
+              navButtonsAlwaysVisible={navButtonsAlwaysVisible}
+              navButtonsAlwaysInvisible={navButtonsAlwaysInvisible}
+            >
+              {
+          listDoctorInformation.map(item => (
+            item
+          ))
+        }
+            </Carousel>
+          )
+      }
     </Wrapper>
   );
 };
