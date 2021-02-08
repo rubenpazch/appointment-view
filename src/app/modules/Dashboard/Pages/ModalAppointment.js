@@ -70,7 +70,6 @@ const ModalAppointment = ({
   const [locale] = useState('en');
 
   const handleDateChange = e => {
-    console.log({ appointmentDateState });
     const newDate = moment(e.target.value).format('YYYY-MM-DD');
     setSelectedDate(newDate);
   };

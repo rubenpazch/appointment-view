@@ -9,7 +9,7 @@ export const ToastContext = createContext({});
 
 export const ToastContextProvider = ({ children }) => {
   // const [toast, setToast] = useState([]);
-  const notify = message => toast.error(message, {
+  const notifyError = message => toast.error(message, {
     position: 'top-center',
     autoClose: 3000,
     hideProgressBar: true,
@@ -18,17 +18,17 @@ export const ToastContextProvider = ({ children }) => {
     draggable: true,
   });
 
-  // toast.success(' Wow so easy!', {
-  //   position: 'top-center',
-  //   autoClose: 3000,
-  //   hideProgressBar: true,
-  //   closeOnClick: true,
-  //   pauseOnHover: true,
-  //   draggable: true,
-  // });
+  const notifySuccess = message => toast.success(message, {
+    position: 'top-center',
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
 
   return (
-    <ToastContext.Provider value={{ notify }}>
+    <ToastContext.Provider value={{ notifyError, notifySuccess }}>
       {children}
     </ToastContext.Provider>
   );

@@ -137,13 +137,12 @@ const Appointment = () => {
   const doctorUserId = new URLSearchParams(useLocation().search).get('user_id');
   const [filterAppointmentsBy, setFilterAppointmentsBy] = useState();
   const [selectedDate, setSelectedDate] = React.useState(moment(new Date()));
-  const notify = useContext(ToastContext);
+  const { notifyError, notifySuccess } = useContext(ToastContext);
 
   const handleDateChange = date => {
     const newDate = moment(date).format('YYYY-MM-DD');
     setCurrentDate(newDate);
     setSelectedDate(newDate);
-    console.log({ doctorcalendars });
     if (doctorcalendars !== null) {
       const DoctorCalendarObject = doctorcalendars
         .find(item => Number(item.attributes.user_id) === Number(doctorUserId)
@@ -160,13 +159,11 @@ const Appointment = () => {
         item => item.attributes.startDate === newDate
       && Number(item.attributes.user_id) === Number(doctorUserId),
       );
-      console.log({ doctorCalendar });
       getListAppointmentByDateService(
         DoctorCalendarObject.relationships.department.data.id,
         newDate,
       )
         .then(({ data }) => {
-          console.log({ data });
           dispatch(setListByDateService(data));
           setFilterAppointmentsBy(data.data);
           const appointmentList = data.data;
@@ -199,7 +196,6 @@ const Appointment = () => {
             arrayHours.push(obj);
             return defaultDoctorCalendar;
           });
-          console.log({ arrayHours });
           for (let indexAH = 0; indexAH < arrayHours.length; indexAH += 1) {
             arrayHours[indexAH].userInformation = doctorsusers
               .find(x => Number(x.id)
@@ -211,7 +207,6 @@ const Appointment = () => {
               .find(x => Number(x.id)
           === Number(arrayHours[indexAH].userInformation.attributes.person_id));
           }
-          console.log({ arrayHours });
           setDoctorInformation(arrayHours);
           const ShiftByHour = [];
           let indexKey = 1;
@@ -234,7 +229,6 @@ const Appointment = () => {
               indexKey += 1;
             }
           }
-          console.log({ ShiftByHour });
           setListShiftDetailsState(ShiftByHour);
           for (let indexh = 0; indexh < appointmentList.length; indexh += 1) {
             const foundIndex = ShiftByHour.findIndex(
@@ -251,7 +245,6 @@ const Appointment = () => {
               ShiftByHour[foundIndex].lastName = objectPerson.attributes.lastName;
             }
           }
-          console.log({ ShiftByHour });
           setAvailability(ShiftByHour);
         })
         .catch(error => {
@@ -261,7 +254,6 @@ const Appointment = () => {
         });
     }
   };
-  console.log({ doctorCalendarId });
 
   useEffect(() => {
     setCalendarState(doctorcalendars);
@@ -277,38 +269,33 @@ const Appointment = () => {
 
   const handleSubmitModal = values => {
     handleClose();
-    console.log({ values });
-    console.log({ listShiftDetailsState });
     const { idtime, appointmentdate } = values;
     const intervalItemSelected = listShiftDetailsState
       .find(item => Number(item.id) === Number(idtime));
-    console.log({ intervalItemSelected });
     const { startTime, endTime, doctor_id } = intervalItemSelected;
     setIntervalTimeState();
     // eslint-disable-next-line camelcase
 
-    saveAppointment(appointmentDateState, startTime, endTime, user_id, doctor_id)
+    saveAppointment(appointmentdate, startTime, endTime, user_id, doctor_id)
       .then(({ response }) => {
-        console.log(response);
-        notify('Error:');
+        console.log({ response });
         if (response.status === 422) {
-          notify(`Error: ${getTextFromObject(response.request.responseText)}`);
+          notifyError(`Error: ${getTextFromObject(response.request.responseText)}`);
         } else if (response.status === 200) {
-          notify('else if:');
-          console.log('success');
+          notifySuccess('else if:');
           handleClose();
         } else {
           // console.log('else');
         }
       }, error => {
-        notify('error response:');
+        notifyError('error response:');
         // if (response.data.user_id[0] !== null) {
         //   notify(response.data.user_id[0]);
         // }
         console.log('error --> ', error);
       })
       .catch(error => {
-        notify('catch:');
+        notifyError('catch:');
         console.log('error --> ', { error });
       });
   };

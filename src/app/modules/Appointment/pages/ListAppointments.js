@@ -186,7 +186,7 @@ const Appointment = () => {
   const [currentDepartment, setCurrentDepartment] = useState(defaultDepartment);
   const [doctorCalendarByDay, setDoctorCalendarByDay] = useState(defaultDoctorCalendar);
   const [doctorCalendarByDepartment, setDoctorCalendarByDepartment] = useState(null);
-  const { notify } = useContext(ToastContext);
+  const { notifyError } = useContext(ToastContext);
   const [listShiftDetailsState, setListShiftDetailsState] = useState([
     {
       endTime: '',
@@ -228,7 +228,7 @@ const Appointment = () => {
       .then(({ response }) => {
         if (response.status === 422) {
           // console.log(response.request.responseText);
-          notify(`Error: ${getTextFromObject(response.request.responseText)}`);
+          notifyError(`Error: ${getTextFromObject(response.request.responseText)}`);
         } else if (response.status === 200) {
           // console.log('success');
           handleClose();
@@ -237,7 +237,7 @@ const Appointment = () => {
         }
       }, error => {
         if (response.data.user_id[0] !== null) {
-          notify(response.data.user_id[0]);
+          notifyError(response.data.user_id[0]);
         }
         // console.log('error --> ', error);
       })
