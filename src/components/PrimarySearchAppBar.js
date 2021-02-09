@@ -5,28 +5,17 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-// import Typography from '@material-ui/core/Typography';
-// import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
-// import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { Link } from 'react-router-dom';
-import Drawer from '@material-ui/core/Drawer';
-// import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import { Link, useHistory } from 'react-router-dom';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import { useDispatch } from 'react-redux';
-
 import toAbsoluteUrl from '../helpers/assetsHelpers';
 import TemporaryDrawer from './Drawer';
 import { removeToken } from '../app/modules/Auth/_redux/authAction';
@@ -117,6 +106,14 @@ const PrimarySearchAppBar = () => {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [togleDrawerState, setTogleDrawerState] = useState(false);
+  const history = useHistory();
+  const handleClickDoctorCalendar = () => {
+    history.push('/');
+  };
+
+  const handleClickAppointments = () => {
+    history.push('/Appointments');
+  };
 
   const [stateDrawer, setStateDrawer] = useState({
     top: false,
@@ -186,7 +183,7 @@ const PrimarySearchAppBar = () => {
       <MenuItem>
         <IconButton aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="secondary">
-            <MailIcon />
+            <DateRangeIcon />
           </Badge>
         </IconButton>
         <p>Messages</p>
@@ -239,15 +236,19 @@ const PrimarySearchAppBar = () => {
             </LogoContainer>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <MailIcon />
-                </Badge>
+              <IconButton
+                aria-label="Doctor Calendar"
+                color="inherit"
+                onClick={handleClickDoctorCalendar}
+              >
+                <DateRangeIcon />
               </IconButton>
-              <IconButton aria-label="show 17 new notifications" color="inherit">
-                <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
+              <IconButton
+                aria-label="show 17 new notifications"
+                color="inherit"
+                onClick={handleClickAppointments}
+              >
+                <PlaylistAddCheckIcon />
               </IconButton>
               <IconButton
                 edge="end"
