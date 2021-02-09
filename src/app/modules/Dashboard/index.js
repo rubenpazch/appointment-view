@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {
   Switch,
@@ -7,10 +7,8 @@ import {
   useRouteMatch,
   useParams,
   useLocation,
-  Link,
 } from 'react-router-dom';
 
-import toAbsoluteUrl from '../../../helpers/assetsHelpers';
 import MenuList from '../../../components/MenuList';
 import Footer from './Pages/Footer';
 import Title from './Pages/Title';
@@ -53,21 +51,6 @@ const BottonContainer = styled.div`
   width: 100%;
   min-width: 100%;
 `;
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
-const TopicChild = () => {
-  const { departmentname } = useParams();
-  const query = useQuery();
-  return (
-    <div>
-      <h3>{departmentname}</h3>
-      <h1>{query.get('id')}</h1>
-    </div>
-  );
-};
 
 const Dashboard = () => {
   const { path, url } = useRouteMatch();
