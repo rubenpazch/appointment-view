@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,7 +17,17 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Link } from 'react-router-dom';
+import Drawer from '@material-ui/core/Drawer';
+// import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+
 import toAbsoluteUrl from '../helpers/assetsHelpers';
+import TemporaryDrawer from './Drawer';
 
 const LogoContainer = styled.div`  
   img {
@@ -98,11 +109,29 @@ const useStyles = makeStyles(theme => ({
 
 const PrimarySearchAppBar = () => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const [togleDrawerState, setTogleDrawerState] = useState(false);
+
+  const [stateDrawer, setStateDrawer] = useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false,
+  });
+
+  const toggleDrawerExternal = (anchorParam, openParam) => event => {
+    console.log({ openParam });
+    console.log({ event });
+    if (typeof (event) !== 'undefined') {
+      if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+        return;
+      }
+    }
+    setTogleDrawerState({ ...togleDrawerState, [anchorParam]: openParam });
+  };
 
   const handleProfileMenuOpen = event => {
     setAnchorEl(event.currentTarget);
@@ -189,6 +218,9 @@ const PrimarySearchAppBar = () => {
               className={classes.menuButton}
               color="inherit"
               aria-label="open drawer"
+              onClick={() => {
+                toggleDrawerExternal('right', true)();
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -234,6 +266,7 @@ const PrimarySearchAppBar = () => {
                 <MoreIcon />
               </IconButton>
             </div>
+            <TemporaryDrawer open={stateDrawer.right} anchor="right" toggleDrawerExternal={toggleDrawerExternal} togleDrawerState={togleDrawerState} />
           </Toolbar>
         </AppBar>
         {renderMobileMenu}
