@@ -25,9 +25,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
+import { useDispatch } from 'react-redux';
 
 import toAbsoluteUrl from '../helpers/assetsHelpers';
 import TemporaryDrawer from './Drawer';
+import { removeToken } from '../app/modules/Auth/_redux/authAction';
 
 const LogoContainer = styled.div`  
   img {
@@ -110,6 +112,7 @@ const useStyles = makeStyles(theme => ({
 const PrimarySearchAppBar = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const dispatch = useDispatch();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -123,8 +126,6 @@ const PrimarySearchAppBar = () => {
   });
 
   const toggleDrawerExternal = (anchorParam, openParam) => event => {
-    console.log({ openParam });
-    console.log({ event });
     if (typeof (event) !== 'undefined') {
       if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
         return;
@@ -150,6 +151,10 @@ const PrimarySearchAppBar = () => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const onSubmitLogout = () => {
+    dispatch(removeToken());
+  };
+
   const mobileMenuId = 'primary-search-account-menu-mobile';
 
   const menuId = 'primary-search-account-menu';
@@ -164,7 +169,7 @@ const PrimarySearchAppBar = () => {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={onSubmitLogout}>Logout</MenuItem>
     </Menu>
   );
 
@@ -266,7 +271,12 @@ const PrimarySearchAppBar = () => {
                 <MoreIcon />
               </IconButton>
             </div>
-            <TemporaryDrawer open={stateDrawer.right} anchor="right" toggleDrawerExternal={toggleDrawerExternal} togleDrawerState={togleDrawerState} />
+            <TemporaryDrawer
+              open={stateDrawer.right}
+              anchor="right"
+              toggleDrawerExternal={toggleDrawerExternal}
+              togleDrawerState={togleDrawerState}
+            />
           </Toolbar>
         </AppBar>
         {renderMobileMenu}
