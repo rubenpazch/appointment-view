@@ -25,6 +25,10 @@ export default function TemporaryDrawer({
   const handleClickDoctorCalendar = () => {
     history.push('/');
   };
+
+  const handleClickAppointments = () => {
+    history.push('/Appointments');
+  };
   const onSubmitLogout = () => {
     dispatch(removeToken());
   };
@@ -65,7 +69,11 @@ export default function TemporaryDrawer({
           <ListItemIcon><DateRangeIcon /></ListItemIcon>
           <ListItemText primary="Doctor Calendar" />
         </ListItem>
-        <ListItem button key="2">
+        <ListItem
+          button
+          key="2"
+          onClick={handleClickAppointments}
+        >
           <ListItemIcon><PlaylistAddCheckIcon /></ListItemIcon>
           <ListItemText primary="My Appointments" />
         </ListItem>
