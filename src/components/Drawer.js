@@ -3,6 +3,8 @@
 import React, { useEffect } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 // import Button from '@material-ui/core/Button';
+import { Link, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
@@ -13,10 +15,19 @@ import MailIcon from '@material-ui/icons/Mail';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import { removeToken } from '../app/modules/Auth/_redux/authAction';
 
 export default function TemporaryDrawer({
   anchor, open, toggleDrawerExternal, togleDrawerState,
 }) {
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const handleClickDoctorCalendar = () => {
+    history.push('/');
+  };
+  const onSubmitLogout = () => {
+    dispatch(removeToken());
+  };
   // const [state, setState] = React.useState({
   //   top: false,
   //   left: false,
@@ -46,7 +57,11 @@ export default function TemporaryDrawer({
       onKeyDown={toggleDrawerExternal(anchor, false)}
     >
       <List>
-        <ListItem button key="1">
+        <ListItem
+          button
+          key="1"
+          onClick={handleClickDoctorCalendar}
+        >
           <ListItemIcon><DateRangeIcon /></ListItemIcon>
           <ListItemText primary="Doctor Calendar" />
         </ListItem>
@@ -57,7 +72,11 @@ export default function TemporaryDrawer({
       </List>
       <Divider />
       <List>
-        <ListItem button key="3">
+        <ListItem
+          button
+          key="3"
+          onClick={onSubmitLogout}
+        >
           <ListItemIcon><ExitToAppIcon /></ListItemIcon>
           <ListItemText primary="Logout" />
         </ListItem>
