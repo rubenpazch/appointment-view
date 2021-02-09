@@ -33,7 +33,7 @@ const LogoContainer = styled.div`
   height: 15vh;
 
   img {
-    width: 150px;
+    width: 125px;
     margin-top: 10px;
     margin-left: 5px;
   }
