@@ -11,7 +11,6 @@ import MomentUtils from '@date-io/moment';
 
 import Routes from './app/Routes';
 import { ToastContextProvider } from './components/ToastContextProvider';
-import PrimarySearchAppBar from './components/PrimarySearchAppBar';
 
 function App({ persistor, store }) {
   return (
@@ -32,7 +31,6 @@ function App({ persistor, store }) {
                   draggable
                   pauseOnHover
                 />
-                <PrimarySearchAppBar />
                 <Routes />
               </ToastContextProvider>
             </MuiPickersUtilsProvider>
