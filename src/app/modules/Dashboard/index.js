@@ -16,6 +16,7 @@ import Footer from './Pages/Footer';
 import Title from './Pages/Title';
 import CalendarCarrusel from './Pages/CalendarCarrusel';
 import Appointment from './Pages/Appointment';
+import PrimarySearchAppBar from '../../../components/PrimarySearchAppBar';
 
 const Wrapper = styled.div`
 `;
@@ -71,43 +72,46 @@ const TopicChild = () => {
 const Dashboard = () => {
   const { path, url } = useRouteMatch();
   return (
-    <Wrapper className="container-fluid flex-nowrap">
-      <div className="row flex-row flex-nowrap">
-        <LeftContainer className="col-2 p-0 border-right">
-          <div className="row d-flex flex-column m-0 p-0">
-            <div className="col m-0 p-0">
-              <LogoContainer />
-            </div>
-            <div className="col m-0 p-0">
-              <MenuList />
-            </div>
-            <div className="col m-0 p-0">
-              <Footer />
-            </div>
-          </div>
-        </LeftContainer>
-        <RigthContainer className="col-10">
-          <Switch>
-            <Route exact path={path}>
-              <h3>Please select a service.</h3>
-            </Route>
-            <Route exact path={`${path}/:departmentname`}>
-              <div className="row d-flex flex-column">
-                <TopContainer className="col-4 p-0">
-                  <Title />
-                </TopContainer>
-                <BottonContainer className="col-8 m-0 p-0">
-                  <CalendarCarrusel />
-                </BottonContainer>
+    <>
+      <PrimarySearchAppBar />
+      <Wrapper className="container-fluid flex-nowrap">
+        <div className="row flex-row flex-nowrap">
+          <LeftContainer className="col-2 p-0 border-right">
+            <div className="row d-flex flex-column m-0 p-0">
+              <div className="col m-0 p-0">
+                <LogoContainer />
               </div>
-            </Route>
-            <Route path={`${path}/:departmentname/:doctorname`}>
-              <Appointment />
-            </Route>
-          </Switch>
-        </RigthContainer>
-      </div>
-    </Wrapper>
+              <div className="col m-0 p-0">
+                <MenuList />
+              </div>
+              <div className="col m-0 p-0">
+                <Footer />
+              </div>
+            </div>
+          </LeftContainer>
+          <RigthContainer className="col-10">
+            <Switch>
+              <Route exact path={path}>
+                <h3>Please select a service.</h3>
+              </Route>
+              <Route exact path={`${path}/:departmentname`}>
+                <div className="row d-flex flex-column">
+                  <TopContainer className="col-4 p-0">
+                    <Title />
+                  </TopContainer>
+                  <BottonContainer className="col-8 m-0 p-0">
+                    <CalendarCarrusel />
+                  </BottonContainer>
+                </div>
+              </Route>
+              <Route path={`${path}/:departmentname/:doctorname`}>
+                <Appointment />
+              </Route>
+            </Switch>
+          </RigthContainer>
+        </div>
+      </Wrapper>
+    </>
   );
 };
 
