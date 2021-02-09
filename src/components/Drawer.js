@@ -10,6 +10,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 
 export default function TemporaryDrawer({
   anchor, open, toggleDrawerExternal, togleDrawerState,
@@ -43,21 +46,21 @@ export default function TemporaryDrawer({
       onKeyDown={toggleDrawerExternal(anchor, false)}
     >
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        <ListItem button key="1">
+          <ListItemIcon><DateRangeIcon /></ListItemIcon>
+          <ListItemText primary="Doctor Calendar" />
+        </ListItem>
+        <ListItem button key="2">
+          <ListItemIcon><PlaylistAddCheckIcon /></ListItemIcon>
+          <ListItemText primary="My Appointments" />
+        </ListItem>
       </List>
       <Divider />
       <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        <ListItem button key="3">
+          <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+          <ListItemText primary="Logout" />
+        </ListItem>
       </List>
     </div>
   );
