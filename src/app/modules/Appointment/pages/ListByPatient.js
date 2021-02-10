@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import AppointmentDetail from './AppointmentDetail';
 import { ListAppointmentByPatient } from '../_redux/appointmentService';
@@ -11,9 +13,11 @@ const Wrapper = styled.div`
 
 const ListByPatient = () => {
   const [listOfAppointments, setListOfAppointments] = useState();
+  // eslint-disable-next-line camelcase
+  const { doctors, doctorsusers, user_id } = useSelector(state => state.tokenStore);
 
   useEffect(() => {
-    ListAppointmentByPatient('557')
+    ListAppointmentByPatient(user_id)
       .then(({ data }) => {
         console.log({ data });
         const listOfAppointments = data.data;
@@ -34,21 +38,49 @@ const ListByPatient = () => {
           }
         }
 
-        for (let k = 0; k < listOfAppointments.length; k += 1) {
-          console.log(listOfAppointments[k]);
-          listOfAppointments[k].attributes.service = 'casa';
+        if (doctorsusers !== null && arrayOfPerson !== null) {
+          for (let k = 0; k < listOfAppointments.length; k += 1) {
+            const tempDoctorUser = doctorsusers.find(item => Number(item.id)
+            === Number(listOfAppointments[k].attributes.doctor_id));
+
+            const tempDepartment = arrayOfDepartments.find(item => Number(item.id)
+            === Number(listOfAppointments[k].relationships.department.data.id));
+
+            listOfAppointments[k]
+              .attributes
+              .person_doctor_id = tempDoctorUser.attributes.person_id;
+
+            listOfAppointments[k]
+              .relationships
+              .department
+              .data.name = tempDepartment.attributes.name;
+
+            listOfAppointments[k]
+              .relationships
+              .department
+              .data.location = tempDepartment.attributes.location;
+          }
+
+          for (let t = 0; t < listOfAppointments.length; t += 1) {
+            const tempPerson = doctors.find(item => Number(item.id)
+            === Number(listOfAppointments[t].attributes.person_doctor_id));
+            listOfAppointments[t]
+              .attributes
+              .firstName = tempPerson.attributes.firstName;
+            listOfAppointments[t]
+              .attributes
+              .lastName = tempPerson.attributes.lastName;
+          }
+          console.log({ listOfAppointments });
+          setListOfAppointments(listOfAppointments);
         }
-        console.log({ arrayOfPerson });
-        console.log({ arrayOfUsers });
-        console.log({ arrayOfDepartments });
-        console.log({ listOfAppointments });
       })
       .catch(error => {
         console.log({ error });
       // setSubmitting(false);
       // setStatus('not working');
       });
-  }, []);
+  }, [doctorsusers]);
   return (
     <Wrapper>
       <AppointmentDetail
@@ -60,15 +92,22 @@ const ListByPatient = () => {
         date="Date"
         status
       />
-      <AppointmentDetail
-        time="8:00"
-        endTime="9:00"
-        patient="Carlos Paz Ortiz de Orue de Los Andes"
-        service="Cirugia"
-        office="Consultorio 5"
-        date="01/01/1999"
-        status
-      />
+      {
+        listOfAppointments !== null && typeof (listOfAppointments) !== 'undefined'
+          ? listOfAppointments.map(item => (
+            <AppointmentDetail
+              key={item.id}
+              time={moment.utc(item.attributes.startTime).format('HH:mm')}
+              endTime={moment.utc(item.attributes.endTime).format('HH:mm')}
+              patient={`${item.attributes.firstName} ${item.attributes.lastName}`}
+              service={item.relationships.department.data.name}
+              office={item.relationships.department.data.location}
+              date={item.attributes.appointmentDate}
+              status
+            />
+          ))
+          : <h1>empty</h1>
+      }
     </Wrapper>
   );
 };
