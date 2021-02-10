@@ -1,25 +1,20 @@
 /* eslint-disable camelcase */
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/no-unused-prop-types */
-/* eslint-disable react/forbid-prop-types */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Snackbar from '@material-ui/core/Snackbar';
-
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import {
   useFormik,
 } from 'formik';
-// import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { setToken } from '../_redux/authAction';
 import { login } from '../_redux/authService';
+import { ToastContext } from '../../../../components/ToastContextProvider';
 
 const WrapperUsername = styled.div` 
   padding: 15px;
@@ -42,17 +37,12 @@ const WrapperButton = styled.div`
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const [openAlert, setOpenAlert] = useState(false);
-  const [errorState, setErrorState] = useState('');
+  const { notifyError, notifySuccess } = useContext(ToastContext);
 
   useEffect(() => {
     setLoading(false);
     return () => setLoading(false);
   }, []);
-
-  setTimeout(() => {
-    setOpenAlert(false);
-  }, (5000));
 
   const enableLoading = () => {
     setLoading(true);
@@ -75,7 +65,7 @@ const Login = () => {
   const formik = useFormik({
     initialValues: { username: '', password: '' },
     validationSchema: LoginSchema,
-    onSubmit: values => {
+    onSubmit: (values, actions) => {
       enableLoading();
       setTimeout(() => {
         login(values.username, values.password)
@@ -84,17 +74,19 @@ const Login = () => {
               token, username, user_id, personInformation,
             },
           }) => {
+            console.log({ actions });
+            notifySuccess('Login success');
             dispatch(setToken({
               token, username, user_id, personInformation,
             }));
             disableLoading();
           })
           .catch(error => {
-            setOpenAlert(true);
-            setErrorState('Incorrect Username or Password');
+            console.log({ actions });
+            console.log({ error });
+            notifyError('Username or password was incorrect, try again.');
             disableLoading();
-            // setSubmitting(false);
-            // setStatus('not working');
+            actions.setSubmitting(false);
           });
       }, 1400);
     },
@@ -103,14 +95,6 @@ const Login = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <WrapperLogin className="d-flex flex-column align-items-center">
-        { openAlert
-          ? (
-            <div className="alert alert-danger" role="alert">
-              {errorState}
-            </div>
-          )
-          : null}
-
         <WrapperUsername className="d-flex flex-row justify-content-center">
           <FormControl>
             <InputLabel htmlFor="username">username</InputLabel>
@@ -146,7 +130,7 @@ const Login = () => {
           </FormControl>
         </WrapperPassword>
         <WrapperButton className="d-flex flex-row justify-content-start ">
-          <Button variant="contained" color="primary" type="submit">
+          <Button variant="contained" color="primary" type="submit" disabled={formik.isSubmitting}>
             Login
           </Button>
           {loading && (
@@ -159,11 +143,4 @@ const Login = () => {
   );
 };
 
-// Login.defaultProps = {
-//   props: {},
-// };
-//
-// Login.propTypes = {
-//   props: PropTypes.object,
-// };
 export default Login;
