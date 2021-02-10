@@ -16,7 +16,7 @@ import { getListAppointmentByDateService, saveAppointment } from '../../Appointm
 import { ToastContext } from '../../../../components/ToastContextProvider';
 import ModalAppointment from './ModalAppointment';
 import { setListByDateService } from '../../Appointment/_redux/appointmentAction';
-import AppointmentDetail from '../../Appointment/pages/AppointmentDetail';
+import AppointmentDetail from './AppointmentDetail';
 import Resume from '../../Appointment/pages/Resume';
 import Alert from '../../../../components/Alert';
 
