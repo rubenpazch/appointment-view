@@ -3,7 +3,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useRouteMatch } from 'react-router-dom';
 import Title from './pages/Title';
@@ -19,12 +19,13 @@ const RigthContainer = styled.div`
 
 const Appointment = () => {
   const { path, url } = useRouteMatch();
+
   return (
     <>
       <PrimarySearchAppBar />
       <Wrapper className="container-fluid flex-nowrap">
         <div className="row flex-row flex-nowrap">
-          <RigthContainer className="col-12 ml-5">
+          <RigthContainer className="col-12">
             <Title />
             <ListByPatient />
           </RigthContainer>
