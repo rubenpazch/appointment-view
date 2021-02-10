@@ -5,8 +5,6 @@ import {
   Switch,
   Route,
   useRouteMatch,
-  useParams,
-  useLocation,
 } from 'react-router-dom';
 
 import MenuList from '../../../components/MenuList';
