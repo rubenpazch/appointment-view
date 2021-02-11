@@ -8,6 +8,8 @@ import {
   FETCH_DOCTORS,
   FETCH_DOCTORS_USERS,
   ACTIVE_STEP,
+  SET_PATIENT_ROLE,
+  SET_PATIENT_DEPARTMENT,
 } from './authReducer';
 
 export const setToken = result => ({
@@ -52,5 +54,15 @@ export const setDoctorsUsers = result => ({
 
 export const setActiveStep = result => ({
   type: ACTIVE_STEP,
+  payload: result,
+});
+
+export const setPatientRole = result => ({
+  type: SET_PATIENT_ROLE,
+  payload: result,
+});
+
+export const setPatientDepartment = result => ({
+  type: SET_PATIENT_DEPARTMENT,
   payload: result,
 });

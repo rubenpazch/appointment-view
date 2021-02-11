@@ -10,11 +10,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
-  setUserInformation,
+  // setUserInformation,
   setActiveStep,
 } from '../_redux/authAction';
 
-import { register } from '../_redux/authService';
+import { registerUser } from '../_redux/authService';
 
 const WrapperField = styled.div` 
   padding: 15px;
@@ -70,11 +70,12 @@ const Registration = () => {
       dispatch(setActiveStep(2));
       setTimeout(() => {
         /* eslint-disable camelcase */
-        register(values.email, values.username, values.password, patient.id)
-          .then(({ data: { data: { attributes: { email, username, role_id } } } }) => {
-            dispatch(setUserInformation({
-              email, username, role_id,
-            }));
+        registerUser(values.email, values.username, values.password, patient.id)
+          .then(({ data }) => {
+            console.log({ data });
+            // dispatch(setUserInformation({
+            //   email, username, role_id,
+            // }));
             disableLoading();
           })
           .catch(() => {

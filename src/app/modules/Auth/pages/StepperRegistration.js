@@ -129,7 +129,7 @@ const StepperRegistration = () => {
       </Stepper>
       { renderSwitch(activeStep) }
       <WrapperStepNavigation>
-        {activeStepState === steps.length ? (
+        {activeStep === steps.length ? (
           <div>
             <Typography className={classes.instructions}>
               All steps completed - you&apos;re finished
@@ -143,17 +143,17 @@ const StepperRegistration = () => {
             <Typography
               className={classes.instructions}
             >
-              {getStepContent(activeStepState)}
+              {getStepContent(activeStep)}
             </Typography>
             <div>
               <Button
-                disabled={activeStepState === 0}
+                disabled={activeStep === 0}
                 onClick={handleBack}
                 className={classes.button}
               >
                 Back
               </Button>
-              {isStepOptional(activeStepState) && (
+              {isStepOptional(activeStep) && (
                 <Button
                   variant="contained"
                   color="primary"
@@ -170,7 +170,7 @@ const StepperRegistration = () => {
                 onClick={handleNext}
                 className={classes.button}
               >
-                {activeStepState === steps.length - 1 ? 'Finish' : 'Next'}
+                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
               </Button>
             </div>
           </div>
