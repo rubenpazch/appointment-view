@@ -1,12 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useRouteMatch } from 'react-router-dom';
 
-const Content = ({ children }) => {
-  // eslint-disable-next-line no-unused-vars
-  const match = useRouteMatch() || {};
-  return <>{children}</>;
-};
+const Content = ({ children }) => <>{children}</>;
 
 Content.defaultProps = {
   children: {},

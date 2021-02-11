@@ -87,6 +87,7 @@ const Login = () => {
             notifyError('Username or password was incorrect, try again.');
             disableLoading();
             actions.setSubmitting(false);
+            // console.clear();
           });
       }, 1400);
     },
