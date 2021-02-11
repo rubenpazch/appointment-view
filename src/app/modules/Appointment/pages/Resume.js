@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -99,5 +99,19 @@ const Resume = ({
     </div>
   </ContentResume>
 );
+
+Resume.propTypes = {
+  doctorName: PropTypes.string,
+  location: PropTypes.string,
+  startTime: PropTypes.string,
+  endTime: PropTypes.string,
+};
+
+Resume.defaultProps = {
+  doctorName: '',
+  location: '',
+  startTime: '',
+  endTime: '',
+};
 
 export default Resume;

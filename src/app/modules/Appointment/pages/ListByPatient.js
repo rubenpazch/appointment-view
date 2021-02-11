@@ -1,10 +1,10 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import AppointmentDetail from './AppointmentDetail';
 import { ListAppointmentByPatient } from '../_redux/appointmentService';
+import { ToastContext } from '../../../../components/ToastContextProvider';
 
 const Wrapper = styled.div`  
   width: 100%;
@@ -13,13 +13,13 @@ const Wrapper = styled.div`
 
 const ListByPatient = () => {
   const [listOfAppointments, setListOfAppointments] = useState();
+  const { notifyError } = useContext(ToastContext);
   // eslint-disable-next-line camelcase
   const { doctors, doctorsusers, user_id } = useSelector(state => state.tokenStore);
 
   useEffect(() => {
     ListAppointmentByPatient(user_id)
       .then(({ data }) => {
-        console.log({ data });
         const listOfAppointments = data.data;
         const listOfIncludes = data.included;
         const arrayOfPerson = [];
@@ -71,14 +71,11 @@ const ListByPatient = () => {
               .attributes
               .lastName = tempPerson.attributes.lastName;
           }
-          console.log({ listOfAppointments });
           setListOfAppointments(listOfAppointments);
         }
       })
       .catch(error => {
-        console.log({ error });
-      // setSubmitting(false);
-      // setStatus('not working');
+        notifyError(error.message);
       });
   }, [doctorsusers]);
   return (

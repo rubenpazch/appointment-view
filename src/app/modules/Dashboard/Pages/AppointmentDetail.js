@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
-/* eslint-disable react/forbid-prop-types */
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -48,50 +46,51 @@ const StatusAppointment = styled.div`
   border-radius: 5px;  
 `;
 
-const AppointmentService = styled.div`
-  h3 {    
-    font-size: 0.7rem;
-    color: #3c6ecc;
-  }
-`;
-
 const AppointmentDetail = ({
   time,
   endTime,
   patient,
-  service,
-  office,
   status,
-}) => {
-  const test = '';
-
-  return (
-    <Wrapper className="d-flex flex-column px-1 pb-1 m-1" status={status}>
-      <TimeWrapper className="d-flex flex-row align-items-center justify-content-between">
+}) => (
+  <Wrapper className="d-flex flex-column px-1 pb-1 m-1" status={status}>
+    <TimeWrapper className="d-flex flex-row align-items-center justify-content-between">
+      <div className="d-flex flex-row align-items-center">
+        <div className="mr-2">
+          <FontAwesomeIcon icon={faClock} />
+        </div>
         <div className="d-flex flex-row align-items-center">
-          <div className="mr-2">
-            <FontAwesomeIcon icon={faClock} />
-          </div>
-          <div className="d-flex flex-row align-items-center">
-            <h1 className="m-0 p-0">{`${time}`}</h1>
-            <span>&#8594;</span>
-            <span className="m-0 p-0">{`${endTime}`}</span>
-          </div>
+          <h1 className="m-0 p-0">{`${time}`}</h1>
+          <span>&#8594;</span>
+          <span className="m-0 p-0">{`${endTime}`}</span>
         </div>
-        <div>
-          <StatusAppointment className="d-flex flex-column align-items-center font-weight-bold" status={status}>
-            <span className="p-1">{ status ? 'Taked' : 'Free'}</span>
-          </StatusAppointment>
-        </div>
-      </TimeWrapper>
-      <AppointmentContent className="d-flex flex-column">
-        <AppointmentName className="d-flex flex-row">
-          <span className="p-0 mr-2">Patient : </span>
-          <h2 className="p-0 m-0">{patient}</h2>
-        </AppointmentName>
-      </AppointmentContent>
-    </Wrapper>
-  );
+      </div>
+      <div>
+        <StatusAppointment className="d-flex flex-column align-items-center font-weight-bold" status={status}>
+          <span className="p-1">{ status ? 'Taked' : 'Free'}</span>
+        </StatusAppointment>
+      </div>
+    </TimeWrapper>
+    <AppointmentContent className="d-flex flex-column">
+      <AppointmentName className="d-flex flex-row">
+        <span className="p-0 mr-2">Patient : </span>
+        <h2 className="p-0 m-0">{patient}</h2>
+      </AppointmentName>
+    </AppointmentContent>
+  </Wrapper>
+);
+
+AppointmentDetail.propTypes = {
+  time: PropTypes.string,
+  endTime: PropTypes.string,
+  patient: PropTypes.string,
+  status: PropTypes.string,
+};
+
+AppointmentDetail.defaultProps = {
+  time: '',
+  endTime: '',
+  patient: '',
+  status: '',
 };
 
 export default AppointmentDetail;

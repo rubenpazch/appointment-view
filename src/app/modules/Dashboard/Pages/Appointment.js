@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 import moment from 'moment';
 import React, { useState, useContext, useEffect } from 'react';
@@ -251,9 +250,7 @@ const Appointment = () => {
             setAvailability(ShiftByHour);
           })
           .catch(error => {
-          // console.log({ error });
-          // setSubmitting(false);
-          // setStatus('not working');
+            notifyError(error.message);
           });
       }
     }
@@ -276,32 +273,26 @@ const Appointment = () => {
     const { idtime, appointmentdate } = values;
     const intervalItemSelected = listShiftDetailsState
       .find(item => Number(item.id) === Number(idtime));
+    // eslint-disable-next-line camelcase
     const { startTime, endTime, doctor_id } = intervalItemSelected;
     setIntervalTimeState();
     // eslint-disable-next-line camelcase
 
     saveAppointment(appointmentdate, startTime, endTime, user_id, doctor_id)
       .then(({ response, data }) => {
-        console.log({ response });
-        console.log({ data });
         if (response.status === 422) {
           notifyError(`Error: ${getTextFromObject(response.request.responseText)}`);
         } else if (response.status === 200) {
           notifySuccess('else if:');
           handleClose();
         } else {
-          // console.log('else');
+          notifyError('else paso algo');
         }
       }, error => {
         notifyError('error response:');
-        // if (response.data.user_id[0] !== null) {
-        //   notify(response.data.user_id[0]);
-        // }
-        console.log('error --> ', error);
       })
       .catch(error => {
         notifyError('catch:');
-        console.log('error --> ', { error });
       });
   };
 

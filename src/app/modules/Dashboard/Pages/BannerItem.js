@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
+/* eslint-disable react/forbid-prop-types */
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
-import { useRouteMatch, NavLink, Link } from 'react-router-dom';
+import { useRouteMatch, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faClock, faPhoneSquareAlt, faAddressBook, faHeart, faPhotoVideo,
@@ -68,7 +68,7 @@ const WrapperCalendarDetails = styled.div`
 `;
 
 const BannerItem = ({ doctorcalendars }) => {
-  const { path, url } = useRouteMatch();
+  const { url } = useRouteMatch();
   return (
     <Wrapper className="row">
       {
@@ -139,6 +139,14 @@ const BannerItem = ({ doctorcalendars }) => {
       }
     </Wrapper>
   );
+};
+
+BannerItem.propTypes = {
+  doctorcalendars: PropTypes.object,
+};
+
+BannerItem.defaultProps = {
+  doctorcalendars: null,
 };
 
 export default BannerItem;

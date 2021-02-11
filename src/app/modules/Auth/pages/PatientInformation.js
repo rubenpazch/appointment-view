@@ -108,7 +108,6 @@ const PatientInformation = () => {
     validationSchema: LoginSchema,
     onSubmit: values => {
       enableLoading();
-      // dispatch(setActiveStep(1));
       setTimeout(() => {
         registerPeople(
           values.firstname,

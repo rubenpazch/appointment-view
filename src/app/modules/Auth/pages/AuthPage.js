@@ -64,7 +64,6 @@ const AuthPage = () => {
   const dispatch = useDispatch();
   const { notifyError } = useContext(ToastContext);
   const location = useLocation();
-  console.log(location);
 
   useEffect(() => {
     getPatientRole()

@@ -1,10 +1,6 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
-/* eslint-disable react/forbid-prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
 
 const Wrapper = styled.div`
   border-top: 1px dotted #000;
@@ -72,11 +68,6 @@ const AppointmentName = styled.div`
   width:100%;
   text-transform: uppercase;
 `;
-const StatusAppointment = styled.div`
-  background-color: ${props => (props.status ? '#fff3f3' : '#d0ffd0')};
-  color: ${props => (props.status ? '#ff0202' : '#148a00')};;
-  border-radius: 5px;  
-`;
 
 const AppointmentDate = styled.div`
   width: 10%;
@@ -96,40 +87,56 @@ const AppointmentDetail = ({
   office,
   status,
   date,
-}) => {
-  const test = '';
-
-  return (
-    <Wrapper className="d-flex flex-row px-1 pb-0 m-1" status={status}>
-      <AppointmentDate className="d-flex flex-row align-items-center">
-        <p className="m-0 px-2">{date}</p>
-      </AppointmentDate>
-      <TimeWrapper className="d-flex flex-row align-items-center justify-content-center px-2">
+}) => (
+  <Wrapper className="d-flex flex-row px-1 pb-0 m-1" status={status}>
+    <AppointmentDate className="d-flex flex-row align-items-center">
+      <p className="m-0 px-2">{date}</p>
+    </AppointmentDate>
+    <TimeWrapper className="d-flex flex-row align-items-center justify-content-center px-2">
+      <div className="d-flex flex-row align-items-center">
         <div className="d-flex flex-row align-items-center">
-          <div className="d-flex flex-row align-items-center">
-            <h1 className="m-0 p-0">{`${time}`}</h1>
-            <span>&#8594;</span>
-            <span className="m-0 p-0">{`${endTime}`}</span>
-          </div>
+          <h1 className="m-0 p-0">{`${time}`}</h1>
+          <span>&#8594;</span>
+          <span className="m-0 p-0">{`${endTime}`}</span>
         </div>
-      </TimeWrapper>
-      <AppointmentContent className="d-flex flex-row align-items-center px-3">
-        <AppointmentName className="d-flex flex-row justify-content-center">
-          <h2 className="p-0 m-0">{patient}</h2>
-        </AppointmentName>
-      </AppointmentContent>
-      <AppointmentService className="d-flex flex-row align-items-center px-3">
-        <AppointmentName className="d-flex flex-row justify-content-center">
-          <h2 className="p-0 m-0">{service}</h2>
-        </AppointmentName>
-      </AppointmentService>
-      <AppointmentLocation className="d-flex flex-row align-items-center px-3">
-        <AppointmentName className="d-flex flex-row justify-content-center">
-          <h2 className="p-0 m-0">{office}</h2>
-        </AppointmentName>
-      </AppointmentLocation>
-    </Wrapper>
-  );
+      </div>
+    </TimeWrapper>
+    <AppointmentContent className="d-flex flex-row align-items-center px-3">
+      <AppointmentName className="d-flex flex-row justify-content-center">
+        <h2 className="p-0 m-0">{patient}</h2>
+      </AppointmentName>
+    </AppointmentContent>
+    <AppointmentService className="d-flex flex-row align-items-center px-3">
+      <AppointmentName className="d-flex flex-row justify-content-center">
+        <h2 className="p-0 m-0">{service}</h2>
+      </AppointmentName>
+    </AppointmentService>
+    <AppointmentLocation className="d-flex flex-row align-items-center px-3">
+      <AppointmentName className="d-flex flex-row justify-content-center">
+        <h2 className="p-0 m-0">{office}</h2>
+      </AppointmentName>
+    </AppointmentLocation>
+  </Wrapper>
+);
+
+AppointmentDetail.propTypes = {
+  time: PropTypes.string,
+  endTime: PropTypes.string,
+  patient: PropTypes.string,
+  service: PropTypes.string,
+  office: PropTypes.string,
+  status: PropTypes.string,
+  date: PropTypes.string,
+};
+
+AppointmentDetail.defaultProps = {
+  time: '',
+  endTime: '',
+  patient: '',
+  service: '',
+  office: '',
+  status: '',
+  date: '',
 };
 
 export default AppointmentDetail;

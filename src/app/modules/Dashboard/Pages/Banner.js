@@ -1,5 +1,6 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
+/* eslint-disable react/no-unused-prop-types */
+/* eslint-disable react/forbid-prop-types */
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import BannerItem from './BannerItem';
@@ -9,13 +10,18 @@ const Wrapper = styled.div`
   min-height: 450px;
 `;
 
-const Banner = prop => {
-  const { item } = prop;
-  return (
-    <Wrapper className="m-0 px-5">
-      <BannerItem doctorcalendars={item} />
-    </Wrapper>
-  );
+const Banner = ({ item }) => (
+  <Wrapper className="m-0 px-5">
+    <BannerItem doctorcalendars={item} />
+  </Wrapper>
+);
+
+Banner.propTypes = {
+  item: PropTypes.object,
+};
+
+Banner.defaultProps = {
+  item: null,
 };
 
 export default Banner;
