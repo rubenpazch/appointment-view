@@ -1,5 +1,6 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -40,5 +41,13 @@ function App({ persistor, store }) {
     </Provider>
   );
 }
+App.propTypes = {
+  persistor: PropTypes.object,
+  store: PropTypes.object,
+};
 
+App.defaultProps = {
+  persistor: null,
+  store: null,
+};
 export default App;
