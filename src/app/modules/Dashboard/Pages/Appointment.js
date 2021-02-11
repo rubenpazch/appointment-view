@@ -3,10 +3,12 @@ import moment from 'moment';
 import React, { useState, useContext, useEffect } from 'react';
 import {
   useLocation,
+  useHistory,
 } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import { useDispatch, useSelector } from 'react-redux';
+
 import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
@@ -138,6 +140,7 @@ const Appointment = () => {
   const [filterAppointmentsBy, setFilterAppointmentsBy] = useState();
   const [selectedDate, setSelectedDate] = React.useState(moment(new Date()));
   const { notifyError, notifySuccess } = useContext(ToastContext);
+  const history = useHistory();
 
   const handleDateChange = date => {
     setAvailability(null);
@@ -148,7 +151,7 @@ const Appointment = () => {
       const DoctorCalendarObject = doctorcalendars
         .find(item => Number(item.attributes.user_id) === Number(doctorUserId)
            && item.attributes.startDate === newDate);
-      console.log({ DoctorCalendarObject });
+
       if (DoctorCalendarObject !== null && typeof (DoctorCalendarObject) !== 'undefined') {
         const resultDepartments = departments.find(
           item => item.id === DoctorCalendarObject.relationships.department.data.id,
@@ -268,9 +271,9 @@ const Appointment = () => {
     setOpen(false);
   };
 
-  const handleSubmitModal = values => {
+  const handleSubmitModal = (values, SelectDate) => {
     handleClose();
-    const { idtime, appointmentdate } = values;
+    const { idtime } = values;
     const intervalItemSelected = listShiftDetailsState
       .find(item => Number(item.id) === Number(idtime));
     // eslint-disable-next-line camelcase
@@ -278,21 +281,30 @@ const Appointment = () => {
     setIntervalTimeState();
     // eslint-disable-next-line camelcase
 
-    saveAppointment(appointmentdate, startTime, endTime, user_id, doctor_id)
+    saveAppointment(SelectDate, startTime, endTime, user_id, doctor_id)
       .then(({ response, data }) => {
-        if (response.status === 422) {
-          notifyError(`Error: ${getTextFromObject(response.request.responseText)}`);
-        } else if (response.status === 200) {
-          notifySuccess('else if:');
-          handleClose();
-        } else {
-          notifyError('else paso algo');
+        if (typeof (data) !== 'undefined') {
+          notifySuccess('The appointment was successfully registered');
+          history.push('/Appointments');
         }
-      }, error => {
-        notifyError('error response:');
+        if (typeof (response) !== 'undefined') {
+          if (response.status === 422) {
+            notifyError(`Error: ${getTextFromObject(response.request.responseText)}`);
+          } else if (response.status === 200) {
+            notifySuccess('The appointment was successfully registered');
+            handleClose();
+          } else {
+            notifyError('else paso algo');
+          }
+        }
       })
       .catch(error => {
-        notifyError('catch:');
+        if (typeof (error.response.data.appointmentDate) !== 'undefined') {
+          notifyError(error.response.data.appointmentDate.join(''));
+        }
+        if (typeof (error.response.data.user_id) !== 'undefined') {
+          notifyError(error.response.data.user_id.join(''));
+        }
       });
   };
 
@@ -319,7 +331,6 @@ const Appointment = () => {
         currentDate,
       )
         .then(({ data }) => {
-          console.log({ data });
           dispatch(setListByDateService(data));
           setFilterAppointmentsBy(data.data);
           const appointmentList = data.data;
@@ -406,9 +417,7 @@ const Appointment = () => {
           setAvailability(ShiftByHour);
         })
         .catch(error => {
-        // console.log({ error });
-        // setSubmitting(false);
-        // setStatus('not working');
+          notifyError(error.message);
         });
     }
   }, [doctorCalendarId]);

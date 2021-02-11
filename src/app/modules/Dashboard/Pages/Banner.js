@@ -17,7 +17,7 @@ const Banner = ({ item }) => (
 );
 
 Banner.propTypes = {
-  item: PropTypes.object,
+  item: PropTypes.any,
 };
 
 Banner.defaultProps = {

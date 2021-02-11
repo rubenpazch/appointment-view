@@ -1,6 +1,4 @@
-/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
 import moment from 'moment';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
@@ -85,6 +83,7 @@ const CalendarCarrusel = () => {
     doctorcalendars, doctors, departments, doctorsusers,
   } = useSelector(state => state.tokenStore);
   const departmentId = new URLSearchParams(useLocation().search).get('id');
+  // eslint-disable-next-line no-unused-vars
   const [appointmentDateState, setAppointmentDateState] = useState(moment(new Date()).format('YYYY-MM-DD'));
   const [filterCalendar, setFilterCalendar] = useState(defaultCalendarList);
   const [listDoctorInformation, setListDoctorInformation] = useState(null);
@@ -163,7 +162,6 @@ const CalendarCarrusel = () => {
         if (relId === departmentIdState) return department;
         return null;
       });
-      console.log({ departmentFounded });
       setCurrentDepartment(departmentFounded);
     }
   }, [departmentId]);

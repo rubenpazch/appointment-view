@@ -142,7 +142,7 @@ const BannerItem = ({ doctorcalendars }) => {
 };
 
 BannerItem.propTypes = {
-  doctorcalendars: PropTypes.object,
+  doctorcalendars: PropTypes.any,
 };
 
 BannerItem.defaultProps = {

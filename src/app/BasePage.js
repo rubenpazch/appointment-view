@@ -1,7 +1,8 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, {
+  lazy, Suspense, useEffect, useContext,
+} from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect, Switch, Route } from 'react-router-dom';
-// const Register = lazy(() => import('./modules/Appointment/Register'));
 import {
   getDoctorCalendars,
 } from './modules/Auth/_redux/authService';
@@ -11,12 +12,14 @@ import {
   setDoctors,
   setDoctorsUsers,
 } from './modules/Auth/_redux/authAction';
+import { ToastContext } from '../components/ToastContextProvider';
 
 const Appointment = lazy(() => import('./modules/Appointment'));
 const Dashboard = lazy(() => import('./modules/Dashboard'));
 
 export default function BasePage() {
   const dispatch = useDispatch();
+  const { notifyError } = useContext(ToastContext);
   useEffect(() => {
     getDoctorCalendars()
       .then(({ data }) => {
@@ -31,14 +34,11 @@ export default function BasePage() {
             arrayOfUsersDoctors.push(includedList[indexIL]);
           }
         }
-        console.log({ arrayOfUsersDoctors });
         dispatch(setDoctorCalendars(data));
         dispatch(setDoctors(arrayOfDoctors));
         dispatch(setDoctorsUsers(arrayOfUsersDoctors));
       }).catch(error => {
-        console.log({ error });
-        // setSubmitting(false);doctorcalendars
-        // setStatus('not working');
+        notifyError(error.message);
       });
   }, []);
 

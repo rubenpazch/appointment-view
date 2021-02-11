@@ -74,20 +74,17 @@ const Login = () => {
               token, username, user_id, personInformation,
             },
           }) => {
-            console.log({ actions });
             notifySuccess('Login success');
             dispatch(setToken({
               token, username, user_id, personInformation,
             }));
             disableLoading();
           })
+          // eslint-disable-next-line no-unused-vars
           .catch(error => {
-            console.log({ actions });
-            console.log({ error });
             notifyError('Username or password was incorrect, try again.');
             disableLoading();
             actions.setSubmitting(false);
-            // console.clear();
           });
       }, 1400);
     },

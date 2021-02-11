@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
+/* eslint-disable react/forbid-prop-types */
+import PropTypes from 'prop-types';
 import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import { useHistory } from 'react-router-dom';
@@ -14,9 +14,13 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import { removeToken } from '../app/modules/Auth/_redux/authAction';
 
-export default function TemporaryDrawer({
-  anchor, open, toggleDrawerExternal, togleDrawerState,
-}) {
+const TemporaryDrawer = ({
+  // eslint-disable-next-line no-unused-vars
+  open,
+  anchor,
+  toggleDrawerExternal,
+  togleDrawerState,
+}) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const handleClickDoctorCalendar = () => {
@@ -77,4 +81,20 @@ export default function TemporaryDrawer({
       </React.Fragment>
     </div>
   );
-}
+};
+
+TemporaryDrawer.propTypes = {
+  open: PropTypes.bool,
+  anchor: PropTypes.string,
+  toggleDrawerExternal: PropTypes.func,
+  togleDrawerState: PropTypes.any,
+};
+
+TemporaryDrawer.defaultProps = {
+  open: false,
+  anchor: '',
+  toggleDrawerExternal: () => {},
+  togleDrawerState: null,
+};
+
+export default TemporaryDrawer;

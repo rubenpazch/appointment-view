@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
@@ -83,7 +84,7 @@ AppointmentDetail.propTypes = {
   time: PropTypes.string,
   endTime: PropTypes.string,
   patient: PropTypes.string,
-  status: PropTypes.string,
+  status: PropTypes.any,
 };
 
 AppointmentDetail.defaultProps = {

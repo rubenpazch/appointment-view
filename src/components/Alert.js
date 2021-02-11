@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const Alert = ({ message, footerMessage }) => (
@@ -8,7 +8,16 @@ const Alert = ({ message, footerMessage }) => (
     <hr />
     <p className="mb-0">{footerMessage}</p>
   </div>
-
 );
+
+Alert.propTypes = {
+  message: PropTypes.string,
+  footerMessage: PropTypes.string,
+};
+
+Alert.defaultProps = {
+  message: null,
+  footerMessage: null,
+};
 
 export default Alert;
