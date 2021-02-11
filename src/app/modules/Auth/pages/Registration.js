@@ -1,24 +1,18 @@
-/* eslint-disable react/no-unused-prop-types */
-/* eslint-disable react/forbid-prop-types */
 import React, { useState, useEffect } from 'react';
-// import TextField from '@material-ui/core/TextField';
-
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-// import { Link } from 'react-router-dom';
-import {
-  useFormik,
-} from 'formik';
-// import PropTypes from 'prop-types';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { setUserInformation } from '../_redux/authAction';
+import {
+  setUserInformation,
+  setActiveStep,
+} from '../_redux/authAction';
 
 import { register } from '../_redux/authService';
 
@@ -73,8 +67,8 @@ const Registration = () => {
     validationSchema: LoginSchema,
     onSubmit: values => {
       enableLoading();
+      dispatch(setActiveStep(2));
       setTimeout(() => {
-        // console.log({ patient });
         /* eslint-disable camelcase */
         register(values.email, values.username, values.password, patient.id)
           .then(({ data: { data: { attributes: { email, username, role_id } } } }) => {
@@ -153,11 +147,4 @@ const Registration = () => {
   );
 };
 
-// Login.defaultProps = {
-//   props: {},
-// };
-//
-// Login.propTypes = {
-//   props: PropTypes.object,
-// };
 export default Registration;

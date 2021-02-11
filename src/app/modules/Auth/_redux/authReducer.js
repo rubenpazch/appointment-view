@@ -12,6 +12,7 @@ const initialState = {
   doctorcalendars: null,
   doctors: null,
   doctorsusers: null,
+  activeStep: 0,
 };
 
 export const FETCH_TOKEN = 'FETCH_TOKEN';
@@ -22,6 +23,7 @@ export const FETCH_GET_DEPARTMENTS = 'FETCH_GET_DEPARTMENTS';
 export const FETCH_DOCTOR_CALENDARS = 'FETCH_DOCTOR_CALENDARS';
 export const FETCH_DOCTORS = 'FETCH_DOCTORS';
 export const FETCH_DOCTORS_USERS = 'FETCH_DOCTORS_USERS';
+export const ACTIVE_STEP = 'ACTIVE_STEP';
 
 export const tokenReducer = persistReducer(
   { storage, key: 'appointment-auth', whitelist: ['username', 'token', 'user_id'] },
@@ -64,6 +66,11 @@ export const tokenReducer = persistReducer(
         return {
           ...state,
           doctorsusers: action.payload,
+        };
+      case ACTIVE_STEP:
+        return {
+          ...state,
+          activeStep: action.payload,
         };
       case REMOVE_TOKEN:
         return initialState;

@@ -7,6 +7,7 @@ import {
   FETCH_DOCTOR_CALENDARS,
   FETCH_DOCTORS,
   FETCH_DOCTORS_USERS,
+  ACTIVE_STEP,
 } from './authReducer';
 
 export const setToken = result => ({
@@ -46,5 +47,10 @@ export const setDoctors = result => ({
 
 export const setDoctorsUsers = result => ({
   type: FETCH_DOCTORS_USERS,
+  payload: result,
+});
+
+export const setActiveStep = result => ({
+  type: ACTIVE_STEP,
   payload: result,
 });

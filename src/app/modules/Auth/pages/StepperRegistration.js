@@ -9,10 +9,10 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
 import Registration from './Registration';
 import PatientInformation from './PatientInformation';
 import RegistrationResume from './RegistrationResume';
-// import { useDispatch } from 'react-redux';
 // import { Link } from 'react-router-dom';
 // import PropTypes from 'prop-types';
 
@@ -52,46 +52,47 @@ function getStepContent(step) {
 }
 
 const StepperRegistration = () => {
-  const [activeStep, setActiveStep] = useState(0);
+  const { activeStep } = useSelector(state => state.tokenStore);
+  const [activeStepState, setActiveStepState] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
   const steps = getSteps();
   const classes = useStyles();
-
+  console.log({ activeStep });
   const isStepOptional = step => step === 1;
   const isStepSkipped = step => skipped.has(step);
 
   const handleNext = () => {
     let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
+    if (isStepSkipped(activeStepState)) {
       newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
+      newSkipped.delete(activeStepState);
     }
 
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStepState(prevActiveStep => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
 
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStepState(prevActiveStep => prevActiveStep - 1);
   };
 
   const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
+    if (!isStepOptional(activeStepState)) {
       // You probably want to guard against something like this,
       // it should never occur unless someone's actively trying to break something.
       throw new Error("You can't skip a step that isn't optional.");
     }
 
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStepState(prevActiveStep => prevActiveStep + 1);
     setSkipped(prevSkipped => {
       const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
+      newSkipped.add(activeStepState);
       return newSkipped;
     });
   };
 
   const handleReset = () => {
-    setActiveStep(0);
+    setActiveStepState(0);
   };
 
   const renderSwitch = param => {
@@ -128,7 +129,7 @@ const StepperRegistration = () => {
       </Stepper>
       { renderSwitch(activeStep) }
       <WrapperStepNavigation>
-        {activeStep === steps.length ? (
+        {activeStepState === steps.length ? (
           <div>
             <Typography className={classes.instructions}>
               All steps completed - you&apos;re finished
@@ -139,12 +140,20 @@ const StepperRegistration = () => {
           </div>
         ) : (
           <div>
-            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+            <Typography
+              className={classes.instructions}
+            >
+              {getStepContent(activeStepState)}
+            </Typography>
             <div>
-              <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+              <Button
+                disabled={activeStepState === 0}
+                onClick={handleBack}
+                className={classes.button}
+              >
                 Back
               </Button>
-              {isStepOptional(activeStep) && (
+              {isStepOptional(activeStepState) && (
                 <Button
                   variant="contained"
                   color="primary"
@@ -161,7 +170,7 @@ const StepperRegistration = () => {
                 onClick={handleNext}
                 className={classes.button}
               >
-                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                {activeStepState === steps.length - 1 ? 'Finish' : 'Next'}
               </Button>
             </div>
           </div>
