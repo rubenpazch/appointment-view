@@ -90,7 +90,7 @@ const CalendarCarrusel = () => {
   const [currentDepartment, setCurrentDepartment] = useState(defaultDepartment);
 
   useEffect(() => {
-    if (doctorcalendars !== null) {
+    if (doctorcalendars !== null && doctors !== null && doctorsusers !== null) {
       const filterCalendarByDepartment = doctorcalendars.filter(item => {
         if (
           Number(item.relationships.department.data.id) === Number(departmentId)
@@ -152,7 +152,7 @@ const CalendarCarrusel = () => {
       }
       setFilterCalendar(filterCalendarByDepartment);
     }
-  }, [departmentId]);
+  }, [doctorcalendars, doctors, doctorsusers, departmentId]);
 
   useEffect(() => {
     if (departments !== null) {

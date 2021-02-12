@@ -72,7 +72,7 @@ const MenuList = () => {
       .then(({ data }) => {
         dispatch(setDepartments(data));
       }).catch(error => {
-        // console.log({ error });
+        console.log({ error });
         // setSubmitting(false);
         // setStatus('not working');
       });
@@ -96,7 +96,7 @@ const MenuList = () => {
         dispatch(setDoctors(arrayOfDoctors));
         dispatch(setDoctorsUsers(arrayOfUsersDoctors));
       }).catch(error => {
-        // console.log({ error });
+        console.log({ error });
         // setSubmitting(false);doctorcalendars
         // setStatus('not working');
       });

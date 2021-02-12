@@ -73,7 +73,9 @@ const Dashboard = () => {
           <RigthContainer className="col-10">
             <Switch>
               <Route exact path={path}>
-                <h3>Please select a service.</h3>
+                <div className="d-flex flex-row justify-content-center align-items-center w-100 h-75">
+                  <h3 className="m-0 p-0">Please select a service.</h3>
+                </div>
               </Route>
               <Route exact path={`${path}/:departmentname`}>
                 <div className="row d-flex flex-column">

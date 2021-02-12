@@ -14,8 +14,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-
-import NativeSelect from '@material-ui/core/NativeSelect';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import styled from 'styled-components';
 import { Formik } from 'formik';
@@ -90,25 +90,22 @@ const ModalAppointment = ({
                 return (
                   <form onSubmit={handleSubmit}>
                     <div className="d-flex flex-column">
-                      <FormControl className="my-3">
-                        <InputLabel shrink htmlFor="age-native-label-placeholder">
-                          Start Time:
-                        </InputLabel>
-                        <NativeSelect
+                      <FormControl>
+                        <InputLabel id="demo-simple-select-label">Start Time</InputLabel>
+                        <Select
                           id="idtime"
                           name="idtime"
-                          value={values.idtime}
                           onChange={handleChange}
+                          value={values.idtime}
                         >
-                          <option value="">Select Start Time</option>
+                          <MenuItem value="">Select Start Time</MenuItem>
                           {selectObjectList !== null
                             ? selectObjectList.map(item => (
-                              <option value={item.id} key={item.id}>{item.startTime}</option>
+                              <MenuItem value={item.id} key={item.id}>{item.startTime}</MenuItem>
                             ))
                             : null}
-                        </NativeSelect>
+                        </Select>
                         {errors.idtime && touched.idtime ? <FormHelperText id="component-error-text" error>{errors.idtime}</FormHelperText> : null}
-
                       </FormControl>
                       <FormControl className="my-3">
                         <DateWrapper>
