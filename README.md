@@ -76,7 +76,10 @@ Hospital Appointment System is a web application tablet, this application was bu
 ## Getting Started
 
 This project was built using React and Redux, Ruby and Rails API, it is a web application and for running on your local environment you should follow these guidelines.
-
+<br/>
+<br/>
+**THIS IS THE FRONTEND OF THE APPLICATION AND THE BACKEND IS LOCATED IN THIS LINK** [(backend)](https://github.com/rubenpazch/appointmentAPI)
+<br/>
 
 ### Prerequisites
 
