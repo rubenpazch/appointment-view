@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export const APPOINTMENT_BY_DATE_AREA = 'http://localhost:3000/api/v1/getappointments';
-export const SERVICE_APPOINTMENT = 'http://localhost:3000/api/v1/appointments';
+export const APPOINTMENT_BY_DATE_AREA = 'https://vast-tundra-77982.herokuapp.com/api/v1/getappointments';
+export const SERVICE_APPOINTMENT = 'https://vast-tundra-77982.herokuapp.com/api/v1/appointments';
 
 // eslint-disable-next-line camelcase
 export function getListAppointmentByDateService(department_id, date) {

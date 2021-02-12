@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-export const LOGIN_URL = 'http://localhost:3000/api/v1/tokens';
-export const REGISTER_URL = 'http://localhost:3000/api/v1/users';
-export const PEOPLE_REGISTER = 'http://localhost:3000/api/v1/people';
-export const GET_DEPARTMENTS = 'http://localhost:3000/api/v1/departments';
-export const GET_DOCTOR_CALENDAR = 'http://localhost:3000/api/v1/doctor_calendars';
-export const GET_PATIENT_ROLE = 'http://localhost:3000/api/v1/roles';
-export const GET_PATIENT_DEPARTMENT = 'http://localhost:3000/api/v1/departments/1/getPatientDepartment';
+export const LOGIN_URL = 'https://vast-tundra-77982.herokuapp.com/api/v1/tokens';
+export const REGISTER_URL = 'https://vast-tundra-77982.herokuapp.com/api/v1/users';
+export const PEOPLE_REGISTER = 'https://vast-tundra-77982.herokuapp.com/api/v1/people';
+export const GET_DEPARTMENTS = 'https://vast-tundra-77982.herokuapp.com/api/v1/departments';
+export const GET_DOCTOR_CALENDAR = 'https://vast-tundra-77982.herokuapp.com/api/v1/doctor_calendars';
+export const GET_PATIENT_ROLE = 'https://vast-tundra-77982.herokuapp.com/api/v1/roles';
+export const GET_PATIENT_DEPARTMENT = 'https://vast-tundra-77982.herokuapp.com/api/v1/departments/1/getPatientDepartment';
 
 export function login(username, password) {
   return axios.post(LOGIN_URL, { user: { username, password } });
