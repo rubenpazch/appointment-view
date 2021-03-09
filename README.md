@@ -36,11 +36,11 @@
 
   <p align="center">    
     <br />
-    <a href="https://github.com/rubenpazch/catalogue-of-dog-clothes"><strong>Explore this project »</strong></a>
+    <a href="https://github.com/rubenpazch/appointment-view"><strong>Explore this project »</strong></a>
     <br />
     <br />&#10023;
-    <a href="https://sad-sinoussi-c7723c.netlify.app/">View Demo</a>   &#10023;  
-    <a href="https://github.com/rubenpazch/catalogue-of-dog-clothes/issues">Report Bug</a>    &#10023;
+    <a href="https://agile-lowlands-59460.herokuapp.com/Dashboard">View Demo</a>   &#10023;  
+    <a href="https://github.com/rubenpazch/appointment-view/issues">Report Bug</a>    &#10023;
     <a href="#Getting-Started">Getting Started</a> &#10023; <a href="#Install">Installing</a> &#10023;
     <a href="#Extra-Feature">Extra Feature</a> &#10023;
     <a href="#Screenshots-of-the-App">Screenshots of the App</a> &#10023;
@@ -53,7 +53,7 @@
 <br/>
 
 
-Hospital Appointment System is a web application tablet, this application was build using ROR and <strong>React & Redux</strong> the latest version, this application includes the ability to register new users, login into the application create a token for the application, when we are logged in the application we can select a service (Surgery, Medicine and others), each of the options show different doctors available, then we can select a doctor a create an appointment..  
+Hospital Appointment System is a web application tablet version, this application was build using ROR and <strong>React & Redux</strong> the latest version, includes the ability to register new users, login into the application creating a token session, when we are logged in the application we can select a service (Surgery, Medicine and others), each of the options show different doctors and their attendance availability, finally we can create an appointment for a specific date and service.
 <br/>
 ### Main Features
 
