@@ -232,5 +232,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Creative Commons ](https://creativecommons.org/licenses/by-nc/4.0/)
 
 * [behance.net ](https://www.behance.net/gallery/24531031/Pimp-my-DOG-Online-store-E-commerse-project)
-
-* [Amadeus](https://developers.amadeus.com/)
