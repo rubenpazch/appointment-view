@@ -55,6 +55,7 @@
 
 Hospital Appointment System is a web application tablet version, this application was build using ROR and <strong>React & Redux</strong> the latest version, includes the ability to register new users, login into the application creating a token session, when we are logged in the application we can select a service (Surgery, Medicine and others), each of the options show different doctors and their attendance availability, finally we can create an appointment for a specific date and service.
 <br/>
+
 ### Main Features
 
 - Create a new user
@@ -73,6 +74,7 @@ Hospital Appointment System is a web application tablet version, this applicatio
 
 <br/>
 <br/>
+
 ## Getting Started
 
 This project was built using React and Redux, Ruby and Rails API, it is a web application and for running on your local environment you should follow these guidelines.
