@@ -1,4 +1,7 @@
+// eslint-disable react-hooks/exhaustive-deps
 /* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import moment from 'moment';
 import React, { useState, useContext, useEffect } from 'react';
 import {

@@ -1,3 +1,6 @@
+// eslint-disable react-hooks/exhaustive-deps
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useEffect, useState, useContext } from 'react';
 import moment from 'moment';
 import { useSelector } from 'react-redux';

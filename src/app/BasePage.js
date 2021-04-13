@@ -1,3 +1,6 @@
+// eslint-disable react-hooks/exhaustive-deps
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, {
   lazy, Suspense, useEffect, useContext,
 } from 'react';
